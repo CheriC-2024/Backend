@@ -30,7 +30,6 @@ public class User extends BaseTime {
     private String email;
 
     @NotNull
-    @Column(unique = true)
     private String name;
 
     private String info;
