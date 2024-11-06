@@ -1,8 +1,6 @@
 package com.art.cheric.module.artist.domain.entity;
 
 import com.art.cheric.global.common.BaseTime;
-import com.art.cheric.global.enums.ValidateState;
-import com.art.cheric.module.user.domain.entity.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

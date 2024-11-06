@@ -1,9 +1,7 @@
 package com.art.cheric.module.artist.domain.entity;
 
 import com.art.cheric.global.common.BaseTime;
-import com.art.cheric.global.enums.ValidateState;
 import com.art.cheric.module.user.domain.entity.User;
-import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -42,7 +40,8 @@ public class ArtRequest extends BaseTime {
     @NotNull
     private String message;
 
-    public static ArtRequest of(@NotNull User sender, @NotNull User recipient, @NotNull String artName, @NotNull String message) {
+    public static ArtRequest of(@NotNull User sender, @NotNull User recipient, @NotNull String artName,
+                                @NotNull String message) {
         return ArtRequest.builder()
                 .sender(sender)
                 .recipient(recipient)
