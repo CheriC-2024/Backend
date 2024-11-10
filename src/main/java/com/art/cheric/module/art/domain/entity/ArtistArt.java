@@ -35,10 +35,13 @@ public class ArtistArt extends BaseTime {
     private User user;
 
 
+    private boolean isUsable;
+
     public static ArtistArt of(@NotNull Art art, @NotNull User user) {
         return ArtistArt.builder()
                 .art(art)
                 .user(user)
+                .isUsable(true)
                 .build();
     }
 }
