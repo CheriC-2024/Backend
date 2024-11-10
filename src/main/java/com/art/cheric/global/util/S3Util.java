@@ -1,6 +1,5 @@
 package com.art.cheric.global.util;
 
-import static com.art.cheric.global.util.FileUtil.FILE_MAX_SIZE;
 import static software.amazon.awssdk.regions.Region.AP_NORTHEAST_2;
 
 import java.net.URL;
@@ -47,7 +46,6 @@ public class S3Util {
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(BUCKET)
                 .key(objectKey)
-                .contentLength(FILE_MAX_SIZE)
                 .build();
 
         // presigned URL의 만료 시간 설정 후, PUT presigned URL 생성 요청 설정
