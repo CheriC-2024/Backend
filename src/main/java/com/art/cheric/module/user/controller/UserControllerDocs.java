@@ -30,9 +30,9 @@ public interface UserControllerDocs {
                             mediaType = "application/json",
                             schema = @Schema(implementation = ResponseDto.class),
                             examples = @ExampleObject(value = "[" +
-                                    "{ \"code\": 400, \"message\": \"Id Token이 필요합니다.\" }, " +
+                                    "{ \"code\": 400, \"message\": \"Id Token이 필요합니다.\" }," +
                                     "{ \"code\": 400, \"message\": \"Device Id가 필요합니다.\" }," +
-                                    "{ \"code\": 400, \"message\": \"Fcm Token이 필요합니다.\" }," +
+                                    "{ \"code\": 400, \"message\": \"Fcm Token이 필요합니다.\" }" +
                                     "]"
                             )
                     )
@@ -42,9 +42,9 @@ public interface UserControllerDocs {
                             mediaType = "application/json",
                             schema = @Schema(implementation = ResponseDto.class),
                             examples = @ExampleObject(value = "[" +
-                                    "{ \"code\": 401, \"message\": \"인증에 실패하였습니다.\" } ," +
-                                    "{ \"code\": 401, \"message\": \"Token이 유효하지 않습니다.\" }" +
-                                    "{ \"code\": 401, \"message\": \"Access Token이 필요합니다.\" }" +
+                                    "{ \"code\": 401, \"message\": \"인증에 실패하였습니다.\" }," +
+                                    "{ \"code\": 401, \"message\": \"Token이 유효하지 않습니다.\" }," +
+                                    "{ \"code\": 401, \"message\": \"Access Token이 필요합니다.\" }," +
                                     "{ \"code\": 404, \"message\": \"해당하는 사용자를 찾을 수 없습니다.\" }" +
                                     "]"
                             )
@@ -82,9 +82,9 @@ public interface UserControllerDocs {
                             mediaType = "application/json",
                             schema = @Schema(implementation = ResponseDto.class),
                             examples = @ExampleObject(value = "[" +
-                                    "{ \"code\": 401, \"message\": \"인증에 실패하였습니다.\" } ," +
-                                    "{ \"code\": 401, \"message\": \"Token이 유효하지 않습니다.\" }" +
-                                    "{ \"code\": 401, \"message\": \"Refresh Token이 필요합니다.\" } ," +
+                                    "{ \"code\": 401, \"message\": \"인증에 실패하였습니다.\" }," +
+                                    "{ \"code\": 401, \"message\": \"Token이 유효하지 않습니다.\" }," +
+                                    "{ \"code\": 401, \"message\": \"Refresh Token이 필요합니다.\" }," +
                                     "]"
                             )
                     )
@@ -121,7 +121,7 @@ public interface UserControllerDocs {
                                     "{ \"code\": 400, \"message\": \"사용자 컬렉팅 경험 여부는 필수 값입니다.\" }," +
                                     "{ \"code\": 400, \"message\": \"사용자 작가 여부는 필수 값입니다.\" }," +
                                     "{ \"code\": 400, \"message\": \"사용자 선호 분야는 필수 값입니다.\" }," +
-                                    "{ \"code\": 400, \"message\": \"사용자 선호 분야는 2개까지 입력 가능합니다.\" }," +
+                                    "{ \"code\": 400, \"message\": \"사용자 선호 분야는 2개까지 입력 가능합니다.\" }" +
                                     "]"
                             )
                     )
@@ -131,8 +131,8 @@ public interface UserControllerDocs {
                             mediaType = "application/json",
                             schema = @Schema(implementation = ResponseDto.class),
                             examples = @ExampleObject(value = "[" +
-                                    "{ \"code\": 401, \"message\": \"인증에 실패하였습니다.\" } ," +
-                                    "{ \"code\": 401, \"message\": \"Token이 유효하지 않습니다.\" }" +
+                                    "{ \"code\": 401, \"message\": \"인증에 실패하였습니다.\" }," +
+                                    "{ \"code\": 401, \"message\": \"Token이 유효하지 않습니다.\" }," +
                                     "{ \"code\": 401, \"message\": \"Access Token이 필요합니다.\" }" +
                                     "]"
                             )
@@ -163,8 +163,8 @@ public interface UserControllerDocs {
                             mediaType = "application/json",
                             schema = @Schema(implementation = ResponseDto.class),
                             examples = @ExampleObject(value = "[" +
-                                    "{ \"code\": 400, \"message\": \"사용자 이름은 필수 값입니다.\" }, " +
-                                    "{ \"code\": 400, \"message\": \"사용자 이름은 2자이상 10자 미만이어야 합니다.\" }," +
+                                    "{ \"code\": 400, \"message\": \"사용자 이름은 필수 값입니다.\" }," +
+                                    "{ \"code\": 400, \"message\": \"사용자 이름은 2자이상 10자 미만이어야 합니다.\" }" +
                                     "]"
                             )
                     )
@@ -174,8 +174,8 @@ public interface UserControllerDocs {
                             mediaType = "application/json",
                             schema = @Schema(implementation = ResponseDto.class),
                             examples = @ExampleObject(value = "[" +
-                                    "{ \"code\": 401, \"message\": \"인증에 실패하였습니다.\" } ," +
-                                    "{ \"code\": 401, \"message\": \"Token이 유효하지 않습니다.\" }" +
+                                    "{ \"code\": 401, \"message\": \"인증에 실패하였습니다.\" }," +
+                                    "{ \"code\": 401, \"message\": \"Token이 유효하지 않습니다.\" }," +
                                     "{ \"code\": 401, \"message\": \"Access Token이 필요합니다.\" }" +
                                     "]"
                             )
@@ -213,9 +213,9 @@ public interface UserControllerDocs {
                             mediaType = "application/json",
                             schema = @Schema(implementation = ResponseDto.class),
                             examples = @ExampleObject(value = "[" +
-                                    "{ \"code\": 401, \"message\": \"인증에 실패하였습니다.\" } ," +
-                                    "{ \"code\": 401, \"message\": \"Token이 유효하지 않습니다.\" }" +
-                                    "{ \"code\": 401, \"message\": \"Access Token이 필요합니다.\" }" +
+                                    "{ \"code\": 401, \"message\": \"인증에 실패하였습니다.\" }," +
+                                    "{ \"code\": 401, \"message\": \"Token이 유효하지 않습니다.\" }," +
+                                    "{ \"code\": 401, \"message\": \"Access Token이 필요합니다.\" }," +
                                     "]"
                             )
                     )
