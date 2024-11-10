@@ -50,9 +50,12 @@ public class Art extends BaseTime {
     @NotNull
     private int heartCount;
 
+    @NotNull
+    private boolean isCollectorsArt;
+
     public static Art of(@NotNull String name, String description, String series, String material, @NotNull Year madeAt,
                          int cherryPrice, @NotNull int horizontalSize, @NotNull int verticalSize,
-                         @NotNull String imgUrl) {
+                         @NotNull String imgUrl, @NotNull boolean isCollectorsArt) {
         return Art.builder()
                 .name(name)
                 .description(description)
@@ -64,6 +67,7 @@ public class Art extends BaseTime {
                 .verticalSize(verticalSize)
                 .heartCount(0)
                 .imgUrl(imgUrl)
+                .isCollectorsArt(isCollectorsArt)
                 .build();
     }
 
