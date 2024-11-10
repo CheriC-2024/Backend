@@ -119,8 +119,10 @@ public class UserService {
         } else if (!(name.length() >= 2 && name.length() <= 10)) {
             throw new AppException(NAME_SIZE_ERROR);
         }
-        userRepository.findByIsArtistTrueAndName(name)
-                .orElseThrow(() -> new AppException(NAME_DUPLICATED));
+
+        userRepository.findByIsArtistFalseAndName(name).ifPresent(user -> {
+                    throw new AppException(NAME_DUPLICATED);
+                });
     }
 
     @Transactional
