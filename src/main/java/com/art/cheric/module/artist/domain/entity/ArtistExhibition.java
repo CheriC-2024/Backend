@@ -3,6 +3,8 @@ package com.art.cheric.module.artist.domain.entity;
 import com.art.cheric.global.common.BaseTime;
 import com.art.cheric.global.enums.ExhibitionType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -41,6 +43,7 @@ public class ArtistExhibition extends BaseTime {
     private String byWho;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     private ExhibitionType exhibitionType;
 
     @NotNull

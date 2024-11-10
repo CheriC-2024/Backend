@@ -4,6 +4,8 @@ import com.art.cheric.global.common.BaseTime;
 import com.art.cheric.global.enums.AlarmType;
 import com.art.cheric.module.user.domain.entity.User;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -38,6 +40,7 @@ public class Alarm extends BaseTime {
     private String content;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     private AlarmType alarm;
 
     public static Alarm of(@NotNull User user, @NotNull String title, @NotNull String content,

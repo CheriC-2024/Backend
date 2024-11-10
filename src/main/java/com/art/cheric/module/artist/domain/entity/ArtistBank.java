@@ -2,6 +2,8 @@ package com.art.cheric.module.artist.domain.entity;
 
 import com.art.cheric.global.enums.BankType;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.Getter;
 
 @Embeddable
@@ -11,9 +13,10 @@ public class ArtistBank {
 
     private String bankNum;
 
+    @Enumerated(EnumType.STRING)
     private BankType bankType;
 
-    public ArtistBank() {
+    protected ArtistBank() {
     }
 
     public ArtistBank(String bankName, String bankNum, BankType bankType) {
@@ -21,6 +24,4 @@ public class ArtistBank {
         this.bankNum = bankNum;
         this.bankType = bankType;
     }
-
-
 }

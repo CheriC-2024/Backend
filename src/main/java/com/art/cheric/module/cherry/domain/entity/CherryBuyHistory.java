@@ -5,6 +5,8 @@ import com.art.cheric.global.enums.CherryCancelableState;
 import com.art.cheric.global.enums.PaymentType;
 import com.art.cheric.module.user.domain.entity.User;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -52,8 +54,10 @@ public class CherryBuyHistory extends BaseTime {
     private int totalAmount;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     private CherryCancelableState cancelableState;
 
+    @Enumerated(EnumType.STRING)
     private PaymentType paymentType;
 
     @NotNull
@@ -81,7 +85,7 @@ public class CherryBuyHistory extends BaseTime {
                 .build();
     }
 
-    public void updateCherryState(CherryCancelableState cancelableState){
+    public void updateCherryState(CherryCancelableState cancelableState) {
         this.cancelableState = cancelableState;
     }
 

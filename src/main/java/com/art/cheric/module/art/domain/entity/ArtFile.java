@@ -3,6 +3,8 @@ package com.art.cheric.module.art.domain.entity;
 import com.art.cheric.global.common.BaseTime;
 import com.art.cheric.global.enums.ValidateState;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -33,6 +35,8 @@ public class ArtFile extends BaseTime {
     @NotNull
     private String fileUrl;
 
+    @NotNull
+    @Enumerated(EnumType.STRING)
     private ValidateState state;
 
     public static ArtFile of(@NotNull OwnArt ownArt, @NotNull String fileUrl) {

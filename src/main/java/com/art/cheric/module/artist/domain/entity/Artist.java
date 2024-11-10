@@ -5,6 +5,8 @@ import com.art.cheric.global.enums.ValidateState;
 import com.art.cheric.module.user.domain.entity.User;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -33,6 +35,7 @@ public class Artist extends BaseTime {
     private User user;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     private ValidateState state;
 
     @Embedded

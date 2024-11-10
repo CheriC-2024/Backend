@@ -4,6 +4,8 @@ import com.art.cheric.global.common.BaseTime;
 import com.art.cheric.global.enums.ValidateState;
 import com.art.cheric.module.user.domain.entity.User;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -45,6 +47,7 @@ public class OwnArt extends BaseTime {
     private boolean isPriceOpen;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     private ValidateState state;
 
     public static OwnArt of(@NotNull Art art, @NotNull User user, @NotNull String artistName, @NotNull long price,

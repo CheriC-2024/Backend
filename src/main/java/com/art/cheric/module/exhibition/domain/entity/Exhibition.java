@@ -5,6 +5,8 @@ import com.art.cheric.global.enums.FontColorType;
 import com.art.cheric.global.enums.FontType;
 import com.art.cheric.module.user.domain.entity.User;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -39,9 +41,11 @@ public class Exhibition extends BaseTime {
     private String description;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     private FontType font;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     private FontColorType fontColor;
 
     @NotNull
@@ -54,8 +58,8 @@ public class Exhibition extends BaseTime {
     private int hits;
 
 
-    public static Exhibition of(@NotNull User user, @NotNull String name, @NotNull String description, @NotNull FontType font,
-                                @NotNull FontColorType fontColor, @NotNull String coverImgUrl,
+    public static Exhibition of(@NotNull User user, @NotNull String name, @NotNull String description,
+                                @NotNull FontType font, @NotNull FontColorType fontColor, @NotNull String coverImgUrl,
                                 @NotNull String musicUrl) {
         return Exhibition.builder()
                 .user(user)

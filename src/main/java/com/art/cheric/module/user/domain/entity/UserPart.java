@@ -3,6 +3,8 @@ package com.art.cheric.module.user.domain.entity;
 import com.art.cheric.global.common.BaseTime;
 import com.art.cheric.global.enums.ArtType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -31,6 +33,7 @@ public class UserPart extends BaseTime {
     private User user;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     private ArtType userPart;
 
     public static UserPart of(@NotNull User user, @NotNull ArtType userPart) {
