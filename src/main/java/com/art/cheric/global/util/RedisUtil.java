@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class RedisUtil {
     private final RedisTemplate<String, Object> redisTemplate;
 
-    // 레디스에 유효 시간에 맞춰 값 저장하는 메서드
+    // 레디스에 유효 시간에 맞춰 값 저장
     public void setOpsForValue(String key, String value, int expire_h) {
         ValueOperations<String, Object> stringValueOperations = redisTemplate.opsForValue();
         stringValueOperations.set(key, value);
@@ -23,12 +23,12 @@ public class RedisUtil {
         log.info("[Redis] Data saved successfully. -- " + key);
     }
 
-    // 레디스에 저장된 값 가져오는 메서드
+    // 레디스에 저장된 값 가져오기
     public String getOpsForValue(String key) {
         return (String) redisTemplate.opsForValue().get(key);
     }
 
-    // 레디스에 저장된 값 삭제하는 메서드
+    // 레디스에 저장된 값 삭제
     public void delete(String key) {
         redisTemplate.delete(key);
 
