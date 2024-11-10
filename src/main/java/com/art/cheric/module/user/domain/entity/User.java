@@ -4,6 +4,8 @@ import com.art.cheric.global.common.BaseTime;
 import com.art.cheric.global.enums.UserRole;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -30,11 +32,15 @@ public class User extends BaseTime {
     private String email;
 
     @NotNull
+    private String fcmToken;
+
+    @NotNull
+    private String deviceId;
+
     private String name;
 
     private String info;
 
-    @NotNull
     private String profileImgUrl;
 
     private String backgroundImgUrl;
@@ -44,6 +50,7 @@ public class User extends BaseTime {
     private boolean isArtist;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     private UserRole role;
 
     @NotNull
@@ -55,8 +62,16 @@ public class User extends BaseTime {
     @NotNull
     private int followingAmount;
 
-    public static User from(@NotNull String email) {
-        return User.builder().email(email).role(UserRole.COLLECTOR).cherryNum(0).followerAmount(0).followingAmount(0)
+    public static User of(@NotNull String email, @NotNull String fcmToken, @NotNull String deviceId) {
+        return User
+                .builder()
+                .email(email)
+                .fcmToken(fcmToken)
+                .deviceId(deviceId)
+                .role(UserRole.COLLECTOR)
+                .cherryNum(0)
+                .followerAmount(0)
+                .followingAmount(0)
                 .build();
     }
 
