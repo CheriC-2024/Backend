@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 1234
+  h2:
+    console:
+      enabled: true # H2 콘솔 활성화
+  jpa:
+    hibernate:
+      ddl-auto: create-drop # 테스트 후 테이블 삭제
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
