@@ -14,16 +14,6 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      DB_URL: ${{ secrets.DB_URL }}
-      DB_USERNAME: ${{ secrets.DB_USERNAME }}
-      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-      REDIS_PORT: ${{ secrets.REDIS_PORT }}
-      REDIS_HOST: ${{ secrets.REDIS_HOST }}
-      REDIS_PW: ${{ secrets.REDIS_PW }}
-      JWT_SECRET: ${{ secrets.JWT_SECRET }}
-      JWT_REFRESH_TOKEN_VALIDITY: ${{ secrets.JWT_REFRESH_TOKEN_VALIDITY }}
-      JWT_ACCESS_TOKEN_VALIDITY: ${{ secrets.JWT_ACCESS_TOKEN_VALIDITY }}
     steps:
       - name: 체크아웃
         uses: actions/checkout@v4
@@ -34,6 +24,13 @@ jobs:
           java-version: 17
           distribution: 'corretto'
 
+      - name: application.yml 생성
+        run: |
+          cd ./src/main/resources
+          touch ./application.yml
+          echo "${{ secrets.PROPERTIES }}" > ./application.yml
+        shell: bash
+
       - name: Start Redis
         uses: supercharge/redis-github-action@1.1.0
         with:
@@ -41,6 +38,9 @@ jobs:
 
       - name: 빌드 권한 부여
         run: chmod +x gradlew
+
+      - name: 테스트 프로파일 설정
+        run: echo "SPRING_PROFILES_ACTIVE=test" >> $GITHUB_ENV
 
       - name: 프로젝트 빌드
         run: ./gradlew clean build
