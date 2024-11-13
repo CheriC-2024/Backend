@@ -1,9 +1,12 @@
 package com.art.cheric.global.error.handler;
 
+import com.art.cheric.global.common.ResponseDto;
+import com.art.cheric.global.error.ErrorCode;
+import com.art.cheric.global.error.GlobalErrorCode;
+import com.art.cheric.global.error.exception.AppException;
 import com.art.cheric.global.error.exception.FilterException;
-import com.art.cheric.global.error.exception.WebClientException;
 import java.util.Objects;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -11,13 +14,6 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import com.art.cheric.global.common.ResponseDto;
-import com.art.cheric.global.error.ErrorCode;
-import com.art.cheric.global.error.GlobalErrorCode;
-import com.art.cheric.global.error.exception.AppException;
-
-import lombok.extern.slf4j.Slf4j;
 
 @RestControllerAdvice
 @Slf4j
