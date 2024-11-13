@@ -5,12 +5,13 @@ import lombok.Getter;
 @Getter
 public enum ArtType {
     PAINTING("회화"),
+    ORIENTAL_PAINTING("동양화"),
     OIL_PAINTING("유화"),
     WATER_PAINTING("수채화"),
-    WESTERN_PAINTING("서양화"),
-    ORIENTAL_PAINTING("동양화"),
-    DIGITAL_ART("디지털아트"),
-    POP_ART("팝아트");
+    PRINTMAKING_PAINTING ("판화"),
+    NEW_MEDIA_ART ("뉴미디어"),
+    DRAWING_ART  ("드로잉"),
+    DESIGN_ART ("디자인");
 
     private final String value;
 
