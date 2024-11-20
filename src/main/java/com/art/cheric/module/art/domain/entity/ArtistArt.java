@@ -2,12 +2,14 @@ package com.art.cheric.module.art.domain.entity;
 
 import com.art.cheric.global.common.BaseTime;
 import com.art.cheric.module.user.domain.entity.User;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -26,7 +28,7 @@ public class ArtistArt extends BaseTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "art_id", nullable = false)
     private Art art;
 
