@@ -27,16 +27,16 @@ jobs:
           echo "${{ secrets.PROPERTIES }}" > ./application.yml
         shell: bash
 
-      - name: GOOGLE_APPLICATION_CREDENTIALS_JSON 파일 생성 및 검증
-        uses: jsdaniell/create-json@v1.2.2
-        with:
-          path: ./src/main/resources/google-credentials.json
-          json: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}
+      - name: GOOGLE_APPLICATION_CREDENTIALS_JSON 환경 변수 설정
+        run: |
+          echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}" > ./src/main/resources/google-credentials.json
+        shell: bash
 
       - name: GOOGLE_APPLICATION_CREDENTIALS_JSON 검증
         run: |
-          cat ./src/main/resources/google-credentials.json | jq '.' > /dev/null || (echo "Invalid JSON file" && exit 1)
-          shell: bash
+            cat ./src/main/resources/google-credentials.json | jq '.' > /dev/null || (echo "Invalid JSON file" && exit 1)
+         shell: bash   
+
 
       - name: 빌드 권한 부여
         run: chmod +x gradlew
