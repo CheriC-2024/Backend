@@ -29,9 +29,8 @@ jobs:
 
       - name: S3에서 GOOGLE_APPLICATION_CREDENTIALS_JSON 파일 다운로드
         run: |
-          mkdir -p /home/ubuntu
-          curl -o /home/ubuntu/google-credentials.json "${{ secrets.S3_OBJECT_URL }}"
-          ls -al /home/ubuntu
+          curl -o $GITHUB_WORKSPACE/google-credentials.json "${{ secrets.S3_OBJECT_URL }}"
+          ls -al $GITHUB_WORKSPACE
 
       - name: 빌드 권한 부여
         run: chmod +x gradlew
@@ -55,7 +54,7 @@ jobs:
           key: ${{ secrets.KEY }}
           script: |
             # 환경 변수로 설정
-            export GOOGLE_APPLICATION_CREDENTIALS="/home/ubuntu/google-credentials.json"
+            export GOOGLE_APPLICATION_CREDENTIALS="$GITHUB_WORKSPACE/google-credentials.json"
 
             # 기존 컨테이너 종료
             sudo docker-compose down
