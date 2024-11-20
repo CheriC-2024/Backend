@@ -34,9 +34,8 @@ jobs:
 
       - name: GOOGLE_APPLICATION_CREDENTIALS_JSON 검증
         run: |
-            cat ./src/main/resources/google-credentials.json | jq '.' > /dev/null || (echo "Invalid JSON file" && exit 1)
-         shell: bash   
-
+          cat ./src/main/resources/google-credentials.json | jq '.' > /dev/null || (echo "Invalid JSON file" && exit 1)
+        shell: bash
 
       - name: 빌드 권한 부여
         run: chmod +x gradlew
@@ -59,12 +58,12 @@ jobs:
           username: ubuntu
           key: ${{ secrets.KEY }}
           script: |
-            # Google Cloud Credentials 환경 변수 파일 생성
+            # GOOGLE_APPLICATION_CREDENTIALS 환경 변수 설정
             echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}" > /home/ubuntu/google-credentials.json
 
-            # 환경 변수로 파일 경로 설정
+            # 환경 변수로 설정
             export GOOGLE_APPLICATION_CREDENTIALS="/home/ubuntu/google-credentials.json"
-            
+
             # 컨테이너 배포 및 업데이트
             sudo docker ps -qa | grep -q . && sudo docker rm -f $(docker ps -qa)
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
