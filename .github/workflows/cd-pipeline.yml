@@ -29,8 +29,9 @@ jobs:
 
       - name: S3에서 GOOGLE_APPLICATION_CREDENTIALS_JSON 파일 다운로드
         run: |
-          curl -o $GITHUB_WORKSPACE/google-credentials.json "${{ secrets.S3_OBJECT_URL }}"
-          ls -al $GITHUB_WORKSPACE
+          curl -o google-credentials.json "${{ secrets.S3_OBJECT_URL }}"
+          ls -al
+
 
       - name: 빌드 권한 부여
         run: chmod +x gradlew
@@ -53,16 +54,11 @@ jobs:
           username: ubuntu
           key: ${{ secrets.KEY }}
           script: |
-            # 환경 변수로 설정
-            export GOOGLE_APPLICATION_CREDENTIALS="$GITHUB_WORKSPACE/google-credentials.json"
-
             # 기존 컨테이너 종료
             sudo docker-compose down
 
-            # Docker 이미지 업데이트 및 컨테이너 실행
-            sudo docker ps -qa | grep -q . && sudo docker rm -f $(docker ps -qa)
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
             sudo docker-compose up -d --force-recreate --no-deps
-
-            # 불필요한 이미지 정리
+            sudo docker cp google-credentials.json <container_name>:/app/google-credentials.json
+            sudo docker exec -it <container_name> bash -c "export GOOGLE_APPLICATION_CREDENTIALS='/app/google-credentials.json'"
             sudo docker image prune -f
