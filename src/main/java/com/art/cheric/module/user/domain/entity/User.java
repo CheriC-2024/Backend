@@ -2,14 +2,19 @@ package com.art.cheric.module.user.domain.entity;
 
 import com.art.cheric.global.common.BaseTime;
 import com.art.cheric.global.enums.UserRole;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -62,6 +67,10 @@ public class User extends BaseTime {
     @NotNull
     private int followingAmount;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @Builder.Default
+    private List<UserPart> userParts = new ArrayList<>();
+
     public static User of(@NotNull String email, @NotNull String fcmToken, @NotNull String deviceId) {
         return User
                 .builder()
@@ -83,6 +92,14 @@ public class User extends BaseTime {
         this.backgroundImgUrl = backgroundImgUrl;
         this.haveExperience = haveExperience;
         this.isArtist = isArtist;
+    }
+
+    public void addUserPart(UserPart userPart) {
+        this.userParts.add(userPart);
+    }
+
+    public void removeUserPart(UserPart userPart) {
+        this.userParts.remove(userPart);
     }
 
     public void plusCherryNum(int plusCherryAmount) {
