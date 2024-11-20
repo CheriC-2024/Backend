@@ -34,12 +34,12 @@ public class UserPart extends BaseTime {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    private ArtType userPart;
+    private ArtType userArtType;
 
-    public static UserPart of(@NotNull User user, @NotNull ArtType userPart) {
+    public static UserPart of(@NotNull User user, @NotNull ArtType userArtType) {
         return UserPart.builder()
                 .user(user)
-                .userPart(userPart)
+                .userArtType(userArtType)
                 .build();
     }
 }

@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface UserPartRepository extends JpaRepository<UserPart, String> {
+public interface UserPartRepository extends JpaRepository<UserPart, Long> {
 }

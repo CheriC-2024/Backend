@@ -84,7 +84,7 @@ public interface UserControllerDocs {
                             examples = @ExampleObject(value = "[" +
                                     "{ \"code\": 401, \"message\": \"인증에 실패하였습니다.\" }," +
                                     "{ \"code\": 401, \"message\": \"Token이 유효하지 않습니다.\" }," +
-                                    "{ \"code\": 401, \"message\": \"Refresh Token이 필요합니다.\" }," +
+                                    "{ \"code\": 401, \"message\": \"Refresh Token이 필요합니다.\" }" +
                                     "]"
                             )
                     )
@@ -215,7 +215,7 @@ public interface UserControllerDocs {
                             examples = @ExampleObject(value = "[" +
                                     "{ \"code\": 401, \"message\": \"인증에 실패하였습니다.\" }," +
                                     "{ \"code\": 401, \"message\": \"Token이 유효하지 않습니다.\" }," +
-                                    "{ \"code\": 401, \"message\": \"Access Token이 필요합니다.\" }," +
+                                    "{ \"code\": 401, \"message\": \"Access Token이 필요합니다.\" }" +
                                     "]"
                             )
                     )
