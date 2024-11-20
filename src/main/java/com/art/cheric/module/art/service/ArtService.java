@@ -138,7 +138,7 @@ public class ArtService {
                 ),
                 art.getHeartCount(),
                 art.getDescription(),
-                ownArt != null ? OwnArtResDto.from(
+                ownArt != null && ownArt.isPriceOpen() ? OwnArtResDto.from(
                         ownArt.getPrice()
                 ) : null,
                 artistArt != null ? artistArt.getId() : null
