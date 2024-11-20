@@ -34,6 +34,10 @@ jobs:
 
       - name: GOOGLE_APPLICATION_CREDENTIALS_JSON 검증
         run: |
+          # JSON 파일 출력 (디버깅용)
+          echo "Verifying JSON file:"
+          cat ./src/main/resources/google-credentials.json
+          
           cat ./src/main/resources/google-credentials.json | jq '.' > /dev/null || (echo "Invalid JSON file" && exit 1)
         shell: bash
 
