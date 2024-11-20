@@ -1,12 +1,18 @@
 package com.art.cheric.module.art.domain.entity;
 
 import com.art.cheric.global.common.BaseTime;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
 import java.time.Year;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,7 +42,8 @@ public class Art extends BaseTime {
     @NotNull
     private Year madeAt;
 
-    private int cherryPrice;
+    @Column(nullable = true)
+    private Integer cherryPrice;
 
     @NotNull
     private int horizontalSize;
@@ -53,8 +60,16 @@ public class Art extends BaseTime {
     @NotNull
     private boolean isCollectorsArt;
 
+    @OneToMany(mappedBy = "art", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @Builder.Default
+    private List<ArtPart> artParts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "art", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @Builder.Default
+    private List<ArtPlusImage> artPlusImages = new ArrayList<>();
+
     public static Art of(@NotNull String name, String description, String series, String material, @NotNull Year madeAt,
-                         int cherryPrice, @NotNull int horizontalSize, @NotNull int verticalSize,
+                         Integer cherryPrice, @NotNull int horizontalSize, @NotNull int verticalSize,
                          @NotNull String imgUrl, @NotNull boolean isCollectorsArt) {
         return Art.builder()
                 .name(name)
@@ -69,6 +84,22 @@ public class Art extends BaseTime {
                 .imgUrl(imgUrl)
                 .isCollectorsArt(isCollectorsArt)
                 .build();
+    }
+
+    public void addArtPart(ArtPart artPart) {
+        this.artParts.add(artPart);
+    }
+
+    public void removeArtPart(ArtPart artPart) {
+        this.artParts.remove(artPart);
+    }
+
+    public void addArtPlusImages(ArtPlusImage imageUrl) {
+        this.artPlusImages.add(imageUrl);
+    }
+
+    public void removeArtPlusImages(ArtPlusImage imageUrl) {
+        this.artPlusImages.remove(imageUrl);
     }
 
     public void plusHeartCount() {
