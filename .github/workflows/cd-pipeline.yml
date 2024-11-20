@@ -59,6 +59,6 @@ jobs:
             TAG=$(date +'%Y%m%d%H%M%S') 
             docker ps -aq | xargs -r docker rm -f
             docker image prune -af
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
-            docker-compose up -d --force-recreate --no-deps
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:${TAG}
+            docker-compose up -d --force-recreate --no-deps --pull always
             sudo docker image prune -f
