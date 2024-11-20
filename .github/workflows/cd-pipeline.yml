@@ -62,7 +62,8 @@ jobs:
             export GOOGLE_APPLICATION_CREDENTIALS="/home/ubuntu/google-credentials.json"
             
             # Docker Compose 배포
-            docker-compose down --remove-orphans
+            docker ps -aq | xargs -r docker rm -f
+            docker image prune -af
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
             docker-compose up -d --force-recreate --no-deps
             sudo docker image prune -f
