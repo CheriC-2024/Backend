@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 public enum ValidateFileType {
     IMAGE(List.of("jpg", "jpeg", "png")),
-    AUDIO(List.of("mp3", "m4a")),
+    AUDIO(List.of("mp3")),
     DOCUMENT(List.of("pdf", "doc", "docx", "xls", "xlsx"));
 
     private final List<String> extensions;
