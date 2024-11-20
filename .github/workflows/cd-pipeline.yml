@@ -2,7 +2,7 @@ name: Java CD with Gradle
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "fix/#33/deploy-unupdate-error" ]
 
 permissions:
   contents: read
