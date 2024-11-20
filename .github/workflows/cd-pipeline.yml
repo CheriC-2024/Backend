@@ -56,10 +56,13 @@ jobs:
             # 환경 변수로 설정
             export GOOGLE_APPLICATION_CREDENTIALS="/home/ubuntu/google-credentials.json"
 
-            # 컨테이너 배포 및 업데이트
+            # 기존 컨테이너 종료
+            sudo docker-compose down
+
+            # Docker 이미지 업데이트 및 컨테이너 실행
             sudo docker ps -qa | grep -q . && sudo docker rm -f $(docker ps -qa)
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
-            docker-compose up -d --force-recreate --no-deps
+            sudo docker-compose up -d --force-recreate --no-deps
+
+            # 불필요한 이미지 정리
             sudo docker image prune -f
-            sudo docker-compose down
-            sudo docker-compose up -d
