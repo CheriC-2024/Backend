@@ -5,6 +5,7 @@ import com.art.cheric.global.error.ErrorCode;
 import com.art.cheric.global.error.GlobalErrorCode;
 import com.art.cheric.global.error.exception.AppException;
 import com.art.cheric.global.error.exception.FilterException;
+import com.art.cheric.global.error.exception.WebClientException;
 import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,18 @@ public class GlobalExceptionHandler {
 	// FilterException
 	@ExceptionHandler(FilterException.class)
 	public ResponseEntity<ResponseDto> exceptionHandler(FilterException e) {
+		int code = e.getErrorCode().getHttpStatus().value();
+		String message = e.getMessage();
+
+		if (code == 500)
+			e.printStackTrace();
+
+		return ResponseEntity.status(code).body(ResponseDto.of(code, message));
+	}
+
+	// WebClientException
+	@ExceptionHandler(WebClientException.class)
+	public ResponseEntity<ResponseDto> exceptionHandler(WebClientException e) {
 		int code = e.getErrorCode().getHttpStatus().value();
 		String message = e.getMessage();
 
