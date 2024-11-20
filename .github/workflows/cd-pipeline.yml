@@ -27,11 +27,12 @@ jobs:
           echo "${{ secrets.PROPERTIES }}" > ./application.yml
         shell: bash
 
-      - name: GOOGLE_APPLICATION_CREDENTIALS_JSON 파일 경로 설정
+      - name: GOOGLE_APPLICATION_CREDENTIALS_JSON 파일 생성 및 검증
         run: |
           cd ./src/main/resources
-          touch ./google-credentials.json
           echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}" > ./google-credentials.json
+          chmod 600 ./google-credentials.json 
+          cat ./google-credentials.json | jq '.' > /dev/null || (echo "Invalid JSON file" && exit 1)
         shell: bash
 
       - name: 빌드 권한 부여
@@ -60,8 +61,9 @@ jobs:
 
             # 환경 변수로 파일 경로 설정
             export GOOGLE_APPLICATION_CREDENTIALS="/home/ubuntu/google-credentials.json"
-
-            sudo docker-compose down --remove-orphans
+            
+            # 컨테이너 배포 및 업데이트
+            sudo docker ps -qa | grep -q . && sudo docker rm -f $(docker ps -qa)
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
             docker-compose up -d --force-recreate --no-deps
             sudo docker image prune -f
