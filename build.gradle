@@ -38,6 +38,10 @@ dependencies {
 	implementation 'com.google.api-client:google-api-client:2.4.0'
 	implementation 'com.google.http-client:google-http-client-jackson2:1.41.5'
 
+	// cloud-vision api
+	implementation platform('com.google.cloud:libraries-bom:26.40.0')
+	implementation 'com.google.cloud:google-cloud-vision'
+
 	// jwt
 	implementation 'io.jsonwebtoken:jjwt-api:0.12.2'
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.2'
