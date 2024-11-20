@@ -55,8 +55,8 @@ jobs:
           username: ubuntu
           key: ${{ secrets.KEY }}
           script: |
-            docker ps -aq | xargs -r docker rm -f
-            docker image prune -af
+            sudo docker ps -aq | xargs -r sudo docker rm -f
+            sudo docker image prune -af
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
             docker-compose up -d --force-recreate --no-deps
             sudo docker image prune -f
