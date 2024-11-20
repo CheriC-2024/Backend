@@ -1,7 +1,12 @@
 package com.art.cheric.global.error.handler;
 
+import com.art.cheric.global.common.ResponseDto;
+import com.art.cheric.global.error.ErrorCode;
+import com.art.cheric.global.error.GlobalErrorCode;
+import com.art.cheric.global.error.exception.AppException;
+import com.art.cheric.global.error.exception.FilterException;
 import java.util.Objects;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -9,13 +14,6 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import com.art.cheric.global.common.ResponseDto;
-import com.art.cheric.global.error.ErrorCode;
-import com.art.cheric.global.error.GlobalErrorCode;
-import com.art.cheric.global.error.exception.AppException;
-
-import lombok.extern.slf4j.Slf4j;
 
 @RestControllerAdvice
 @Slf4j
@@ -28,6 +26,18 @@ public class GlobalExceptionHandler {
 		String message = e.getMessage();
 
 		// 내부 서버 에러일 경우, stack trace 출력
+		if (code == 500)
+			e.printStackTrace();
+
+		return ResponseEntity.status(code).body(ResponseDto.of(code, message));
+	}
+
+	// FilterException
+	@ExceptionHandler(FilterException.class)
+	public ResponseEntity<ResponseDto> exceptionHandler(FilterException e) {
+		int code = e.getErrorCode().getHttpStatus().value();
+		String message = e.getMessage();
+
 		if (code == 500)
 			e.printStackTrace();
 
