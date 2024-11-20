@@ -46,9 +46,6 @@ public class ExhibitionAiService {
         // 요청받은 Art ID들의 유효성 검사 (중복 또는 초과 여부 확인)
         checkDuplicationAndMaxSize(artCloudReq.artIds());
 
-        // google credentials 인증
-        cloudVisionService.authenticateWithGoogleCloud();
-
         // Google Cloud Vision API 클라이언트 생성 및 사용
         try (ImageAnnotatorClient vision = ImageAnnotatorClient.create()) {
             for (Long artId : artCloudReq.artIds()) {
