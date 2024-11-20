@@ -31,6 +31,13 @@ jobs:
           echo "${{ secrets.PROPERTIES }}" > ./application.yml
         shell: bash
 
+      - name: GOOGLE_APPLICATION_CREDENTIALS_JSON 파일 경로 설정
+        run: |
+          cd ./src/main/resources
+          touch ./google-credentials.json
+          echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}" > ./google-credentials.json
+        shell: bash
+
       - name: Start Redis
         uses: supercharge/redis-github-action@1.1.0
         with:
