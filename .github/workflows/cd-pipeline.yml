@@ -28,9 +28,11 @@ jobs:
         shell: bash
 
       - name: GOOGLE_APPLICATION_CREDENTIALS_JSON 파일 생성 및 검증
+        with:
+          path: ./src/main/resources/google-credentials.json
+          json: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}
         run: |
           cd ./src/main/resources
-          echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}" > ./google-credentials.json
           chmod 600 ./google-credentials.json 
           cat ./google-credentials.json | jq '.' > /dev/null || (echo "Invalid JSON file" && exit 1)
         shell: bash
