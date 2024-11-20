@@ -31,6 +31,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
+	// Web Client
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
 	// google api client
 	implementation 'com.google.api-client:google-api-client:2.4.0'
 	implementation 'com.google.http-client:google-http-client-jackson2:1.41.5'
