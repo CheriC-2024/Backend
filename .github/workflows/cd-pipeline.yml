@@ -29,6 +29,7 @@ jobs:
 
       - name: S3에서 GOOGLE_APPLICATION_CREDENTIALS_JSON 파일 다운로드
         run: |
+          mkdir -p /home/ubuntu
           curl -o /home/ubuntu/google-credentials.json "${{ secrets.S3_OBJECT_URL }}"
           ls -al /home/ubuntu
 
