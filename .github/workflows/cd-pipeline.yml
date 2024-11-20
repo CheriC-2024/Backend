@@ -44,6 +44,7 @@ jobs:
 
       - name: 웹 이미지 빌드 및 도커허브에 push
         run: |
+          TAG=$(date +'%Y%m%d%H%M%S') 
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }} . 
           docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
@@ -55,13 +56,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.KEY }}
           script: |
-            # Google Cloud Credentials 환경 변수 파일 생성
-            echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}" > /home/ubuntu/google-credentials.json
-
-            # 환경 변수로 파일 경로 설정
-            export GOOGLE_APPLICATION_CREDENTIALS="/home/ubuntu/google-credentials.json"
-            
-            # Docker Compose 배포
+            TAG=$(date +'%Y%m%d%H%M%S') 
             docker ps -aq | xargs -r docker rm -f
             docker image prune -af
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
