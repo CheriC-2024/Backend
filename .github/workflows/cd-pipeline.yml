@@ -27,16 +27,9 @@ jobs:
           echo "${{ secrets.PROPERTIES }}" > ./application.yml
         shell: bash
 
-      - name: AWS CLI 설치
+      - name: S3에서 GOOGLE_APPLICATION_CREDENTIALS_JSON 파일 다운로드
         run: |
-          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-          unzip awscliv2.zip
-          sudo ./aws/install
-        shell: bash
-
-      - name: AWS S3에서 GOOGLE_APPLICATION_CREDENTIALS_JSON 파일 다운로드
-        run: |
-          aws s3 cp s3://${{ secrets.S3_BUCKET_NAME }}/google-credentials.json ./src/main/resources/google-credentials.json
+          curl -o ./src/main/resources/google-credentials.json "${{ secrets.S3_OBJECT_URL }}"
         shell: bash
 
       - name: GOOGLE_APPLICATION_CREDENTIALS_JSON 검증
