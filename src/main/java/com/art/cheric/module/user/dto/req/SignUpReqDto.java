@@ -36,7 +36,7 @@ public record SignUpReqDto(
         @NotNull(message = "사용자 작가 여부는 필수 값입니다.")
         boolean isArtist,
 
-        @Schema(description = "사용자 선호 분야는", example = "[\"PAINTING\", \"OIL_PAINTING\"]")
+        @Schema(description = "사용자 선호 분야", example = "[\"PAINTING\", \"OIL_PAINTING\"]")
         @NotEmpty(message = "사용자 선호 분야는 필수 값입니다.")
         @Size(max = 2, message = "사용자 선호 분야는 2개까지 입력 가능합니다.")
         List<ArtType> userPartRequests
