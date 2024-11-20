@@ -55,6 +55,13 @@ jobs:
           username: ubuntu
           key: ${{ secrets.KEY }}
           script: |
+            # Google Cloud Credentials 환경 변수 파일 생성
+            echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}" > /home/ubuntu/google-credentials.json
+
+            # 환경 변수로 파일 경로 설정
+            export GOOGLE_APPLICATION_CREDENTIALS="/home/ubuntu/google-credentials.json"
+            
+            # Docker Compose 배포
             docker-compose down --remove-orphans
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
             docker-compose up -d --force-recreate --no-deps
