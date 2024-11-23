@@ -45,7 +45,7 @@ public class ArtistPrize extends BaseTime {
                 .artist(artist)
                 .organization(organization)
                 .level(level)
-                .level(level)
+                .receivedAt(receivedAt)
                 .build();
     }
 }
