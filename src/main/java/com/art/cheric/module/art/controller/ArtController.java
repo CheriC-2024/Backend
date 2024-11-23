@@ -27,19 +27,22 @@ public class ArtController implements ArtControllerDocs {
     private final ArtService artService;
 
     @PostMapping("/own")
-    public ResponseEntity<ResponseDto> postOwnArt(@RequestAttribute("user") User user, @RequestBody @Valid OwnArtReqDto ownArtReq) {
+    public ResponseEntity<ResponseDto> postOwnArt(@RequestAttribute("user") User user,
+                                                  @RequestBody @Valid OwnArtReqDto ownArtReq) {
         artService.postOwnArt(user, ownArtReq);
-        return ResponseEntity.status(201).body(ResponseDto.of( 201));
+        return ResponseEntity.status(201).body(ResponseDto.of(201));
     }
 
     @PostMapping("/artist")
-    public ResponseEntity<ResponseDto> postArtistArt(@RequestAttribute("user") User user, @RequestBody @Valid  ArtReqDto artReq) {
+    public ResponseEntity<ResponseDto> postArtistArt(@RequestAttribute("user") User user,
+                                                     @RequestBody @Valid ArtReqDto artReq) {
         artService.postArtistArt(user, artReq);
-        return ResponseEntity.status(201).body(ResponseDto.of( 201));
+        return ResponseEntity.status(201).body(ResponseDto.of(201));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseDto> getArt(@RequestAttribute("user") User user, @PathVariable("id") Long artId) {
+    public ResponseEntity<ResponseDto> getArt(@RequestAttribute("user") User user,
+                                              @PathVariable("id") Long artId) {
         ArtResDto resDto = artService.getArt(user, artId);
         return ResponseEntity.status(200).body(DataResponseDto.of(resDto, 200));
     }
