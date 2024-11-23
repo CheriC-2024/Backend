@@ -1,8 +1,6 @@
 package com.art.cheric.module.art.dto.res;
 
 import com.art.cheric.global.enums.ArtType;
-import com.art.cheric.module.art.domain.entity.Art;
-import com.art.cheric.module.art.domain.entity.ArtPart;
 import com.art.cheric.module.user.dto.res.UserResDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.Year;
@@ -61,15 +59,11 @@ public class ArtResDto {
     @Schema(description = "소장 작품 관련 추가 정보 DTO", example = "작가 작품인 경우 나오지 않음")
     private final OwnArtResDto ownArtRes;
 
-    @Schema(description = "작가 ID", example = "소장 작품인 경우 나오지 않음")
-    private final Long artistId;
-
-    // TODO 리스트 추가하기
 
     public static ArtResDto of(boolean isCollectorsArt, String imgUrl, Integer cherryPrice, String name,
                                String artistName, String series, int horizontalSize,
                                int verticalSize, String material, Year madeAt, List<ArtType> artTypes,
-                               UserResDto userRes, int heartCount, String description, OwnArtResDto ownArtRes, Long artistId) {
+                               UserResDto userRes, int heartCount, String description, OwnArtResDto ownArtRes) {
         return ArtResDto.builder()
                 .isCollectorsArt(isCollectorsArt)
                 .imgUrl(imgUrl)
@@ -86,7 +80,6 @@ public class ArtResDto {
                 .heartCount(heartCount)
                 .description(description)
                 .ownArtRes(ownArtRes)
-                .artistId(artistId)
                 .build();
     }
 }
