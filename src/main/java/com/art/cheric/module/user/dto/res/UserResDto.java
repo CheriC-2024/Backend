@@ -12,6 +12,10 @@ import lombok.Getter;
 @Getter
 @Builder(access = AccessLevel.PRIVATE)
 public class UserResDto {
+
+    @Schema(description = "사용자 id", example = "1")
+    private final Long id;
+
     @Schema(description = "사용자 이름", example = "이예림")
     private final String name;
 
@@ -21,11 +25,16 @@ public class UserResDto {
     @Schema(description = "사용자 선호 분야", example = "[\"PAINTING\", \"OIL_PAINTING\"]")
     private final List<ArtType> artTypes;
 
-    public static UserResDto of(String name, String description, List<ArtType> artTypes) {
+    @Schema(description = "사용자 프로필 이미지", example = "https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-profileimage.png")
+    private final String profileImgUrl;
+
+    public static UserResDto of(Long id, String name, String description, List<ArtType> artTypes, String profileImgUrl) {
         return UserResDto.builder()
+                .id(id)
                 .name(name)
                 .description(description)
                 .artTypes(artTypes)
+                .profileImgUrl(profileImgUrl)
                 .build();
     }
 }
