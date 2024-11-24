@@ -27,13 +27,6 @@ jobs:
           echo "${{ secrets.PROPERTIES }}" > ./application.yml
         shell: bash
 
-      - name: GOOGLE_APPLICATION_CREDENTIALS_JSON 파일 경로 설정
-        run: |
-          cd ./src/main/resources
-          touch ./google-credentials.json
-          echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}" > ./google-credentials.json
-        shell: bash
-
       - name: 빌드 권한 부여
         run: chmod +x gradlew
 
@@ -55,7 +48,10 @@ jobs:
           username: ubuntu
           key: ${{ secrets.KEY }}
           script: |
-            sudo docker ps -qa | grep -q . && sudo docker rm -f $(docker ps -qa)
+            sudo docker-compose down
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
-            docker-compose up -d
+            sudo docker-compose up -d --force-recreate --no-deps
+            sudo docker exec -it backend bash -c "export GOOGLE_APPLICATION_CREDENTIALS='/home/ubuntu/google-credentials.json'"
+            sudo docker exec backend ls -al /app/google-credentials.json
+            sudo docker exec backend cat /app/google-credentials.json
             sudo docker image prune -f

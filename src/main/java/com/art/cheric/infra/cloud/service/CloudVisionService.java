@@ -35,24 +35,6 @@ public class CloudVisionService {
     public final int EXTRACT_COLOR_MAX_SIZE = 4;
     public final int EXTRACT_LABEL_MAX_SIZE = 5;
 
-    public void authenticateWithGoogleCloud() {
-        try {
-            // 클래스패스에서 JSON 파일 읽기
-            InputStream credentialsStream = new ClassPathResource(GOOGLE_CREDENTIAL_FILE).getInputStream();
-            GoogleCredentials credentials = GoogleCredentials.fromStream(credentialsStream);
-
-            // Vision API 설정에 자격 증명 추가
-            ImageAnnotatorSettings.newBuilder()
-                    .setCredentialsProvider(() -> credentials)
-                    .build();
-
-            log.info("[Cloud Vision] Authentication successful!");
-        } catch (IOException e) {
-            log.error("[Cloud Vision] google credential error : {}", e.getMessage(), e);
-            throw new AppException(GlobalErrorCode.INTERNAL_SERVER_ERROR);
-        }
-    }
-
     // Type에 따라 속성 추출
     public List<String> extractProperties(BatchAnnotateImagesResponse response, Type fetureType) {
         List<String> properties = new ArrayList<>();
