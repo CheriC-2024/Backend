@@ -230,5 +230,25 @@ public interface UserControllerDocs {
     })
     ResponseEntity<ResponseDto> deleteGoogleLogout(User user);
 
+
+    @Operation(summary = "사용자 기본 정보 조회 API", description = "사용자 기본 정보를 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Ok",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ResponseDto.class),
+                            examples =
+                            @ExampleObject(value = "{ \"code\": 200, \"message\": \"Ok\" }")
+                    )
+            ),
+            @ApiResponse(responseCode = "404", description = "해당 자원을 찾을 수 없습니다.",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ResponseDto.class),
+                            examples = @ExampleObject(value = "{ \"code\": 403, \"message\": \"해당하는 사용자를 찾을 수 없습니다.\" }")
+                    )
+            )
+    })
+    ResponseEntity<ResponseDto> getUserDetailInfo(User user, Long userId);
 }
 
