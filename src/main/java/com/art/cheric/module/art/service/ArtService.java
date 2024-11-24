@@ -24,8 +24,8 @@ import com.art.cheric.module.art.dto.res.OwnArtResDto;
 import com.art.cheric.module.art.error.ArtErrorCode;
 import com.art.cheric.module.artist.service.ArtistService;
 import com.art.cheric.module.user.domain.entity.User;
-import com.art.cheric.module.user.domain.entity.UserPart;
 import com.art.cheric.module.user.dto.res.UserResDto;
+import com.art.cheric.module.user.service.UserService;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -44,8 +44,9 @@ public class ArtService {
     private final ArtPlusImageRepository artPlusImageRepository;
     private final ArtFileRepository artFileRepository;
     private final OwnArtRepository ownArtRepository;
-    private final ArtistService artistService;
     private final ArtHeartRepository artHeartRepository;
+    private final ArtistService artistService;
+    private final UserService userService;
 
     // 소장 작품 생성
     @Transactional
@@ -125,11 +126,11 @@ public class ArtService {
             OwnArt ownArt = findOwnArtByArtId(art.getId());
             artistName = ownArt.getArtistName();
             artPrice = ownArt.getPrice();
-            userResDto = createUserResDto(ownArt.getUser());
+            userResDto = userService.createUserResDto(ownArt.getUser());
         } else {
             ArtistArt artistArt = findArtistArtByArtId(art.getId());
             artistName = artistArt.getUser().getName();
-            userResDto = createUserResDto(artistArt.getUser());
+            userResDto = userService.createUserResDto(artistArt.getUser());
         }
 
         // 값 제공
@@ -152,17 +153,6 @@ public class ArtService {
         );
     }
 
-    public UserResDto createUserResDto(User user) {
-        return UserResDto.of(
-                user.getId(),
-                user.getName(),
-                user.getInfo(),
-                user.getUserParts().stream()
-                        .map(UserPart::getUserArtType)
-                        .collect(Collectors.toList()),
-                user.getProfileImgUrl()
-        );
-    }
 
     @Transactional
     public int postHeart(User user, Long artId) {
@@ -229,7 +219,7 @@ public class ArtService {
                 .orElseThrow(() -> new AppException(ArtErrorCode.YOUR_OWN_ART_NOT_FOUND));
 
         // 작품이 유효한 상태인지 확인
-        if(ownArt.isNotValidState()){
+        if (ownArt.isNotValidState()) {
             throw new AppException(ArtErrorCode.OWN_ART_INVALID);
         }
 
@@ -268,7 +258,7 @@ public class ArtService {
     // 소장 작품 유효성 확인
     private void checkOwnArtValid(Long artId) {
         OwnArt ownArt = findOwnArtByArtId(artId);
-        if(ownArt.isNotValidState()){
+        if (ownArt.isNotValidState()) {
             throw new AppException(ArtErrorCode.OWN_ART_INVALID);
         }
     }
@@ -283,7 +273,7 @@ public class ArtService {
     // 작가 작품 유효성 확인
     public void checkArtistArtValid(Long artId) {
         ArtistArt artistArt = findArtistArtByArtId(artId);
-        if(artistArt.isUsable()){
+        if (artistArt.isUsable()) {
             throw new AppException(ArtErrorCode.ARTIST_ART_INVALID);
         }
     }
