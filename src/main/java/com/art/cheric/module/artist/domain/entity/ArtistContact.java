@@ -1,10 +1,17 @@
 package com.art.cheric.module.artist.domain.entity;
 
 import jakarta.persistence.Embeddable;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Embeddable
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
 public class ArtistContact {
 
     private String instagram;
@@ -14,6 +21,15 @@ public class ArtistContact {
     private String naverBlog;
 
     private String email;
+
+    public static ArtistContact of(String instagram, String twitter, String naverBlog, String email) {
+        return ArtistContact.builder()
+                .instagram(instagram)
+                .twitter(twitter)
+                .naverBlog(naverBlog)
+                .email(email)
+                .build();
+    }
 
     public void updateInstagram(String instagram) {
         this.instagram = instagram;

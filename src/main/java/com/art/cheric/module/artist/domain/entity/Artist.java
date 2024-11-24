@@ -44,9 +44,10 @@ public class Artist extends BaseTime {
     @Embedded
     ArtistContact artistContact; // 소셜 정보를 위한 VO
 
-    public static Artist of(@NotNull User user) {
+    public static Artist of(@NotNull User user, ArtistContact artistContact) {
         return Artist.builder()
                 .user(user)
+                .artistContact(artistContact)
                 .state(ValidateState.VALID_YET)
                 .build();
     }

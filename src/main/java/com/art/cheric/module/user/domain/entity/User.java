@@ -52,14 +52,20 @@ public class User extends BaseTime {
 
     private boolean haveExperience;
 
-    private boolean isArtist;
+    private boolean isArtist; // 작가 등록 여부와 관계 없이 회원가입 시 받는 데이터
+
+    @NotNull
+    private boolean isValidateArtist; // 실제 서비스 내에서 작가 등록 및 인증에 따라 변경되는 데이터
 
     @NotNull
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
     @NotNull
-    private int cherryNum;
+    private int myCherryNum;
+
+    @NotNull
+    private Integer soldCherryNum; 
 
     @NotNull
     private int followerAmount;
@@ -77,8 +83,10 @@ public class User extends BaseTime {
                 .email(email)
                 .fcmToken(fcmToken)
                 .deviceId(deviceId)
+                .isValidateArtist(false)
                 .role(UserRole.COLLECTOR)
-                .cherryNum(0)
+                .myCherryNum(0)
+                .soldCherryNum(null)
                 .followerAmount(0)
                 .followingAmount(0)
                 .build();
@@ -94,6 +102,18 @@ public class User extends BaseTime {
         this.isArtist = isArtist;
     }
 
+    public void updateUserDetailAsArtist(@NotNull String name, @NotNull String info, @NotNull String profileImgUrl,
+                                 @NotNull List<UserPart> userArtType) {
+        this.name = name;
+        this.info = info;
+        this.profileImgUrl = profileImgUrl;
+        this.userParts = userArtType;
+    }
+
+    public void updateIsValidateArtist(){
+        this.isValidateArtist = true;
+    }
+
     public void addUserPart(UserPart userPart) {
         this.userParts.add(userPart);
     }
@@ -102,12 +122,20 @@ public class User extends BaseTime {
         this.userParts.remove(userPart);
     }
 
-    public void plusCherryNum(int plusCherryAmount) {
-        this.cherryNum += plusCherryAmount;
+    public void plusMyCherryNum(int plusMyCherryAmount) {
+        this.myCherryNum += plusMyCherryAmount;
     }
 
-    public void minusCherryNum(int minusCheeryAmount) {
-        this.cherryNum -= minusCheeryAmount;
+    public void minusMyCherryNum(int minusMyCheeryAmount) {
+        this.myCherryNum -= minusMyCheeryAmount;
+    }
+
+    public void plusSoldCherryNum(int plusSoldCherryAmount) {
+        this.soldCherryNum += plusSoldCherryAmount;
+    }
+
+    public void minusSoldCherryNum(int minusSoldCheeryAmount) {
+        this.soldCherryNum -= minusSoldCheeryAmount;
     }
 
     public void plusFollowing() {
