@@ -38,6 +38,7 @@ public class ArtistService {
     // 작가 등록
     @Transactional
     public Long postArtist(User user, ArtistReqDto artistReq) {
+        // 작가 기본 정보
         ArtistBasicReqDto artistBasicReq = artistReq.artistBasicReq();
 
         // 작가 여부 검사
@@ -76,8 +77,7 @@ public class ArtistService {
         return user.getId();
     }
 
-
-    public void checkThisUserIsNotArtist(Long userId) {
+    private void checkThisUserIsNotArtist(Long userId) {
         if (artistRepository.findByUserId(userId).isPresent()) {
             throw new AppException(ArtistErrorCode.ARTIST_ALREADY_EXIST);
         }
@@ -95,7 +95,7 @@ public class ArtistService {
         Artist artist = findArtistByUserId(userId);
 
         // 작가 상태 검증
-        checkArtistStateValid(artist);
+        checkArtistStateValid(artist.getState());
 
         // 작가 연락망
         ArtistContact artistContact = artist.getArtistContact();
@@ -113,11 +113,17 @@ public class ArtistService {
                 artistPrizeService.getArtistPrizes(artistId),
                 artistResidenceService.getArtistResidences(artistId)
         );
-
     }
 
-    private static void checkArtistStateValid(Artist artist) {
-        if (artist.getState() != ValidateState.VALID) {
+    public void checkThisUserIsValidArtist(Long userId) {
+        Artist artist = artistRepository.findByUserId(userId).orElseThrow(
+                () ->  new AppException(ArtistErrorCode.ARTIST_NOT_FOUND));
+
+        checkArtistStateValid(artist.getState());
+    }
+
+    private void checkArtistStateValid(ValidateState state) {
+        if (state != ValidateState.VALID) {
             throw new AppException(ArtistErrorCode.ARTIST_NON_VALID);
         }
     }
