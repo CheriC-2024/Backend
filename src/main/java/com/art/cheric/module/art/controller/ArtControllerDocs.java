@@ -1,7 +1,6 @@
 package com.art.cheric.module.art.controller;
 
 import com.art.cheric.global.common.ResponseDto;
-import com.art.cheric.module.art.dto.req.ArtIdListReqDto;
 import com.art.cheric.module.art.dto.req.ArtReqDto;
 import com.art.cheric.module.art.dto.req.OwnArtReqDto;
 import com.art.cheric.module.user.domain.entity.User;
@@ -93,9 +92,9 @@ public interface ArtControllerDocs {
                             mediaType = "application/json",
                             schema = @Schema(implementation = ResponseDto.class),
                             examples =
-                            @ExampleObject(value =  "[" +
-                                    "{ \"code\": 403, \"message\": \"해당 작가의 작품은 이제 사용할 수 없습니다.\" },"+
-                                    "{ \"code\": 403, \"message\": \"해당 소장 작품은 현재 인증이 되지 않았습니다.\" },"+
+                            @ExampleObject(value = "[" +
+                                    "{ \"code\": 403, \"message\": \"해당 작가의 작품은 이제 사용할 수 없습니다.\" }," +
+                                    "{ \"code\": 403, \"message\": \"해당 소장 작품은 현재 인증이 되지 않았습니다.\" }," +
                                     "]"
                             )
                     )
@@ -106,9 +105,9 @@ public interface ArtControllerDocs {
                             schema = @Schema(implementation = ResponseDto.class),
                             examples =
                             @ExampleObject(value = "[" +
-                                    "{ \"code\": 404, \"message\": \"해당 작품을 찾을 수 없습니다.\" },"+
-                                    "{ \"code\": 404, \"message\": \"작가 작품을 찾을 수 없습니다.\" },"+
-                                    "{ \"code\": 404, \"message\": \"소장 작품을 찾을 수 없습니다.\" }"+
+                                    "{ \"code\": 404, \"message\": \"해당 작품을 찾을 수 없습니다.\" }," +
+                                    "{ \"code\": 404, \"message\": \"작가 작품을 찾을 수 없습니다.\" }," +
+                                    "{ \"code\": 404, \"message\": \"소장 작품을 찾을 수 없습니다.\" }" +
                                     "]"
                             )
                     )
@@ -139,9 +138,9 @@ public interface ArtControllerDocs {
                             mediaType = "application/json",
                             schema = @Schema(implementation = ResponseDto.class),
                             examples =
-                            @ExampleObject(value =  "[" +
-                                    "{ \"code\": 403, \"message\": \"해당 작가의 작품은 이제 사용할 수 없습니다.\" },"+
-                                    "{ \"code\": 403, \"message\": \"해당 소장 작품은 현재 인증이 되지 않았습니다.\" },"+
+                            @ExampleObject(value = "[" +
+                                    "{ \"code\": 403, \"message\": \"해당 작가의 작품은 이제 사용할 수 없습니다.\" }," +
+                                    "{ \"code\": 403, \"message\": \"해당 소장 작품은 현재 인증이 되지 않았습니다.\" }," +
                                     "]"
                             )
                     )
@@ -152,9 +151,9 @@ public interface ArtControllerDocs {
                             schema = @Schema(implementation = ResponseDto.class),
                             examples =
                             @ExampleObject(value = "[" +
-                                    "{ \"code\": 404, \"message\": \"해당 작품을 찾을 수 없습니다.\" },"+
-                                    "{ \"code\": 404, \"message\": \"작가 작품을 찾을 수 없습니다.\" },"+
-                                    "{ \"code\": 404, \"message\": \"소장 작품을 찾을 수 없습니다.\" },"+
+                                    "{ \"code\": 404, \"message\": \"해당 작품을 찾을 수 없습니다.\" }," +
+                                    "{ \"code\": 404, \"message\": \"작가 작품을 찾을 수 없습니다.\" }," +
+                                    "{ \"code\": 404, \"message\": \"소장 작품을 찾을 수 없습니다.\" }," +
                                     "{ \"code\": 404, \"message\": \"해당 작품에 하트 표시를 한 적이 없어 취소할 수 없습니다.\" }" +
                                     "]"
                             )
@@ -162,7 +161,6 @@ public interface ArtControllerDocs {
             )
     })
     ResponseEntity<ResponseDto> deleteHeart(User user, Long artId);
-
 
 
     @Operation(summary = "소장 작품 소개 가져오기 API", description = "소장 작품의 정보를 가져옵니다.")
@@ -197,8 +195,8 @@ public interface ArtControllerDocs {
                             schema = @Schema(implementation = ResponseDto.class),
                             examples =
                             @ExampleObject(value = "[" +
-                                    "{ \"code\": 404, \"message\": \"해당 작품을 찾을 수 없습니다.\" },"+
-                                    "{ \"code\": 404, \"message\": \"본인 소장 작품을 찾을 수 없습니다.\" }"+
+                                    "{ \"code\": 404, \"message\": \"해당 작품을 찾을 수 없습니다.\" }," +
+                                    "{ \"code\": 404, \"message\": \"본인 소장 작품을 찾을 수 없습니다.\" }" +
                                     "]"
                             )
                     )
