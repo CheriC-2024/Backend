@@ -1,19 +1,14 @@
 package com.art.cheric.module.user.service;
 
-import static com.art.cheric.global.error.GlobalErrorCode.EXPIRED_JWT;
-import static com.art.cheric.global.error.GlobalErrorCode.INVALID_TOKEN;
-import static com.art.cheric.global.error.GlobalErrorCode.REFRESH_TOKEN_REQUIRED;
-import static com.art.cheric.module.user.error.UserErrorCode.NAME_DUPLICATED;
-import static com.art.cheric.module.user.error.UserErrorCode.NAME_REQUIRED;
-import static com.art.cheric.module.user.error.UserErrorCode.NAME_SIZE_ERROR;
-
 import com.art.cheric.global.enums.ArtType;
 import com.art.cheric.global.enums.JwtVo;
 import com.art.cheric.global.error.ErrorCode;
+import com.art.cheric.global.error.GlobalErrorCode;
 import com.art.cheric.global.error.exception.AppException;
 import com.art.cheric.global.util.GoogleOAuthUtil;
 import com.art.cheric.global.util.JwtUtil;
 import com.art.cheric.global.util.RedisUtil;
+import com.art.cheric.module.artist.dto.req.ArtistBasicReqDto;
 import com.art.cheric.module.user.domain.entity.User;
 import com.art.cheric.module.user.domain.entity.UserPart;
 import com.art.cheric.module.user.domain.repository.UserPartRepository;
@@ -25,6 +20,8 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -76,7 +73,7 @@ public class UserService {
     @Transactional
     public LoginResDto getAccessToken(String refreshToken) {
         if (refreshToken.isBlank()) {
-            throw new AppException(REFRESH_TOKEN_REQUIRED);
+            throw new AppException(GlobalErrorCode.REFRESH_TOKEN_REQUIRED);
         }
 
         // refreshToken 유효성 검사 실행
@@ -85,7 +82,7 @@ public class UserService {
             tokenUser = jwtUtil.validateToken(false, refreshToken);
         } catch (JwtException e) {
             ErrorCode code =
-                    e instanceof ExpiredJwtException ? EXPIRED_JWT : INVALID_TOKEN;
+                    e instanceof ExpiredJwtException ? GlobalErrorCode.EXPIRED_JWT : GlobalErrorCode.INVALID_TOKEN;
 
             throw new AppException(code);
         }
@@ -112,23 +109,45 @@ public class UserService {
 
     }
 
-    @Transactional
     public void checkNameIsDuplicated(String name) {
-        if (name.isBlank()) {
-            throw new AppException(NAME_REQUIRED);
-        } else if (!(name.length() >= 2 && name.length() <= 10)) {
-            throw new AppException(NAME_SIZE_ERROR);
-        }
+        checkNameIsBlankOrSizeError(name);
+        checkArtistNameIsDuplicated(name);
+    }
 
-        userRepository.findByIsArtistFalseAndName(name).ifPresent(user -> {
-                    throw new AppException(NAME_DUPLICATED);
-                });
+    private void checkNameIsBlankOrSizeError(String name) {
+        if (name.isBlank()) {
+            throw new AppException(UserErrorCode.NAME_REQUIRED);
+        } else if (!(name.length() >= 2 && name.length() <= 10)) {
+            throw new AppException(UserErrorCode.NAME_SIZE_ERROR);
+        }
+    }
+
+    private void checkArtistNameIsDuplicated(String name) {
+        userRepository.findByIsValidateArtistFalseAndName(name).ifPresent(user -> {
+            throw new AppException(UserErrorCode.NAME_DUPLICATED);
+        });
     }
 
     @Transactional
     public void deleteGoogleLogout(User user) {
         // 사용자 refreshToken 삭제
         redisUtil.delete(user.getId() + "_refresh");
+    }
+
+    public void updateUserAsArtist(User user, ArtistBasicReqDto artistBasicReq) {
+        List<UserPart> userParts = new ArrayList<>();
+        for (ArtType artType : artistBasicReq.userPartRequests()) {
+            userParts.add(UserPart.of(user, artType));
+        }
+
+        user.updateUserDetailAsArtist(
+                artistBasicReq.name(),
+                artistBasicReq.info(),
+                artistBasicReq.profileImgUrl(),
+                userParts
+        );
+
+        userRepository.save(user);
     }
 
 }
