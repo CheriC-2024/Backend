@@ -19,6 +19,7 @@ import com.art.cheric.module.art.dto.req.OwnArtReqDto;
 import com.art.cheric.module.art.dto.res.ArtResDto;
 import com.art.cheric.module.art.dto.res.OwnArtResDto;
 import com.art.cheric.module.art.error.ArtErrorCode;
+import com.art.cheric.module.artist.service.ArtistService;
 import com.art.cheric.module.user.domain.entity.User;
 import com.art.cheric.module.user.dto.res.UserResDto;
 import java.util.List;
@@ -38,11 +39,12 @@ public class ArtService {
     private final ArtPlusImageRepository artPlusImageRepository;
     private final ArtFileRepository artFileRepository;
     private final OwnArtRepository ownArtRepository;
+    private final ArtistService artistService;
 
 
     // 소장 작품 생성
     @Transactional
-    public void postOwnArt(User user, OwnArtReqDto ownArtReq) {
+    public Long postOwnArt(User user, OwnArtReqDto ownArtReq) {
         // art 생성
         ArtReqDto artReq = ownArtReq.artBasicInfo();
         Art art = artRepository.save(
@@ -67,13 +69,18 @@ public class ArtService {
         for (String fileUrl : ownArtReq.fileUrl()) {
             artFileRepository.save(ArtFile.of(ownArt, fileUrl));
         }
+
+        return art.getId();
     }
 
     // 작가 작품 생성
     @Transactional
-    public void postArtistArt(User user, ArtReqDto artReq) {
+    public Long postArtistArt(User user, ArtReqDto artReq) {
         // 체리 가격 검증
         checkCherryCountValidate(artReq);
+
+        // 작가 유효 상태 검증
+        artistService.checkThisUserIsNotArtist(user.getId());
 
         // art 생성
         Art art = artRepository.save(
@@ -88,6 +95,8 @@ public class ArtService {
 
         // artistArt 생성
         artistArtRepository.save(ArtistArt.of(art, user));
+
+        return art.getId();
     }
 
     private void checkCherryCountValidate(ArtReqDto artReq) {
@@ -104,7 +113,6 @@ public class ArtService {
 
         // 기본 데이터 준비
         OwnArt ownArt = null;
-        ArtistArt artistArt = null;
         String artistName = user.getName();
 
         // 작품 종류에 따른 연결
@@ -112,9 +120,6 @@ public class ArtService {
             ownArt = ownArtRepository.findByUserIdAndArtId(user.getId(), art.getId())
                     .orElseThrow(() -> new AppException(ArtErrorCode.OWN_ART_NOT_FOUND));
             artistName = ownArt.getArtistName();
-        } else {
-            artistArt = artistArtRepository.findByUserIdAndArtId(user.getId(), art.getId())
-                    .orElseThrow(() -> new AppException(ArtErrorCode.ARTIST_ART_NOT_FOUND));
         }
 
         // 값 제공
@@ -131,17 +136,18 @@ public class ArtService {
                 art.getMadeAt(),
                 List.of(art.getArtParts().get(0).getArtType(), art.getArtParts().get(1).getArtType()),
                 UserResDto.of(
+                        user.getId(),
                         user.getName(),
                         user.getInfo(),
                         List.of(user.getUserParts().get(0).getUserArtType(),
-                                user.getUserParts().get(1).getUserArtType())
+                                user.getUserParts().get(1).getUserArtType()),
+                        user.getProfileImgUrl()
                 ),
                 art.getHeartCount(),
                 art.getDescription(),
                 ownArt != null && ownArt.isPriceOpen() ? OwnArtResDto.from(
                         ownArt.getPrice()
-                ) : null,
-                artistArt != null ? artistArt.getId() : null
+                ) : null
         );
     }
 }
