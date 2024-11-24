@@ -16,6 +16,7 @@ import com.art.cheric.module.user.domain.repository.UserRepository;
 import com.art.cheric.module.user.dto.req.SignUpReqDto;
 import com.art.cheric.module.user.dto.res.LoginResDto;
 import com.art.cheric.module.user.dto.res.UserDetailResDto;
+import com.art.cheric.module.user.dto.res.UserResDto;
 import com.art.cheric.module.user.error.UserErrorCode;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -156,6 +157,18 @@ public class UserService {
                 finalUser.getSoldCherryNum()
         );
     }
+
+
+    public UserResDto createUserResDto(User user) {
+        return UserResDto.of(
+                user.getId(),
+                user.getName(),
+                user.getInfo(),
+                getArtTypes(user.getUserParts()),
+                user.getProfileImgUrl()
+        );
+    }
+
 
     private List<ArtType> getArtTypes(List<UserPart> userParts) {
         return userParts.stream()
