@@ -5,8 +5,10 @@ import com.art.cheric.global.common.ResponseDto;
 import com.art.cheric.module.user.domain.entity.User;
 import com.art.cheric.module.user.dto.req.SignUpReqDto;
 import com.art.cheric.module.user.dto.res.LoginResDto;
+import com.art.cheric.module.user.dto.res.UserDetailResDto;
 import com.art.cheric.module.user.service.UserService;
 import jakarta.validation.Valid;
+import javax.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -58,5 +60,12 @@ public class UserController implements UserControllerDocs {
     public ResponseEntity<ResponseDto> deleteGoogleLogout(@RequestAttribute("user") User user) {
         userService.deleteGoogleLogout(user);
         return ResponseEntity.ok(ResponseDto.of(200));
+    }
+
+    @GetMapping
+    public ResponseEntity<ResponseDto> getUserDetailInfo(@RequestAttribute("user") User user,
+                                                         @RequestParam("id") @Nullable Long userId) {
+        UserDetailResDto resDto = userService.getUserDetailInfo(user, userId);
+        return ResponseEntity.status(200).body(DataResponseDto.of(resDto, 200));
     }
 }

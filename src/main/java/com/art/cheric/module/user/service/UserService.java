@@ -15,6 +15,7 @@ import com.art.cheric.module.user.domain.repository.UserPartRepository;
 import com.art.cheric.module.user.domain.repository.UserRepository;
 import com.art.cheric.module.user.dto.req.SignUpReqDto;
 import com.art.cheric.module.user.dto.res.LoginResDto;
+import com.art.cheric.module.user.dto.res.UserDetailResDto;
 import com.art.cheric.module.user.error.UserErrorCode;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -22,6 +23,7 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -132,6 +134,44 @@ public class UserService {
     public void deleteGoogleLogout(User user) {
         // 사용자 refreshToken 삭제
         redisUtil.delete(user.getId() + "_refresh");
+    }
+
+    public UserDetailResDto getUserDetailInfo(User user, Long userId) {
+        User finalUser = user;
+        if (userId != null) {
+            finalUser = findUserById(userId);
+        }
+
+        return UserDetailResDto.of(
+                finalUser.getId(),
+                finalUser.isValidateArtist(),
+                finalUser.getName(),
+                finalUser.getInfo(),
+                getArtTypes(finalUser.getUserParts()),
+                finalUser.getProfileImgUrl(),
+                finalUser.getBackgroundImgUrl(),
+                finalUser.getFollowerAmount(),
+                finalUser.getFollowingAmount(),
+                finalUser.getMyCherryNum(),
+                finalUser.getSoldCherryNum()
+        );
+    }
+
+    private List<ArtType> getArtTypes(List<UserPart> userParts) {
+        return userParts.stream()
+                .map(UserPart::getUserArtType)
+                .collect(Collectors.toList());
+    }
+
+
+    public User findUserById(Long userId) {
+        return userRepository.findById(userId.toString()).orElseThrow(
+                () -> new AppException(GlobalErrorCode.USER_NOT_FOUND)
+        );
+    }
+
+    public void saveAllUser(List<User> user) {
+        userRepository.saveAll(user);
     }
 
     public void updateUserAsArtist(User user, ArtistBasicReqDto artistBasicReq) {
