@@ -10,4 +10,6 @@ import org.springframework.stereotype.Repository;
 public interface OwnArtRepository extends JpaRepository<OwnArt, Long> {
 
     Optional<OwnArt> findByUserIdAndArtId(Long userId, Long artId);
+
+    Optional<OwnArt> findByArtId(Long artId);
 }

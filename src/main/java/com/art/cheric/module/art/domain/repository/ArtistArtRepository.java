@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ArtistArtRepository extends JpaRepository<ArtistArt, Long> {
-    Optional<ArtistArt> findByUserIdAndArtId(Long userId, Long artId);
+    Optional<ArtistArt> findByArtId(Long artId);
 
 }
