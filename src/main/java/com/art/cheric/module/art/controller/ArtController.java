@@ -4,6 +4,7 @@ import com.art.cheric.global.common.DataResponseDto;
 import com.art.cheric.global.common.ResponseDto;
 import com.art.cheric.module.art.dto.req.ArtReqDto;
 import com.art.cheric.module.art.dto.req.OwnArtReqDto;
+import com.art.cheric.module.art.dto.res.ArtDescriptionResDto;
 import com.art.cheric.module.art.dto.res.ArtResDto;
 import com.art.cheric.module.art.service.ArtService;
 import com.art.cheric.module.user.domain.entity.User;
@@ -11,6 +12,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,7 +45,28 @@ public class ArtController implements ArtControllerDocs {
     @GetMapping("/{id}")
     public ResponseEntity<ResponseDto> getArt(@RequestAttribute("user") User user,
                                               @PathVariable("id") Long artId) {
-        ArtResDto resDto = artService.getArt(user, artId);
+        ArtResDto resDto = artService.getArt(artId);
+        return ResponseEntity.status(200).body(DataResponseDto.of(resDto, 200));
+    }
+
+    @PostMapping("/{id}/heart")
+    public ResponseEntity<ResponseDto> postHeart(@RequestAttribute("user") User user,
+                                                 @PathVariable("id") Long artId) {
+        int heartCount = artService.postHeart(user, artId);
+        return ResponseEntity.ok(DataResponseDto.of(heartCount, 200));
+    }
+
+    @DeleteMapping("/{id}/heart")
+    public ResponseEntity<ResponseDto> deleteHeart(@RequestAttribute("user") User user,
+                                                   @PathVariable("id") Long artId) {
+        int heartCount = artService.deleteHeart(user, artId);
+        return ResponseEntity.ok(DataResponseDto.of(heartCount, 200));
+    }
+
+    @GetMapping("/owns/{id}")
+    public ResponseEntity<ResponseDto> getOwnArtDescription(@RequestAttribute("user") User user,
+                                                            @PathVariable(name = "id") Long artId) {
+        ArtDescriptionResDto resDto = artService.getOwnArtDescription(user, artId);
         return ResponseEntity.status(200).body(DataResponseDto.of(resDto, 200));
     }
 
