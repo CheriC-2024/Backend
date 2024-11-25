@@ -28,14 +28,13 @@ public class ExhibitionReviewHeart extends BaseTime {
 
     @ManyToOne
     @JoinColumn(name = "exhibition_review_id", nullable = false)
-    private ExhibitionReviewHeart exhibitionReview;
+    private ExhibitionReview exhibitionReview;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-
-    public static ExhibitionReviewHeart of(@NotNull ExhibitionReviewHeart exhibitionReview, @NotNull User user) {
+    public static ExhibitionReviewHeart of(@NotNull ExhibitionReview exhibitionReview, @NotNull User user) {
         return ExhibitionReviewHeart.builder()
                 .exhibitionReview(exhibitionReview)
                 .user(user)
