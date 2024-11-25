@@ -273,7 +273,7 @@ public class ArtService {
     // 작가 작품 유효성 확인
     public void checkArtistArtValid(Long artId) {
         ArtistArt artistArt = findArtistArtByArtId(artId);
-        if (artistArt.isUsable()) {
+        if (!artistArt.isUsable()) {
             throw new AppException(ArtErrorCode.ARTIST_ART_INVALID);
         }
     }
