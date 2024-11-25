@@ -71,6 +71,10 @@ public class OwnArt extends BaseTime {
                 .build();
     }
 
+    public boolean isNotValidState() {
+        return this.state != ValidateState.VALID;
+    }
+
     public void addArtFile(ArtFile artFile) {
         this.artFiles.add(artFile);
     }

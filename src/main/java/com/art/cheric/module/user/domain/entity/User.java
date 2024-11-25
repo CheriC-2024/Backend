@@ -64,8 +64,7 @@ public class User extends BaseTime {
     @NotNull
     private int myCherryNum;
 
-    @NotNull
-    private Integer soldCherryNum; 
+    private Integer soldCherryNum;
 
     @NotNull
     private int followerAmount;

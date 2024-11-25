@@ -2,13 +2,17 @@ package com.art.cheric.module.collection.domain.entity;
 
 import com.art.cheric.global.common.BaseTime;
 import com.art.cheric.module.user.domain.entity.User;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,6 +39,10 @@ public class Collection extends BaseTime {
 
     @NotNull
     private String description;
+
+    @OneToMany(mappedBy = "collection", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<CollectionArt> collectionArts = new ArrayList<>();
 
     public static Collection of(@NotNull User user, @NotNull String name, @NotNull String description) {
         return Collection.builder()
