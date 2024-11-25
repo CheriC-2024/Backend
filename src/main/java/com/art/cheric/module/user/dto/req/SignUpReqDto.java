@@ -2,6 +2,7 @@ package com.art.cheric.module.user.dto.req;
 
 
 import com.art.cheric.global.enums.ArtType;
+import com.art.cheric.global.validation.annotation.UniqueElements;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -38,6 +39,7 @@ public record SignUpReqDto(
 
         @Schema(description = "사용자 선호 분야", example = "[\"PAINTING\", \"OIL_PAINTING\"]")
         @NotEmpty(message = "사용자 선호 분야는 필수 값입니다.")
+        @UniqueElements
         @Size(max = 2, message = "사용자 선호 분야는 2개까지 입력 가능합니다.")
         List<ArtType> userPartRequests
 ) {

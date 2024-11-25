@@ -1,6 +1,7 @@
 package com.art.cheric.module.artist.dto.req;
 
 
+import com.art.cheric.global.validation.annotation.UniqueElements;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -16,6 +17,7 @@ public record ArtistReqDto(
         @Schema(description = "작가 인증 서류 url 리스트", example = "[\"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_VALIDATE_FILE/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ownArtFile1.pdf\",\"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_VALIDATE_FILE/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ownArtFile2.pdf\"]")
         @NotNull
         @Size(min = 1, max = 3, message = "작가 인증 서류는 1개 이상, 3개 이하로 등록해야 합니다.")
+        @UniqueElements
         List<String> fileUrl,
 
         @Schema(description = "작가 연락망")
