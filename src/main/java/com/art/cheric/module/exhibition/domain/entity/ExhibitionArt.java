@@ -41,14 +41,17 @@ public class ExhibitionArt extends BaseTime {
 
     private String review;
 
+    private int num;
+
     public static ExhibitionArt of(@NotNull Exhibition exhibition, @NotNull Art art, @NotNull String description,
-                                   String reasonForPurchase, String review) {
+                                   String reasonForPurchase, String review,  @NotNull int num) {
         return ExhibitionArt.builder()
                 .exhibition(exhibition)
                 .art(art)
                 .description(description)
                 .reasonForPurchase(reasonForPurchase)
                 .review(review)
+                .num(num)
                 .build();
     }
 
