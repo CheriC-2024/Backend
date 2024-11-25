@@ -34,8 +34,18 @@ public class ExhibitionHit extends BaseTime {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    private int count;
+
     public static ExhibitionHit of(@NotNull Exhibition exhibition, @NotNull User user) {
-        return ExhibitionHit.builder().exhibition(exhibition).user(user).build();
+        return ExhibitionHit.builder()
+                .exhibition(exhibition)
+                .user(user)
+                .count(0)
+                .build();
+    }
+
+    public void plusCounts(){
+        this.count += 1;
     }
 
 }
