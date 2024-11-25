@@ -2,10 +2,10 @@ package com.art.cheric.module.art.dto.req;
 
 
 import com.art.cheric.global.enums.ArtType;
+import com.art.cheric.global.validation.annotation.UniqueElements;
 import com.art.cheric.global.validation.annotation.ValidYear;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.criteria.CriteriaBuilder.In;
-import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -42,6 +42,7 @@ public record ArtReqDto(
         Year madeAt,
 
         @Schema(description = "작품의 체리 가격", example = "2")
+        @Max(value = 100, message = "작품의 체리 가격은 체리 100개를 초과할 수 없습니다.")
         Integer cherryPrice,
 
         @Schema(description = "작품 가로 사이즈", example = "100000")
@@ -60,6 +61,7 @@ public record ArtReqDto(
 
         @Schema(description = "작품 분야", example = "[\"PAINTING\", \"OIL_PAINTING\"]")
         @NotEmpty(message = "작품 분야는 필수 값입니다.")
+        @UniqueElements
         @Size(max = 2, message = "작품 분야는 2개까지 입력 가능합니다.")
         List<ArtType> artTypes
 ) {
