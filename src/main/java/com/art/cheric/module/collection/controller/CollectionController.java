@@ -2,6 +2,7 @@ package com.art.cheric.module.collection.controller;
 
 import com.art.cheric.global.common.DataResponseDto;
 import com.art.cheric.global.common.ResponseDto;
+import com.art.cheric.global.enums.BasicSortType;
 import com.art.cheric.module.art.dto.req.ArtIdListReqDto;
 import com.art.cheric.module.collection.dto.req.CollectionIdListReqDto;
 import com.art.cheric.module.collection.dto.req.CollectionReqDto;
@@ -11,6 +12,7 @@ import com.art.cheric.module.collection.service.CollectionService;
 import com.art.cheric.module.user.domain.entity.User;
 import jakarta.validation.Valid;
 import java.util.List;
+import javax.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -49,10 +52,13 @@ public class CollectionController implements CollectionControllerDocs {
         List<CollectionResDto> resDtos = collectionService.getSelfCollectionList(user);
         return ResponseEntity.status(200).body(DataResponseDto.of(resDtos, 200));
     }
+
     @PostMapping("/arts")
     public ResponseEntity<ResponseDto> getSelfCollectionList(@RequestAttribute("user") User user,
-                                                             @RequestBody @Valid CollectionIdListReqDto collectionIdListReq) {
-        List<CollectionArtResDto> resDtos = collectionService.getSelfCollectionList(user, collectionIdListReq);
+                                                             @RequestBody @Valid CollectionIdListReqDto collectionIdListReq,
+                                                             @RequestParam @Nullable BasicSortType sortType) {
+        List<CollectionArtResDto> resDtos = collectionService.getSelfCollectionList(user, collectionIdListReq,
+                sortType);
         return ResponseEntity.status(200).body(DataResponseDto.of(resDtos, 200));
     }
 }

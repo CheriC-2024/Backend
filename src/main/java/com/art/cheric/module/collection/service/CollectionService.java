@@ -1,6 +1,7 @@
 package com.art.cheric.module.collection.service;
 
 
+import com.art.cheric.global.enums.BasicSortType;
 import com.art.cheric.global.error.exception.AppException;
 import com.art.cheric.module.art.domain.entity.Art;
 import com.art.cheric.module.art.dto.req.ArtIdListReqDto;
@@ -99,10 +100,12 @@ public class CollectionService {
     }
 
     // 컬렉션 id 별 조회
-    public List<CollectionArtResDto> getSelfCollectionList(User user, CollectionIdListReqDto collectionIdListReq) {
+    public List<CollectionArtResDto> getSelfCollectionList(User user, CollectionIdListReqDto collectionIdListReq,
+                                                           BasicSortType sortType) {
         checkIdsValid(user, collectionIdListReq);
 
-        return collectionRepository.getCollectionByCollectionIds(user.getId(), collectionIdListReq.collectionIds());
+        return collectionRepository.getCollectionByCollectionIds(user.getId(), collectionIdListReq.collectionIds(),
+                sortType);
     }
 
     private void checkIdsValid(User user, CollectionIdListReqDto collectionIdListReq) {
