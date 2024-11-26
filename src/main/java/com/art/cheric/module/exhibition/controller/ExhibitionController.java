@@ -107,7 +107,7 @@ public class ExhibitionController implements ExhibitionControllerDocs {
     public ResponseEntity<ResponseDto> getExhibitions(
             @Schema(name = "작품 id", description = "해당 작품을 포함한 전시 리스트를 불러옵니다.") @RequestParam(name = "artId") @Nullable Long artId,
             @Schema(name = "사용자 id", description = "해당 사용자의 전시 리스트를 불러옵니다.") @RequestParam(name = "userId") @Nullable Long userId,
-            @Schema(name = "정렬 기준", description = "정렬 기준에 맞춰 불러옵니다.") @RequestParam(name = "order") ExhibitionOrderType order,
+            @RequestParam(name = "order") ExhibitionOrderType order,
             @Schema(name = "페이지 번호", description = "0번부터 시작하는 페이지 번호에 따라 불러옵니다.") @RequestParam(name = "page") int page,
             @Schema(name = "페이지 내 아이템 개수", description = "해당하는 페이지에서 아이템 개수만큼 불러옵니다.") @RequestParam(name = "size") int size) {
         Page<ExhibitionListResDto> resPage = exhibitionService.getExhibitions(artId, userId, order, page, size);
