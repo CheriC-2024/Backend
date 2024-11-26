@@ -17,14 +17,19 @@ public class CollectionArtResDto {
     @Schema(description = "컬렉션 이름")
     private final String name;
 
+    @Schema(description = "컬렉션 설명")
+    private final String description;
+
     @Schema(description = "컬렉션 작품 리스트")
     List<ArtBriefResDto> artBriefRess;
 
 
-    public static CollectionArtResDto of(Long collectionId, String name, List<ArtBriefResDto> artBriefRess) {
+    public static CollectionArtResDto of(Long collectionId, String name, String description,
+                                         List<ArtBriefResDto> artBriefRess) {
         return CollectionArtResDto.builder()
                 .collectionId(collectionId)
                 .name(name)
+                .description(description)
                 .artBriefRess(artBriefRess)
                 .build();
     }
