@@ -1,5 +1,6 @@
 package com.art.cheric.module.collection.domain.repository.custom;
 
+import com.art.cheric.global.enums.BasicSortType;
 import com.art.cheric.module.art.domain.entity.QArt;
 import com.art.cheric.module.art.dto.res.ArtBriefResDto;
 import com.art.cheric.module.collection.domain.entity.QCollection;
@@ -7,15 +8,19 @@ import com.art.cheric.module.collection.domain.entity.QCollectionArt;
 import com.art.cheric.module.collection.dto.res.CollectionArtResDto;
 import com.art.cheric.module.collection.dto.res.CollectionResDto;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Repository;import java.util.LinkedHashMap;
+
 
 
 @Repository
@@ -65,16 +70,29 @@ public class CollectionRepositoryImpl implements CollectionRepositoryCustom {
     }
 
     @Override
-    public List<CollectionArtResDto> getCollectionByCollectionIds(long userId, List<Long> collectionIds) {
+    public List<CollectionArtResDto> getCollectionByCollectionIds(long userId, List<Long> collectionIds,
+                                                                  BasicSortType sort) {
         QCollection collection = QCollection.collection;
         QCollectionArt collectionArt = QCollectionArt.collectionArt;
         QArt art = QArt.art;
 
+        // 정렬 기준 설정
+        List<OrderSpecifier<?>> orderSpecifiers = new ArrayList<>();
+        orderSpecifiers.add(collection.createdAt.desc()); // 공통 정렬 조건
+
+        // 동적 정렬 조건 추가
+        if (sort != null) {
+            switch (sort) {
+                case LATEST -> orderSpecifiers.add(collectionArt.createdAt.desc());
+                case NAME -> orderSpecifiers.add(art.name.asc());
+            }
+        }
         // 쿼리 실행
         List<Tuple> results = jpaQueryFactory
                 .select(
                         collection.id,
                         collection.name,
+                        collection.description,
                         art.id,
                         art.imgUrl,
                         art.name,
@@ -85,14 +103,15 @@ public class CollectionRepositoryImpl implements CollectionRepositoryCustom {
                 .leftJoin(collectionArt).on(collection.id.eq(collectionArt.collection.id))
                 .leftJoin(collectionArt.art, art)
                 .where(collection.user.id.eq(userId)
-                        .and(collection.id.in(collectionIds))) // 컬렉션 ID 조건
-                .orderBy(collection.id.asc(), art.id.asc()) // 컬렉션별로 정렬
+                        .and(collection.id.in(collectionIds)))
+                .orderBy(orderSpecifiers.toArray(new OrderSpecifier[0]))
                 .fetch();
 
-        // 결과 매핑
-        return results.stream()
+        // 그룹화된 결과의 순서 유지
+        Map<Long, List<ArtBriefResDto>> groupedResults = results.stream()
                 .collect(Collectors.groupingBy(
-                        tuple -> tuple.get(collection.id), // 컬렉션 ID를 기준으로 그룹화
+                        tuple -> tuple.get(collection.id), // 컬렉션 ID 기준으로 그룹화
+                        LinkedHashMap::new, // 순서 유지
                         Collectors.mapping(tuple -> ArtBriefResDto.of(
                                 tuple.get(art.id),
                                 tuple.get(art.isCollectorsArt),
@@ -100,9 +119,10 @@ public class CollectionRepositoryImpl implements CollectionRepositoryCustom {
                                 tuple.get(art.cherryPrice),
                                 tuple.get(art.name)
                         ), Collectors.toList())
-                ))
-                .entrySet()
-                .stream()
+                ));
+
+        // 결과 매핑
+        return groupedResults.entrySet().stream()
                 .map(entry -> {
                     Long collectionId = entry.getKey();
                     List<ArtBriefResDto> artBriefResDtos = entry.getValue();
@@ -114,11 +134,10 @@ public class CollectionRepositoryImpl implements CollectionRepositoryCustom {
                     return CollectionArtResDto.of(
                             collectionId,
                             firstCollectionTuple.get(collection.name),
+                            firstCollectionTuple.get(collection.description),
                             artBriefResDtos
                     );
                 })
                 .toList();
     }
-
-
 }
