@@ -1,7 +1,7 @@
 package com.art.cheric.module.collection.controller;
 
 import com.art.cheric.global.common.ResponseDto;
-import com.art.cheric.global.enums.BasicSortType;
+import com.art.cheric.global.enums.BasicOrderType;
 import com.art.cheric.module.art.dto.req.ArtIdListReqDto;
 import com.art.cheric.module.collection.dto.req.CollectionIdListReqDto;
 import com.art.cheric.module.collection.dto.req.CollectionReqDto;
@@ -243,6 +243,6 @@ public interface CollectionControllerDocs {
             )
     })
     ResponseEntity<ResponseDto> getSelfCollectionList(User user, CollectionIdListReqDto collectionIdListReq,
-                                                      BasicSortType sortType);
+                                                      BasicOrderType sortType);
 }
 
