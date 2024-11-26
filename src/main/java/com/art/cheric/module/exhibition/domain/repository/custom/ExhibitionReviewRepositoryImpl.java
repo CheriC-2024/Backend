@@ -26,7 +26,7 @@ public class ExhibitionReviewRepositoryImpl implements ExhibitionReviewRepositor
         // 리뷰 조회
         List<ExhibitionReview> results = jpaQueryFactory
                 .selectFrom(review)
-                .where(review.exhibition.id.eq(exhibitionId).and(review.exhibitionReview.isNull()))
+                .where(review.exhibition.id.eq(exhibitionId))
                 .orderBy(review.createdAt.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
