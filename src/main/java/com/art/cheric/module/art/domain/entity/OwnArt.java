@@ -38,10 +38,6 @@ public class OwnArt extends BaseTime {
     @JoinColumn(name = "art_id", nullable = false, unique = true)
     private Art art;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
     @NotNull
     private String artistName;
 
@@ -59,11 +55,10 @@ public class OwnArt extends BaseTime {
     @Builder.Default
     private List<ArtFile> artFiles = new ArrayList<>();
 
-    public static OwnArt of(@NotNull Art art, @NotNull User user, @NotNull String artistName, @NotNull long price,
+    public static OwnArt of(@NotNull Art art, @NotNull String artistName, @NotNull long price,
                             @NotNull boolean isPriceOpen) {
         return OwnArt.builder()
                 .art(art)
-                .user(user)
                 .artistName(artistName)
                 .price(price)
                 .isPriceOpen(isPriceOpen)
