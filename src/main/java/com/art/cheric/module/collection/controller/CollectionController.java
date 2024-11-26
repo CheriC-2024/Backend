@@ -1,14 +1,20 @@
 package com.art.cheric.module.collection.controller;
 
+import com.art.cheric.global.common.DataResponseDto;
 import com.art.cheric.global.common.ResponseDto;
 import com.art.cheric.module.art.dto.req.ArtIdListReqDto;
+import com.art.cheric.module.collection.dto.req.CollectionIdListReqDto;
 import com.art.cheric.module.collection.dto.req.CollectionReqDto;
+import com.art.cheric.module.collection.dto.res.CollectionArtResDto;
+import com.art.cheric.module.collection.dto.res.CollectionResDto;
 import com.art.cheric.module.collection.service.CollectionService;
 import com.art.cheric.module.user.domain.entity.User;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
@@ -36,5 +42,17 @@ public class CollectionController implements CollectionControllerDocs {
                                                          @RequestBody @Valid ArtIdListReqDto artIdListReq) {
         collectionService.postCollectionArt(user, collectionId, artIdListReq);
         return ResponseEntity.status(201).body(ResponseDto.of(201));
+    }
+
+    @GetMapping
+    public ResponseEntity<ResponseDto> getSelfCollectionList(@RequestAttribute("user") User user) {
+        List<CollectionResDto> resDtos = collectionService.getSelfCollectionList(user);
+        return ResponseEntity.status(200).body(DataResponseDto.of(resDtos, 200));
+    }
+    @PostMapping("/arts")
+    public ResponseEntity<ResponseDto> getSelfCollectionList(@RequestAttribute("user") User user,
+                                                             @RequestBody @Valid CollectionIdListReqDto collectionIdListReq) {
+        List<CollectionArtResDto> resDtos = collectionService.getSelfCollectionList(user, collectionIdListReq);
+        return ResponseEntity.status(200).body(DataResponseDto.of(resDtos, 200));
     }
 }
