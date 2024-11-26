@@ -3,13 +3,16 @@ package com.art.cheric.module.collection.service;
 
 import com.art.cheric.global.error.exception.AppException;
 import com.art.cheric.module.art.domain.entity.Art;
+import com.art.cheric.module.art.dto.req.ArtIdListReqDto;
 import com.art.cheric.module.art.service.ArtService;
 import com.art.cheric.module.collection.domain.entity.Collection;
 import com.art.cheric.module.collection.domain.entity.CollectionArt;
 import com.art.cheric.module.collection.domain.repository.CollectionArtRepository;
 import com.art.cheric.module.collection.domain.repository.CollectionRepository;
-import com.art.cheric.module.art.dto.req.ArtIdListReqDto;
+import com.art.cheric.module.collection.dto.req.CollectionIdListReqDto;
 import com.art.cheric.module.collection.dto.req.CollectionReqDto;
+import com.art.cheric.module.collection.dto.res.CollectionArtResDto;
+import com.art.cheric.module.collection.dto.res.CollectionResDto;
 import com.art.cheric.module.collection.error.CollectionErrorCode;
 import com.art.cheric.module.user.domain.entity.User;
 import java.util.ArrayList;
@@ -88,6 +91,24 @@ public class CollectionService {
         return collectionRepository.findByIdAndUserId(collectionId, user.getId()).orElseThrow(
                 () -> new AppException(CollectionErrorCode.COLLECTION_NOT_FOUND)
         );
+    }
+
+    // 자신의 컬렉션 모두 조회
+    public List<CollectionResDto> getSelfCollectionList(User user) {
+        return collectionRepository.getCollection(user.getId());
+    }
+
+    // 컬렉션 id 별 조회
+    public List<CollectionArtResDto> getSelfCollectionList(User user, CollectionIdListReqDto collectionIdListReq) {
+        checkIdsValid(user, collectionIdListReq);
+
+        return collectionRepository.getCollectionByCollectionIds(user.getId(), collectionIdListReq.collectionIds());
+    }
+
+    private void checkIdsValid(User user, CollectionIdListReqDto collectionIdListReq) {
+        collectionIdListReq.collectionIds()
+                .forEach(id -> collectionRepository.findByIdAndUserId(id, user.getId())
+                .orElseThrow(() -> new AppException(CollectionErrorCode.COLLECTION_NOT_FOUND)));
     }
 
 }
