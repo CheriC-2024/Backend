@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.checkerframework.checker.units.qual.N;
 
 @Entity
 @Getter
@@ -32,11 +33,14 @@ public class ExhibitionBackgroundColor extends BaseTime {
     @NotNull
     private String colors;
 
+    @NotNull
+    private Integer num;
 
-    public static ExhibitionBackgroundColor of(@NotNull Exhibition exhibition, @NotNull String colors) {
+    public static ExhibitionBackgroundColor of(@NotNull Exhibition exhibition, @NotNull String colors, @NotNull Integer num) {
         return ExhibitionBackgroundColor.builder()
                 .exhibition(exhibition)
                 .colors(colors)
+                .num(num)
                 .build();
     }
 

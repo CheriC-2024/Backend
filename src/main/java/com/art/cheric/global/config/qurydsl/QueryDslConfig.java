@@ -1,4 +1,4 @@
-package com.art.cheric.global.config;
+package com.art.cheric.global.config.qurydsl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -14,6 +14,6 @@ public class QueryDslConfig {
 
     @Bean
     public JPAQueryFactory jpaQueryFactory() {
-        return new JPAQueryFactory(entityManager);
+        return new JPAQueryFactory(new CustomHibernate5Templates(), entityManager);
     }
 }

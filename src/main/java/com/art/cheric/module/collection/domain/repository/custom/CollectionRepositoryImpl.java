@@ -1,6 +1,6 @@
 package com.art.cheric.module.collection.domain.repository.custom;
 
-import com.art.cheric.global.enums.BasicSortType;
+import com.art.cheric.global.enums.BasicOrderType;
 import com.art.cheric.module.art.domain.entity.QArt;
 import com.art.cheric.module.art.dto.res.ArtBriefResDto;
 import com.art.cheric.module.collection.domain.entity.QCollection;
@@ -71,7 +71,7 @@ public class CollectionRepositoryImpl implements CollectionRepositoryCustom {
 
     @Override
     public List<CollectionArtResDto> getCollectionByCollectionIds(long userId, List<Long> collectionIds,
-                                                                  BasicSortType sort) {
+                                                                  BasicOrderType order) {
         QCollection collection = QCollection.collection;
         QCollectionArt collectionArt = QCollectionArt.collectionArt;
         QArt art = QArt.art;
@@ -81,12 +81,13 @@ public class CollectionRepositoryImpl implements CollectionRepositoryCustom {
         orderSpecifiers.add(collection.createdAt.desc()); // 공통 정렬 조건
 
         // 동적 정렬 조건 추가
-        if (sort != null) {
-            switch (sort) {
+        if (order != null) {
+            switch (order) {
                 case LATEST -> orderSpecifiers.add(collectionArt.createdAt.desc());
                 case NAME -> orderSpecifiers.add(art.name.asc());
             }
         }
+
         // 쿼리 실행
         List<Tuple> results = jpaQueryFactory
                 .select(

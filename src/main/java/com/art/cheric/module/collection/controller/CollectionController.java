@@ -2,7 +2,7 @@ package com.art.cheric.module.collection.controller;
 
 import com.art.cheric.global.common.DataResponseDto;
 import com.art.cheric.global.common.ResponseDto;
-import com.art.cheric.global.enums.BasicSortType;
+import com.art.cheric.global.enums.BasicOrderType;
 import com.art.cheric.module.art.dto.req.ArtIdListReqDto;
 import com.art.cheric.module.collection.dto.req.CollectionIdListReqDto;
 import com.art.cheric.module.collection.dto.req.CollectionReqDto;
@@ -56,9 +56,9 @@ public class CollectionController implements CollectionControllerDocs {
     @PostMapping("/arts")
     public ResponseEntity<ResponseDto> getSelfCollectionList(@RequestAttribute("user") User user,
                                                              @RequestBody @Valid CollectionIdListReqDto collectionIdListReq,
-                                                             @RequestParam @Nullable BasicSortType sortType) {
+                                                             @RequestParam(name = "order") @Nullable BasicOrderType order) {
         List<CollectionArtResDto> resDtos = collectionService.getSelfCollectionList(user, collectionIdListReq,
-                sortType);
+                order);
         return ResponseEntity.status(200).body(DataResponseDto.of(resDtos, 200));
     }
 }

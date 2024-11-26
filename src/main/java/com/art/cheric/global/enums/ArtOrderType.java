@@ -3,13 +3,14 @@ package com.art.cheric.global.enums;
 import lombok.Getter;
 
 @Getter
-public enum BasicSortType {
+public enum ArtOrderType {
     NAME("이름순"),
-    LATEST("최신순");
+    LATEST("최신순"),
+    MY_TYPE("관련 분야순");
 
     private final String value;
 
-    BasicSortType(String value) {
+    ArtOrderType(String value) {
         this.value = value;
     }
 }

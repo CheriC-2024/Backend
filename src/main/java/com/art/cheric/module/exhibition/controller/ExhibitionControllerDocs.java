@@ -1,6 +1,7 @@
 package com.art.cheric.module.exhibition.controller;
 
 import com.art.cheric.global.common.ResponseDto;
+import com.art.cheric.global.enums.ExhibitionOrderType;
 import com.art.cheric.module.exhibition.dto.req.ExhibitionReqDto;
 import com.art.cheric.module.exhibition.dto.req.ExhibitionReviewReqDto;
 import com.art.cheric.module.user.domain.entity.User;
@@ -12,6 +13,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name = "Exhibition", description = "전시 관련 API")
 public interface ExhibitionControllerDocs {
@@ -228,5 +231,213 @@ public interface ExhibitionControllerDocs {
     ResponseEntity<ResponseDto> postHits(User user, Long exhibitionId);
 
 
+    @Operation(summary = "전시 리스트 조회 API", description = "전시 리스트를 조건에 맞춰 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Ok",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ResponseDto.class),
+                            examples =
+                            @ExampleObject(value = "{\n"
+                                    + "  \"code\": 200,\n"
+                                    + "  \"message\": \"OK\",\n"
+                                    + "  \"data\": [\n"
+                                    + "    {\n"
+                                    + "      \"exhibitionId\": 16,\n"
+                                    + "      \"name\": \"별빛:하늘을 그리다\",\n"
+                                    + "      \"font\": \"BASIC\",\n"
+                                    + "      \"fontColor\": \"BLACK\",\n"
+                                    + "      \"colors\": [\n"
+                                    + "        \"#CF3420\",\n"
+                                    + "        \"#CF3421\",\n"
+                                    + "        \"#CF3422\",\n"
+                                    + "        \"#CF3423\"\n"
+                                    + "      ],\n"
+                                    + "      \"exhibitionBackgroundType\": \"TOP_DOWN\",\n"
+                                    + "      \"coverImgUrl\": null,\n"
+                                    + "      \"themes\": [\n"
+                                    + "        \"별\",\n"
+                                    + "        \"하늘\",\n"
+                                    + "        \"빛\"\n"
+                                    + "      ],\n"
+                                    + "      \"heartCount\": 0,\n"
+                                    + "      \"hits\": 0\n"
+                                    + "    },\n"
+                                    + "    {\n"
+                                    + "      \"exhibitionId\": 15,\n"
+                                    + "      \"name\": \"별빛:하늘을 그리다\",\n"
+                                    + "      \"font\": \"BASIC\",\n"
+                                    + "      \"fontColor\": \"BLACK\",\n"
+                                    + "      \"colors\": [\n"
+                                    + "        \"#CF3420\",\n"
+                                    + "        \"#CF3421\",\n"
+                                    + "        \"#CF3422\",\n"
+                                    + "        \"#CF3423\"\n"
+                                    + "      ],\n"
+                                    + "      \"exhibitionBackgroundType\": \"TOP_DOWN\",\n"
+                                    + "      \"coverImgUrl\": null,\n"
+                                    + "      \"themes\": [\n"
+                                    + "        \"별\",\n"
+                                    + "        \"하늘\",\n"
+                                    + "        \"빛\"\n"
+                                    + "      ],\n"
+                                    + "      \"heartCount\": 0,\n"
+                                    + "      \"hits\": 0\n"
+                                    + "    },\n"
+                                    + "    {\n"
+                                    + "      \"exhibitionId\": 14,\n"
+                                    + "      \"name\": \"별빛:하늘을 그리다\",\n"
+                                    + "      \"font\": \"BASIC\",\n"
+                                    + "      \"fontColor\": \"BLACK\",\n"
+                                    + "      \"colors\": [],\n"
+                                    + "      \"exhibitionBackgroundType\": \"TOP_DOWN\",\n"
+                                    + "      \"coverImgUrl\": null,\n"
+                                    + "      \"themes\": [\n"
+                                    + "        \"별\",\n"
+                                    + "        \"하늘\",\n"
+                                    + "        \"빛\"\n"
+                                    + "      ],\n"
+                                    + "      \"heartCount\": 0,\n"
+                                    + "      \"hits\": 0\n"
+                                    + "    }\n"
+                                    + "  ],\n"
+                                    + "  \"totalElements\": 4,\n"
+                                    + "  \"totalPages\": 2,\n"
+                                    + "  \"size\": 3,\n"
+                                    + "  \"numberOfElements\": 3\n"
+                                    + "}")
+                    )
+            ),
+    })
+    ResponseEntity<ResponseDto> getExhibitions(Long artId, Long userId, ExhibitionOrderType order, int page, int size);
+
+    @Operation(summary = "전시 댓글 리스트 조회 API", description = "전시의 대댓글 제외 댓글을 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Ok",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ResponseDto.class),
+                            examples =
+                            @ExampleObject(value = "{\n"
+                                    + "  \"code\": 200,\n"
+                                    + "  \"message\": \"OK\",\n"
+                                    + "  \"data\": [\n"
+                                    + "    {\n"
+                                    + "      \"id\": 4,\n"
+                                    + "      \"review\": \"3수집하신 소장 작품 너무 좋네요!\",\n"
+                                    + "      \"name\": null,\n"
+                                    + "      \"heartCount\": 0,\n"
+                                    + "      \"replyCount\": 0,\n"
+                                    + "      \"createAt\": \"2024.11.27\"\n"
+                                    + "    },\n"
+                                    + "    {\n"
+                                    + "      \"id\": 3,\n"
+                                    + "      \"review\": \"2수집하신 소장 작품 너무 좋네요!\",\n"
+                                    + "      \"name\": null,\n"
+                                    + "      \"heartCount\": 0,\n"
+                                    + "      \"replyCount\": 0,\n"
+                                    + "      \"createAt\": \"2024.11.27\"\n"
+                                    + "    },\n"
+                                    + "    {\n"
+                                    + "      \"id\": 2,\n"
+                                    + "      \"review\": \"1수집하신 소장 작품 너무 좋네요!\",\n"
+                                    + "      \"name\": null,\n"
+                                    + "      \"heartCount\": 0,\n"
+                                    + "      \"replyCount\": 0,\n"
+                                    + "      \"createAt\": \"2024.11.27\"\n"
+                                    + "    },\n"
+                                    + "    {\n"
+                                    + "      \"id\": 1,\n"
+                                    + "      \"review\": \"수집하신 소장 작품 너무 좋네요!\",\n"
+                                    + "      \"name\": null,\n"
+                                    + "      \"heartCount\": 0,\n"
+                                    + "      \"replyCount\": 2,\n"
+                                    + "      \"createAt\": \"2024.11.27\"\n"
+                                    + "    }\n"
+                                    + "  ],\n"
+                                    + "  \"totalElements\": 4,\n"
+                                    + "  \"totalPages\": 1,\n"
+                                    + "  \"size\": 4,\n"
+                                    + "  \"numberOfElements\": 4\n"
+                                    + "}")
+                    )
+            ),
+    })
+    ResponseEntity<ResponseDto> getExhibitionReviews(Long exhibitionId, int page,int size);
+
+    @Operation(summary = "전시 댓글 상세 조회 API", description = "전시 및 댓글 id에 해당하는 댓글과 대댓글을 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Ok",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ResponseDto.class),
+                            examples =
+                            @ExampleObject(value = "{\n"
+                                    + "  \"code\": 200,\n"
+                                    + "  \"message\": \"OK\",\n"
+                                    + "  \"data\": {\n"
+                                    + "    \"id\": 1,\n"
+                                    + "    \"review\": \"수집하신 소장 작품 너무 좋네요!\",\n"
+                                    + "    \"name\": null,\n"
+                                    + "    \"heartCount\": 0,\n"
+                                    + "    \"createAt\": \"2024.11.27\",\n"
+                                    + "    \"replies\": [\n"
+                                    + "      {\n"
+                                    + "        \"id\": 5,\n"
+                                    + "        \"review\": \"1수집하신 소장 작품 너무 좋네요!\",\n"
+                                    + "        \"name\": null,\n"
+                                    + "        \"heartCount\": 0,\n"
+                                    + "        \"createAt\": \"2024.11.27\",\n"
+                                    + "        \"replies\": [\n"
+                                    + "          {\n"
+                                    + "            \"id\": 7,\n"
+                                    + "            \"review\": \"1수집하신 소장 작품 너무 좋네요!\",\n"
+                                    + "            \"name\": null,\n"
+                                    + "            \"heartCount\": 0,\n"
+                                    + "            \"createAt\": \"2024.11.27\",\n"
+                                    + "            \"replies\": []\n"
+                                    + "          },\n"
+                                    + "          {\n"
+                                    + "            \"id\": 8,\n"
+                                    + "            \"review\": \"2수집하신 소장 작품 너무 좋네요!\",\n"
+                                    + "            \"name\": null,\n"
+                                    + "            \"heartCount\": 0,\n"
+                                    + "            \"createAt\": \"2024.11.27\",\n"
+                                    + "            \"replies\": [\n"
+                                    + "              {\n"
+                                    + "                \"id\": 9,\n"
+                                    + "                \"review\": \"1수집하신 소장 작품 너무 좋네요!\",\n"
+                                    + "                \"name\": null,\n"
+                                    + "                \"heartCount\": 0,\n"
+                                    + "                \"createAt\": \"2024.11.27\",\n"
+                                    + "                \"replies\": []\n"
+                                    + "              }\n"
+                                    + "            ]\n"
+                                    + "          }\n"
+                                    + "        ]\n"
+                                    + "      },\n"
+                                    + "      {\n"
+                                    + "        \"id\": 6,\n"
+                                    + "        \"review\": \"2수집하신 소장 작품 너무 좋네요!\",\n"
+                                    + "        \"name\": null,\n"
+                                    + "        \"heartCount\": 0,\n"
+                                    + "        \"createAt\": \"2024.11.27\",\n"
+                                    + "        \"replies\": []\n"
+                                    + "      }\n"
+                                    + "    ]\n"
+                                    + "  }\n"
+                                    + "}")
+                    )
+            ),
+            @ApiResponse(responseCode = "404", description = "해당 자원을 찾을 수 없습니다.",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ResponseDto.class),
+                            examples =
+                            @ExampleObject(value = "{ \"code\": 404, \"message\": \"해당 전시 댓글이 존재하지 않습니다.\" }")
+                    )
+            ),
+    })
+    ResponseEntity<ResponseDto> getExhibitionReviews(Long exhibitionId, Long reviewId);
 }
 

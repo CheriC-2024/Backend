@@ -1,6 +1,8 @@
 package com.art.cheric.module.exhibition.service;
 
+import com.art.cheric.global.enums.ExhibitionOrderType;
 import com.art.cheric.global.error.exception.AppException;
+import com.art.cheric.global.util.DateFormatUtil;
 import com.art.cheric.module.art.domain.entity.Art;
 import com.art.cheric.module.art.domain.entity.ArtistArt;
 import com.art.cheric.module.art.domain.entity.OwnArt;
@@ -27,7 +29,10 @@ import com.art.cheric.module.exhibition.dto.req.ExhibitionArtReqDto;
 import com.art.cheric.module.exhibition.dto.req.ExhibitionReqDto;
 import com.art.cheric.module.exhibition.dto.req.ExhibitionReviewReqDto;
 import com.art.cheric.module.exhibition.dto.res.ExhibitionArtResDto;
+import com.art.cheric.module.exhibition.dto.res.ExhibitionListResDto;
 import com.art.cheric.module.exhibition.dto.res.ExhibitionResDto;
+import com.art.cheric.module.exhibition.dto.res.ExhibitionReviewDetailResDto;
+import com.art.cheric.module.exhibition.dto.res.ExhibitionReviewListResDto;
 import com.art.cheric.module.exhibition.dto.res.ExhibitionReviewResDto;
 import com.art.cheric.module.exhibition.error.ExhibitionErrorCode;
 import com.art.cheric.module.user.domain.entity.User;
@@ -37,6 +42,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -79,8 +88,8 @@ public class ExhibitionService {
 
     // 작품 배경 컬러 저장
     private void saveExhibitionBackgroundColor(ExhibitionReqDto exhibitionReq, Exhibition exhibition) {
-        if (exhibition.getCoverImgUrl() == null && exhibitionReq.exhibitionBackgroundType() != null
-                && exhibition.getColors() != null) {
+        if (exhibitionReq.coverImgUrl() == null && exhibitionReq.exhibitionBackgroundType() != null
+                && exhibitionReq.colors() != null) {
             exhibitionBackgroundColorRepository.saveAll(
                     getColorListToExhibitionBackgroundColor(exhibitionReq.colors(), exhibition));
         }
@@ -95,11 +104,14 @@ public class ExhibitionService {
     }
 
     // color string List를 엔티티로 변환
-    private List<ExhibitionBackgroundColor> getColorListToExhibitionBackgroundColor(List<String> colors, Exhibition exhibition) {
+    private List<ExhibitionBackgroundColor> getColorListToExhibitionBackgroundColor(List<String> colors,
+                                                                                    Exhibition exhibition) {
+        int[] num = {0};
         return colors.stream()
                 .map(color -> ExhibitionBackgroundColor.of(
                         exhibition,
-                        color
+                        color,
+                        ++num[0]
                 ))
                 .collect(Collectors.toList());
     }
@@ -130,7 +142,7 @@ public class ExhibitionService {
 
     // 전시 작품 리스트 저장
     private void saveExhibitionArts(Exhibition exhibition, List<ExhibitionArtReqDto> exhibitionArtReqs) {
-        int[] num = {0}; // 배열로 참조를 유지하여 증가값 저장
+        int[] num = {0};
         List<ExhibitionArt> exhibitionArts = exhibitionArtReqs.stream()
                 .map(artReq -> createExhibitionArt(exhibition, artReq, ++num[0]))
                 .toList();
@@ -410,5 +422,103 @@ public class ExhibitionService {
         exhibitionRepository.save(exhibition);
 
         return exhibition.getHits();
+    }
+
+    public Page<ExhibitionListResDto> getExhibitions(Long artId, Long userId, ExhibitionOrderType order, int page,
+                                                     int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+
+
+        Page<Exhibition> exhibitionPage = exhibitionRepository.getExhibitionsBySortAndFilterAndPaging(artId, userId,
+                order, pageable);
+
+        List<ExhibitionListResDto> exhibitionListRess = new ArrayList<>();
+        for (Exhibition exhibition : exhibitionPage.getContent()) {
+            List<String> colors = exhibitionBackgroundColorRepository.findByExhibitionIdOrderByNum(exhibition.getId());
+
+            exhibitionListRess.add(
+                    ExhibitionListResDto.of(
+                            exhibition.getId(),
+                            exhibition.getName(),
+                            exhibition.getFont(),
+                            exhibition.getFontColor(),
+                            colors,
+                            exhibition.getExhibitionBackgroundType(),
+                            exhibition.getCoverImgUrl(),
+                            exhibition.getExhibitionThemes().stream()
+                                    .map(ExhibitionTheme::getTheme).toList(),
+                            exhibition.getHeartCount(),
+                            exhibition.getHits()
+                    )
+            );
+        }
+
+
+        return new PageImpl<>(exhibitionListRess, PageRequest.of((int) (exhibitionPage.getPageable().getOffset() / exhibitionPage.getPageable().getPageSize()), exhibitionPage.getPageable().getPageSize()), exhibitionPage.getTotalPages());
+    }
+
+    public Page<ExhibitionReviewListResDto> getExhibitionReviews(Long exhibitionId, int page, int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<ExhibitionReview> exhibitionReviewPage = exhibitionReviewRepository.findReviewsByExhibitionIdWithPaging(
+                exhibitionId, pageable );
+
+        List<ExhibitionReviewListResDto> exhibitionReviewListRess = new ArrayList<>();
+        for (ExhibitionReview exhibitionReview : exhibitionReviewPage.getContent()) {
+            exhibitionReviewListRess.add(
+                    ExhibitionReviewListResDto.of(
+                            exhibitionReview.getId(),
+                            exhibitionReview.getMessage(),
+                            exhibitionReview.getUser().getName(),
+                            exhibitionReview.getHeartCount(),
+                            exhibitionReviewRepository.countByExhibitionIdAndExhibitionReviewId(exhibitionId,
+                                    exhibitionReview.getId()),
+                            DateFormatUtil.formatLocalDateTime(exhibitionReview.getCreatedAt())
+                    )
+            );
+        }
+
+        return new PageImpl<>(exhibitionReviewListRess, pageable, exhibitionReviewPage.getTotalPages());
+    }
+
+    public ExhibitionReviewDetailResDto getExhibitionReviewsById(Long exhibitionId, Long reviewId) {
+        ExhibitionReview exhibitionReview = exhibitionReviewRepository.findByIdAndExhibitionId(reviewId, exhibitionId)
+                .orElseThrow(() -> new AppException(ExhibitionErrorCode.REVIEW_NOT_EXIST));
+
+        // 전시 기본 댓글 조회
+        ExhibitionReviewDetailResDto exhibitionReviewDetailRes = convertToDetailResDto(exhibitionReview);
+
+        // 대댓글 리스트를 가져와서 재귀적으로 처리
+        List<ExhibitionReviewDetailResDto> replies = getRepliesRecursively(reviewId);
+
+        // 대댓글 정보를 메인 댓글 DTO에 추가
+        return exhibitionReviewDetailRes.addExhibitionReviewListResDto(replies);
+    }
+
+    private List<ExhibitionReviewDetailResDto> getRepliesRecursively(Long parentReviewId) {
+        // 대댓글을 조회
+        List<ExhibitionReview> replies = exhibitionReviewRepository.findReplyById(parentReviewId);
+
+        // 대댓글 각각에 대해 DTO 변환 및 재귀 호출
+        List<ExhibitionReviewDetailResDto> replyDtos = new ArrayList<>();
+        for (ExhibitionReview reply : replies) {
+            ExhibitionReviewDetailResDto replyDto = convertToDetailResDto(reply);
+            replyDto.addExhibitionReviewListResDto(getRepliesRecursively(reply.getId())); // 재귀 호출
+            replyDtos.add(replyDto);
+        }
+
+        return replyDtos;
+    }
+
+    private ExhibitionReviewDetailResDto convertToDetailResDto(ExhibitionReview review) {
+        return ExhibitionReviewDetailResDto.of(
+                review.getId(),
+                review.getMessage(),
+                review.getUser().getName(),
+                review.getHeartCount(),
+                DateFormatUtil.formatLocalDateTime(review.getCreatedAt())
+        );
     }
 }
