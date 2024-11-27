@@ -1,6 +1,8 @@
 package com.art.cheric.module.user.controller;
 
 import com.art.cheric.global.common.ResponseDto;
+import com.art.cheric.global.enums.ArtType;
+import com.art.cheric.global.enums.UserOrderType;
 import com.art.cheric.module.user.domain.entity.User;
 import com.art.cheric.module.user.dto.req.SignUpReqDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,6 +13,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+
+import java.util.List;
 
 @Tag(name = "User", description = "사용자 관련 API")
 public interface UserControllerDocs {
@@ -250,5 +254,158 @@ public interface UserControllerDocs {
             )
     })
     ResponseEntity<ResponseDto> getUserDetailInfo(User user, Long userId);
+
+    @Operation(summary = "사용자 간단 리스트 조회 API", description = "사용자 리스트를 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Ok",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ResponseDto.class),
+                            examples =
+                            @ExampleObject(value = "{\n" +
+                                    "  \"code\": 200,\n" +
+                                    "  \"message\": \"OK\",\n" +
+                                    "  \"data\": [\n" +
+                                    "    {\n" +
+                                    "      \"id\": 3,\n" +
+                                    "      \"name\": \"test2\",\n" +
+                                    "      \"profileImgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-profileimage.png\"\n" +
+                                    "    },\n" +
+                                    "    {\n" +
+                                    "      \"id\": 2,\n" +
+                                    "      \"name\": \"test1\",\n" +
+                                    "      \"profileImgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-profileimage.png\"\n" +
+                                    "    }\n" +
+                                    "  ],\n" +
+                                    "  \"totalElements\": 2,\n" +
+                                    "  \"totalPages\": 1,\n" +
+                                    "  \"size\": 10,\n" +
+                                    "  \"numberOfElements\": 2\n" +
+                                    "}")
+                    )
+            )
+    })
+    ResponseEntity<ResponseDto> getUserBriefList(
+            User user, Boolean isFollowing, Boolean isArtist, List<ArtType> artTypes, UserOrderType order,
+            int page, int size);
+
+
+    @Operation(summary = "사용자 팔로우 여부 포함 리스트 조회 API", description = "사용자 팔로우 여부 포함 리스트를 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Ok",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ResponseDto.class),
+                            examples =
+                            @ExampleObject(value = "{\n" +
+                                    "  \"code\": 200,\n" +
+                                    "  \"message\": \"OK\",\n" +
+                                    "  \"data\": [\n" +
+                                    "    {\n" +
+                                    "      \"id\": 3,\n" +
+                                    "      \"name\": \"test2\",\n" +
+                                    "      \"profileImgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-profileimage.png\",\n" +
+                                    "      \"artTypes\": [\n" +
+                                    "        \"WATER_PAINTING\",\n" +
+                                    "        \"OIL_PAINTING\"\n" +
+                                    "      ],\n" +
+                                    "      \"following\": true\n" +
+                                    "    },\n" +
+                                    "    {\n" +
+                                    "      \"id\": 2,\n" +
+                                    "      \"name\": \"test1\",\n" +
+                                    "      \"profileImgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-profileimage.png\",\n" +
+                                    "      \"artTypes\": [\n" +
+                                    "        \"ORIENTAL_PAINTING\",\n" +
+                                    "        \"DESIGN_ART\"\n" +
+                                    "      ],\n" +
+                                    "      \"following\": true\n" +
+                                    "    }\n" +
+                                    "  ],\n" +
+                                    "  \"totalElements\": 2,\n" +
+                                    "  \"totalPages\": 1,\n" +
+                                    "  \"size\": 10,\n" +
+                                    "  \"numberOfElements\": 2\n" +
+                                    "}")
+                    )
+            )
+    })
+    ResponseEntity<ResponseDto> getUserFollowInfoList(
+            User user, Boolean isFollowing, Boolean isArtist, List<ArtType> artTypes, UserOrderType order,
+            int page, int size);
+
+    @Operation(summary = "분야 기반 사용자 추천 리스트 조회 API", description = "조회한 분야를 기반으로 추천하는 컬렉터를 제공합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Ok",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ResponseDto.class),
+                            examples =
+                            @ExampleObject(value = "{\n" +
+                                    "  \"code\": 201,\n" +
+                                    "  \"message\": \"Created\",\n" +
+                                    "  \"data\": [\n" +
+                                    "    {\n" +
+                                    "      \"id\": 2,\n" +
+                                    "      \"name\": \"test1\",\n" +
+                                    "      \"profileImgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-profileimage.png\",\n" +
+                                    "      \"artBriefRess\": [\n" +
+                                    "        {\n" +
+                                    "          \"artId\": 24,\n" +
+                                    "          \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\",\n" +
+                                    "          \"name\": \"1 별이 빛나는 밤에\",\n" +
+                                    "          \"cherryPrice\": 2,\n" +
+                                    "          \"collectorsArt\": false\n" +
+                                    "        },\n" +
+                                    "        {\n" +
+                                    "          \"artId\": 23,\n" +
+                                    "          \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\",\n" +
+                                    "          \"name\": \"1 별이 빛나는 밤에\",\n" +
+                                    "          \"cherryPrice\": 2,\n" +
+                                    "          \"collectorsArt\": false\n" +
+                                    "        },\n" +
+                                    "        {\n" +
+                                    "          \"artId\": 22,\n" +
+                                    "          \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\",\n" +
+                                    "          \"name\": \"1 별이 빛나는 밤에\",\n" +
+                                    "          \"cherryPrice\": 2,\n" +
+                                    "          \"collectorsArt\": false\n" +
+                                    "        }\n" +
+                                    "      ]\n" +
+                                    "    },\n" +
+                                    "    {\n" +
+                                    "      \"id\": 3,\n" +
+                                    "      \"name\": \"test2\",\n" +
+                                    "      \"profileImgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-profileimage.png\",\n" +
+                                    "      \"artBriefRess\": [\n" +
+                                    "        {\n" +
+                                    "          \"artId\": 20,\n" +
+                                    "          \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\",\n" +
+                                    "          \"name\": \"1 별이 빛나는 밤에\",\n" +
+                                    "          \"cherryPrice\": 2,\n" +
+                                    "          \"collectorsArt\": false\n" +
+                                    "        },\n" +
+                                    "        {\n" +
+                                    "          \"artId\": 19,\n" +
+                                    "          \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\",\n" +
+                                    "          \"name\": \"1 별이 빛나는 밤에\",\n" +
+                                    "          \"cherryPrice\": 2,\n" +
+                                    "          \"collectorsArt\": false\n" +
+                                    "        },\n" +
+                                    "        {\n" +
+                                    "          \"artId\": 18,\n" +
+                                    "          \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\",\n" +
+                                    "          \"name\": \"1 별이 빛나는 밤에\",\n" +
+                                    "          \"cherryPrice\": 2,\n" +
+                                    "          \"collectorsArt\": false\n" +
+                                    "        }\n" +
+                                    "      ]\n" +
+                                    "    }\n" +
+                                    "  ]\n" +
+                                    "}")
+                    )
+            )
+    })
+    ResponseEntity<ResponseDto> getUserRecommend(User user, ArtType artType, UserOrderType order, int page, int size);
 }
 
