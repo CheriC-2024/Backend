@@ -7,9 +7,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ArtRepositoryCustom {
     Page<Art> getArtsBySortAndFilterAndPaging(
-            Long userId, Boolean isCollectorsArt, ArtType artType, ArtOrderType order, Pageable pageable);
+            Boolean isFollowing, List<Long> followingIds, Long userId, Boolean isCollectorsArt, ArtType artType, ArtOrderType order, Pageable pageable);
 
 }
