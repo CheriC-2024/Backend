@@ -6,7 +6,7 @@ import lombok.Getter;
 public enum ArtOrderType {
     NAME("이름순"),
     LATEST("최신순"),
-    MY_TYPE("관련 분야순");
+    LIKE("좋아요순");
 
     private final String value;
 
