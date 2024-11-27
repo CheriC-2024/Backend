@@ -13,5 +13,5 @@ import java.util.List;
 public interface ArtRepositoryCustom {
     Page<Art> getArtsBySortAndFilterAndPaging(
             Boolean isFollowing, List<Long> followingIds, Long userId, Boolean isCollectorsArt, ArtType artType, ArtOrderType order, Pageable pageable);
-
+    List<Art> getArtsByUserIdAndCollectorsArtFalseOrderByCreatedAtDesc(Long userId);
 }
