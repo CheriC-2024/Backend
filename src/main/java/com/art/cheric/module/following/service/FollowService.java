@@ -1,5 +1,6 @@
 package com.art.cheric.module.following.service;
 
+import com.art.cheric.global.enums.ArtType;
 import com.art.cheric.global.enums.FollowSortType;
 import com.art.cheric.global.enums.UserOrderType;
 import com.art.cheric.global.error.exception.AppException;
@@ -7,6 +8,7 @@ import com.art.cheric.module.following.domain.entity.Follow;
 import com.art.cheric.module.following.domain.repository.FollowRepository;
 import com.art.cheric.module.following.error.FollowErrorCode;
 import com.art.cheric.module.user.domain.entity.User;
+import com.art.cheric.module.user.domain.entity.UserPart;
 import com.art.cheric.module.user.dto.res.UserBrief2ResDto;
 import com.art.cheric.module.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -130,9 +133,14 @@ public class FollowService {
                 user.getId(),
                 user.getName(),
                 user.getProfileImgUrl(),
-                userService.getArtTypes(user.getUserParts()),
+                getArtTypes(user.getUserParts()),
                 followingIds.contains(user.getId())
         );
     }
 
+    private List<ArtType> getArtTypes(List<UserPart> userParts) {
+        return userParts.stream()
+                .map(UserPart::getUserArtType)
+                .collect(Collectors.toList());
+    }
 }
