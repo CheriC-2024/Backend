@@ -3,11 +3,13 @@ package com.art.cheric.module.exhibition.dto.res;
 import com.art.cheric.global.enums.ExhibitionBackgroundType;
 import com.art.cheric.global.enums.FontColorType;
 import com.art.cheric.global.enums.FontType;
+import com.art.cheric.module.user.dto.res.UserBriefResDto;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.util.List;
 
 @Schema(description = "전시 리스트 응답 DTO")
 @Getter
@@ -43,9 +45,11 @@ public class ExhibitionListResDto {
     @Schema(description = "전시 관람 수", example = "123")
     private final int hits;
 
+    private final UserBriefResDto userRes;
+
     public static ExhibitionListResDto of(Long exhibitionId, String name, FontType font, FontColorType fontColor,
                                           List<String> colors, ExhibitionBackgroundType exhibitionBackgroundType,
-                                          String coverImgUrl, List<String> themes, int heartCount, int hits) {
+                                          String coverImgUrl, List<String> themes, int heartCount, int hits, UserBriefResDto userRes) {
         return ExhibitionListResDto.builder()
                 .exhibitionId(exhibitionId)
                 .name(name)
@@ -57,6 +61,7 @@ public class ExhibitionListResDto {
                 .themes(themes)
                 .heartCount(heartCount)
                 .hits(hits)
+                .userRes(userRes)
                 .build();
     }
 }
