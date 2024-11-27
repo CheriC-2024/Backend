@@ -26,7 +26,7 @@ public class ArtRepositoryImpl implements ArtRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Page<Art> getArtsBySortAndFilterAndPaging(Long userId, Boolean isCollectorsArt, ArtType artType,
+    public Page<Art> getArtsBySortAndFilterAndPaging(Boolean isFollowing, List<Long> followingIds, Long userId, Boolean isCollectorsArt, ArtType artType,
                                                      ArtOrderType order, Pageable pageable) {
         QArt art = QArt.art;
 
@@ -37,11 +37,24 @@ public class ArtRepositoryImpl implements ArtRepositoryCustom {
         BooleanExpression isCollectorsArtCondition = isCollectorsArt != null ? art.isCollectorsArt.eq(isCollectorsArt) : null;
         BooleanExpression artTypeCondition = artType != null ? art.artParts.any().artType.eq(artType) : null;
         BooleanExpression userCondition = userId != null ? art.user.id.eq(userId) : null;
+        BooleanExpression isFollowingCondition = null;
+        if (isFollowing != null) {
+            if (isFollowing) {
+                isFollowingCondition = followingIds != null
+                        ? art.user.id.in(followingIds)
+                        : null;
+            } else {
+                isFollowingCondition = followingIds != null
+                        ? art.user.id.notIn(followingIds)
+                        : null;
+
+            }
+        }
 
         // 데이터 조회
         List<Art> results = jpaQueryFactory
                 .selectFrom(art)
-                .where(isCollectorsArtCondition, artTypeCondition, userCondition)
+                .where(userCondition, isCollectorsArtCondition, artTypeCondition, isFollowingCondition)
                 .orderBy(orderSpecifiers.toArray(new OrderSpecifier[0]))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -51,7 +64,7 @@ public class ArtRepositoryImpl implements ArtRepositoryCustom {
         long total = jpaQueryFactory
                 .select(art.count())
                 .from(art)
-                .where(isCollectorsArtCondition, artTypeCondition, userCondition)
+                .where(userCondition, isCollectorsArtCondition, artTypeCondition, isFollowingCondition)
                 .fetchOne();
 
         return new PageImpl<>(results, pageable, total);
