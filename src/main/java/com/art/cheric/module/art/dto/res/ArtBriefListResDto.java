@@ -16,18 +16,27 @@ public class ArtBriefListResDto {
     @Schema(description = "작품 이미지 경로", example = "https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/OWN_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png")
     private final String imgUrl;
 
-    @Schema(description = "작가 이름", example = "고흐")
-    private final String artistName;
-
     @Schema(description = "작품 이름", example = "별이 빛나는 밤에")
     private final String name;
 
-    public static ArtBriefListResDto of(Long artId, String imgUrl, String artistName, String name) {
+    @Schema(description = "작품 체리 개수", example = "null")
+    private final Integer cherryNum;
+
+    @Schema(description = "소유주 이름", example = "윤컬렉터")
+    private final String ownerName;
+
+    @Schema(description = "소유주 프로필 이미지 경로", example = "https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-userImg.png")
+    private final String ownerImgUrl;
+
+    public static ArtBriefListResDto of(Long artId, String imgUrl, String name, Integer cherryNum,
+                                        String ownerName, String ownerImgUrl) {
         return ArtBriefListResDto.builder()
                 .artId(artId)
                 .imgUrl(imgUrl)
-                .artistName(artistName)
                 .name(name)
+                .cherryNum(cherryNum)
+                .ownerName(ownerName)
+                .ownerImgUrl(ownerImgUrl)
                 .build();
     }
 }
