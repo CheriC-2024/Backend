@@ -14,6 +14,7 @@ import com.art.cheric.module.artist.service.ArtistService;
 import com.art.cheric.module.following.service.FollowService;
 import com.art.cheric.module.user.domain.entity.User;
 import com.art.cheric.module.user.domain.entity.UserPart;
+import com.art.cheric.module.user.dto.res.UserBriefResDto;
 import com.art.cheric.module.user.dto.res.UserResDto;
 import com.art.cheric.module.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -308,11 +309,11 @@ public class ArtService {
                         art.getName(),
                         art.getCherryPrice(),
                         art.getUser().getName(),
-                        art.getUser().getProfileImgUrl(),
-                        art.getUser().getId(),
-                        DateFormatUtil.formatLocalDateTime(art.getCreatedAt())
-                )
-        ).toList();
+                        UserBriefResDto.of(
+                                art.getUser().getId(),
+                                art.getUser().getProfileImgUrl(),
+                                DateFormatUtil.formatLocalDateTime(art.getCreatedAt()
+                                )))).toList();
 
         // 페이징된 결과물 반환
         return new PageImpl<>(result, pageable, arts.getTotalElements());
