@@ -36,6 +36,7 @@ import com.art.cheric.module.exhibition.dto.res.ExhibitionReviewListResDto;
 import com.art.cheric.module.exhibition.dto.res.ExhibitionReviewResDto;
 import com.art.cheric.module.exhibition.error.ExhibitionErrorCode;
 import com.art.cheric.module.user.domain.entity.User;
+import com.art.cheric.module.user.dto.res.UserBriefResDto;
 import com.art.cheric.module.user.service.UserService;
 import java.util.ArrayList;
 import java.util.List;
@@ -448,7 +449,12 @@ public class ExhibitionService {
                             exhibition.getExhibitionThemes().stream()
                                     .map(ExhibitionTheme::getTheme).toList(),
                             exhibition.getHeartCount(),
-                            exhibition.getHits()
+                            exhibition.getHits(),
+                            UserBriefResDto.of(
+                                    exhibition.getUser().getId(),
+                                    exhibition.getUser().getName(),
+                                    exhibition.getUser().getProfileImgUrl()
+                            )
                     )
             );
         }
