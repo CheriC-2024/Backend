@@ -181,7 +181,7 @@ public class UserService {
         );
     }
 
-    private List<ArtType> getArtTypes(List<UserPart> userParts) {
+    public List<ArtType> getArtTypes(List<UserPart> userParts) {
         return userParts.stream()
                 .map(UserPart::getUserArtType)
                 .collect(Collectors.toList());
@@ -283,7 +283,7 @@ public class UserService {
     }
 
     public List<UserListResDto> getUserRecommend(User user, ArtType artTypes,
-                                           UserOrderType order, int page, int size) {
+                                                 UserOrderType order, int page, int size) {
         // 페이징 데이터 전달
         Pageable pageable = PageRequest.of(page, size);
 
