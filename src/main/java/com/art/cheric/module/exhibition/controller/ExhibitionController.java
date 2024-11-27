@@ -105,11 +105,12 @@ public class ExhibitionController implements ExhibitionControllerDocs {
 
     @GetMapping
     public ResponseEntity<ResponseDto> getExhibitions(
-            @Schema(name = "작품 id", description = "해당 작품을 포함한 전시 리스트를 불러옵니다.") @RequestParam(name = "artId") @Nullable Long artId,
-            @Schema(name = "사용자 id", description = "해당 사용자의 전시 리스트를 불러옵니다.") @RequestParam(name = "userId") @Nullable Long userId,
+            @Schema(description = "해당 작품을 포함한 전시 리스트를 불러옵니다.") @RequestParam(name = "artId") @Nullable Long artId,
+            @Schema(description = "해당 사용자가 생성한 전시 리스트를 불러옵니다.") @RequestParam(name = "userId") @Nullable Long userId,
             @RequestParam(name = "order") ExhibitionOrderType order,
-            @Schema(name = "페이지 번호", description = "0번부터 시작하는 페이지 번호에 따라 불러옵니다.") @RequestParam(name = "page") int page,
-            @Schema(name = "페이지 내 아이템 개수", description = "해당하는 페이지에서 아이템 개수만큼 불러옵니다.") @RequestParam(name = "size") int size) {
+            @Schema(description = "0번부터 시작합니다. 조회할 페이지 번호를 의미합니다.")  @RequestParam(name = "page") int page,
+            @Schema(description = "조회할 페이지 크기를 의미합니다.")  @RequestParam(name = "size") int size) {
+        System.out.println("Request Params: " + page + size);
         Page<ExhibitionListResDto> resPage = exhibitionService.getExhibitions(artId, userId, order, page, size);
         return ResponseEntity.status(200).body(
                 DataPageResponseDto.of(resPage.getContent(), 200, resPage.getTotalElements(),
