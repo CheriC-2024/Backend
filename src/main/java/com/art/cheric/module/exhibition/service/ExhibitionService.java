@@ -208,8 +208,7 @@ public class ExhibitionService {
                 artistName = ownArt.getArtistName();
                 artPrice = ownArt.getPrice();
             } else {
-                ArtistArt artistArt = artService.findArtistArtByArtId(art.getId());
-                artistName = artistArt.getUser().getName();
+                artistName = art.getUser().getName();
             }
 
             // 작품 정보 가져오기
