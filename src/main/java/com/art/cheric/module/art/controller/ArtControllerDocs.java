@@ -222,36 +222,102 @@ public interface ArtControllerDocs {
                                     "      \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\",\n" +
                                     "      \"name\": \"1 별이 빛나는 밤에\",\n" +
                                     "      \"cherryNum\": 2,\n" +
-                                    "      \"ownerName\": \"artist\",\n" +
-                                    "      \"ownerImgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-profileimage.png\",\n" +
-                                    "      \"ownerId\": 2,\n" +
-                                    "      \"createdAt\": \"2024.11.27 08:49\"\n" +
+                                    "      \"createdAt\": \"artist\",\n" +
+                                    "      \"userRes\": {\n" +
+                                    "        \"id\": 2,\n" +
+                                    "        \"name\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-profileimage.png\",\n" +
+                                    "        \"profileImgUrl\": \"2024.11.27 08:49\"\n" +
+                                    "      }\n" +
                                     "    },\n" +
                                     "    {\n" +
                                     "      \"artId\": 23,\n" +
                                     "      \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\",\n" +
                                     "      \"name\": \"1 별이 빛나는 밤에\",\n" +
                                     "      \"cherryNum\": 2,\n" +
-                                    "      \"ownerName\": \"artist\",\n" +
-                                    "      \"ownerImgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-profileimage.png\",\n" +
-                                    "      \"ownerId\": 2,\n" +
-                                    "      \"createdAt\": \"2024.11.27 08:45\"\n" +
+                                    "      \"createdAt\": \"artist\",\n" +
+                                    "      \"userRes\": {\n" +
+                                    "        \"id\": 2,\n" +
+                                    "        \"name\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-profileimage.png\",\n" +
+                                    "        \"profileImgUrl\": \"2024.11.27 08:45\"\n" +
+                                    "      }\n" +
                                     "    },\n" +
                                     "    {\n" +
                                     "      \"artId\": 22,\n" +
                                     "      \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\",\n" +
                                     "      \"name\": \"1 별이 빛나는 밤에\",\n" +
                                     "      \"cherryNum\": 2,\n" +
-                                    "      \"ownerName\": \"artist\",\n" +
-                                    "      \"ownerImgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-profileimage.png\",\n" +
-                                    "      \"ownerId\": 2,\n" +
-                                    "      \"createdAt\": \"2024.11.27 08:37\"\n" +
+                                    "      \"createdAt\": \"artist\",\n" +
+                                    "      \"userRes\": {\n" +
+                                    "        \"id\": 2,\n" +
+                                    "        \"name\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-profileimage.png\",\n" +
+                                    "        \"profileImgUrl\": \"2024.11.27 08:37\"\n" +
+                                    "      }\n" +
+                                    "    },\n" +
+                                    "    {\n" +
+                                    "      \"artId\": 21,\n" +
+                                    "      \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\",\n" +
+                                    "      \"name\": \"1 별이 빛나는 밤에\",\n" +
+                                    "      \"cherryNum\": 2,\n" +
+                                    "      \"createdAt\": \"artist\",\n" +
+                                    "      \"userRes\": {\n" +
+                                    "        \"id\": 2,\n" +
+                                    "        \"name\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-profileimage.png\",\n" +
+                                    "        \"profileImgUrl\": \"2024.11.27 08:16\"\n" +
+                                    "      }\n" +
+                                    "    },\n" +
+                                    "    {\n" +
+                                    "      \"artId\": 20,\n" +
+                                    "      \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\",\n" +
+                                    "      \"name\": \"1 별이 빛나는 밤에\",\n" +
+                                    "      \"cherryNum\": 2,\n" +
+                                    "      \"createdAt\": \"artist\",\n" +
+                                    "      \"userRes\": {\n" +
+                                    "        \"id\": 3,\n" +
+                                    "        \"name\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-profileimage.png\",\n" +
+                                    "        \"profileImgUrl\": \"2024.11.27 08:36\"\n" +
+                                    "      }\n" +
+                                    "    },\n" +
+                                    "    {\n" +
+                                    "      \"artId\": 19,\n" +
+                                    "      \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\",\n" +
+                                    "      \"name\": \"1 별이 빛나는 밤에\",\n" +
+                                    "      \"cherryNum\": 2,\n" +
+                                    "      \"createdAt\": \"artist\",\n" +
+                                    "      \"userRes\": {\n" +
+                                    "        \"id\": 3,\n" +
+                                    "        \"name\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-profileimage.png\",\n" +
+                                    "        \"profileImgUrl\": \"2024.11.27 08:33\"\n" +
+                                    "      }\n" +
+                                    "    },\n" +
+                                    "    {\n" +
+                                    "      \"artId\": 18,\n" +
+                                    "      \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\",\n" +
+                                    "      \"name\": \"1 별이 빛나는 밤에\",\n" +
+                                    "      \"cherryNum\": 2,\n" +
+                                    "      \"createdAt\": \"artist\",\n" +
+                                    "      \"userRes\": {\n" +
+                                    "        \"id\": 3,\n" +
+                                    "        \"name\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-profileimage.png\",\n" +
+                                    "        \"profileImgUrl\": \"2024.11.27 08:24\"\n" +
+                                    "      }\n" +
+                                    "    },\n" +
+                                    "    {\n" +
+                                    "      \"artId\": 17,\n" +
+                                    "      \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\",\n" +
+                                    "      \"name\": \"별이 빛나는 밤에\",\n" +
+                                    "      \"cherryNum\": 2,\n" +
+                                    "      \"createdAt\": \"artist\",\n" +
+                                    "      \"userRes\": {\n" +
+                                    "        \"id\": 3,\n" +
+                                    "        \"name\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-profileimage.png\",\n" +
+                                    "        \"profileImgUrl\": \"2024.11.27 08:20\"\n" +
+                                    "      }\n" +
                                     "    }\n" +
                                     "  ],\n" +
                                     "  \"totalElements\": 8,\n" +
-                                    "  \"totalPages\": 3,\n" +
-                                    "  \"size\": 3,\n" +
-                                    "  \"numberOfElements\": 3\n" +
+                                    "  \"totalPages\": 1,\n" +
+                                    "  \"size\": 10,\n" +
+                                    "  \"numberOfElements\": 8\n" +
                                     "}")
                     )
             )
