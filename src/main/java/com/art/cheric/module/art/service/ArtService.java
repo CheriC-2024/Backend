@@ -1,37 +1,35 @@
 package com.art.cheric.module.art.service;
 
+import com.art.cheric.global.enums.ArtOrderType;
 import com.art.cheric.global.enums.ArtType;
 import com.art.cheric.global.error.exception.AppException;
-import com.art.cheric.module.art.domain.entity.Art;
-import com.art.cheric.module.art.domain.entity.ArtFile;
-import com.art.cheric.module.art.domain.entity.ArtHeart;
-import com.art.cheric.module.art.domain.entity.ArtPart;
-import com.art.cheric.module.art.domain.entity.ArtPlusImage;
-import com.art.cheric.module.art.domain.entity.ArtistArt;
-import com.art.cheric.module.art.domain.entity.OwnArt;
-import com.art.cheric.module.art.domain.repository.ArtFileRepository;
-import com.art.cheric.module.art.domain.repository.ArtHeartRepository;
-import com.art.cheric.module.art.domain.repository.ArtPartRepository;
-import com.art.cheric.module.art.domain.repository.ArtPlusImageRepository;
-import com.art.cheric.module.art.domain.repository.ArtRepository;
-import com.art.cheric.module.art.domain.repository.ArtistArtRepository;
-import com.art.cheric.module.art.domain.repository.OwnArtRepository;
+import com.art.cheric.global.util.DateFormatUtil;
+import com.art.cheric.module.art.domain.entity.*;
+import com.art.cheric.module.art.domain.repository.*;
 import com.art.cheric.module.art.dto.req.ArtReqDto;
 import com.art.cheric.module.art.dto.req.OwnArtReqDto;
-import com.art.cheric.module.art.dto.res.ArtDescriptionResDto;
-import com.art.cheric.module.art.dto.res.ArtResDto;
-import com.art.cheric.module.art.dto.res.OwnArtResDto;
+import com.art.cheric.module.art.dto.res.*;
 import com.art.cheric.module.art.error.ArtErrorCode;
 import com.art.cheric.module.artist.service.ArtistService;
+import com.art.cheric.module.following.service.FollowService;
 import com.art.cheric.module.user.domain.entity.User;
+import com.art.cheric.module.user.domain.entity.UserPart;
 import com.art.cheric.module.user.dto.res.UserResDto;
 import com.art.cheric.module.user.service.UserService;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -47,6 +45,7 @@ public class ArtService {
     private final ArtHeartRepository artHeartRepository;
     private final ArtistService artistService;
     private final UserService userService;
+    private final FollowService followService;
 
     // 소장 작품 생성
     @Transactional
@@ -54,7 +53,7 @@ public class ArtService {
         // art 생성
         ArtReqDto artReq = ownArtReq.artBasicInfo();
         Art art = artRepository.save(
-                Art.of(artReq.name(), artReq.description(), artReq.series(), artReq.material(), artReq.madeAt(), null,
+                Art.of(user, artReq.name(), artReq.description(), artReq.series(), artReq.material(), artReq.madeAt(), null,
                         artReq.horizontalSize(), artReq.verticalSize(), artReq.imgUrl(), true));
 
         // artPart 생성
@@ -69,7 +68,7 @@ public class ArtService {
 
         // ownArt 생성
         OwnArt ownArt = ownArtRepository.save(
-                OwnArt.of(art, user, ownArtReq.artistName(), ownArtReq.price(), ownArtReq.isPriceOpen()));
+                OwnArt.of(art, ownArtReq.artistName(), ownArtReq.price(), ownArtReq.isPriceOpen()));
 
         // ownArt File 생성
         for (String fileUrl : ownArtReq.fileUrl()) {
@@ -90,7 +89,7 @@ public class ArtService {
 
         // art 생성
         Art art = artRepository.save(
-                Art.of(artReq.name(), artReq.description(), artReq.series(), artReq.material(), artReq.madeAt(),
+                Art.of(user, artReq.name(), artReq.description(), artReq.series(), artReq.material(), artReq.madeAt(),
                         artReq.cherryPrice(),
                         artReq.horizontalSize(), artReq.verticalSize(), artReq.imgUrl(), false));
 
@@ -100,7 +99,7 @@ public class ArtService {
         }
 
         // artistArt 생성
-        artistArtRepository.save(ArtistArt.of(art, user));
+        artistArtRepository.save(ArtistArt.from(art));
 
         return art.getId();
     }
@@ -126,12 +125,10 @@ public class ArtService {
             OwnArt ownArt = findOwnArtByArtId(art.getId());
             artistName = ownArt.getArtistName();
             artPrice = ownArt.getPrice();
-            userResDto = userService.createUserResDto(ownArt.getUser());
         } else {
-            ArtistArt artistArt = findArtistArtByArtId(art.getId());
-            artistName = artistArt.getUser().getName();
-            userResDto = userService.createUserResDto(artistArt.getUser());
+            artistName = art.getUser().getName();
         }
+        userResDto = userService.createUserResDto(art.getUser());
 
         // 값 제공
         return ArtResDto.of(
@@ -206,7 +203,7 @@ public class ArtService {
     // 소장 작품 소개 불러오기
     public ArtDescriptionResDto getOwnArtDescription(User user, Long artId) {
         // 작품 찾기
-        Art art = artRepository.findById(artId)
+        Art art = artRepository.findByIdAndUserId(artId, user.getId())
                 .orElseThrow(() -> new AppException(ArtErrorCode.ART_NOT_FOUND));
 
         // 작품이 작가 작품인지 확인
@@ -215,7 +212,7 @@ public class ArtService {
         }
 
         // 자신의 작품인지 확인
-        OwnArt ownArt = ownArtRepository.findByUserIdAndArtId(user.getId(), art.getId())
+        OwnArt ownArt = ownArtRepository.findByArtId(art.getId())
                 .orElseThrow(() -> new AppException(ArtErrorCode.YOUR_OWN_ART_NOT_FOUND));
 
         // 작품이 유효한 상태인지 확인
@@ -284,4 +281,91 @@ public class ArtService {
                 () -> new AppException(ArtErrorCode.ARTIST_ART_NOT_FOUND)
         );
     }
+
+
+    // 작품 리스트 반환
+    public Page<ArtBriefListResDto> getArts(User user, Boolean isFollowing, Long userId, Boolean isCollectorsArt, ArtType artType,
+                                            ArtOrderType order, int page, int size) {
+
+        // 페이징 데이터 전달
+        Pageable pageable = PageRequest.of(page, size);
+
+        // 팔로잉 순이라면 팔로잉 id 전달
+        List<Long> followingIds = null;
+        if (isFollowing != null) {
+            followingIds = followService.findFollowingIdsListByUserId(user.getId());
+        }
+
+        // 필터링, 정렬에 따른 데이터 가져오기
+        Page<Art> arts = artRepository.getArtsBySortAndFilterAndPaging(isFollowing, followingIds, userId, isCollectorsArt, artType,
+                order, pageable);
+
+        // 엔티티 dto 매핑
+        List<ArtBriefListResDto> result = arts.stream().map(
+                art -> ArtBriefListResDto.of(
+                        art.getId(),
+                        art.getImgUrl(),
+                        art.getName(),
+                        art.getCherryPrice(),
+                        art.getUser().getName(),
+                        art.getUser().getProfileImgUrl(),
+                        art.getUser().getId(),
+                        DateFormatUtil.formatLocalDateTime(art.getCreatedAt())
+                )
+        ).toList();
+
+        // 페이징된 결과물 반환
+        return new PageImpl<>(result, pageable, arts.getTotalElements());
+    }
+
+    // 분야 별 작품 리스트
+    public Page<ArtTypeSortListResDto> getArtsGroupByArtType(User user, ArtOrderType order, int page, int size) {
+        // 페이징 데이터 전달
+        Pageable pageable = PageRequest.of(page, size);
+
+        // 사용자 분야에서 artType 가져오기
+        List<UserPart> userParts = userService.getUserPartListByUserId(user.getId());
+        List<ArtType> excludedArtTypes = userParts.stream()
+                .map(UserPart::getUserArtType)
+                .toList();
+
+        // 선호 작품 type에 맞는 결과물 먼저 가져오기
+        List<ArtTypeSortListResDto> artTypeSortListRess = new ArrayList<>();
+        for (ArtType artType : excludedArtTypes) {
+            artTypeSortListRess.add(addArtTypesArtListToArtTypeSortListRess(order, artType, true, pageable));
+        }
+
+
+        // 사용되지 않은 나머지 ArtType 이름 기반 오름차순 리스트 뽑기
+        List<ArtType> remainingArtTypes = Arrays.stream(ArtType.values())
+                .filter(artType -> !excludedArtTypes.contains(artType))
+                .sorted(Comparator.comparing(ArtType::getValue))
+                .toList();
+
+        // 사용되지 않은 것도 순서 맞춰서 작품 가져오기
+        for (ArtType remainingArtType : remainingArtTypes) {
+            artTypeSortListRess.add(addArtTypesArtListToArtTypeSortListRess(order, remainingArtType, false, pageable));
+        }
+
+        // 페이징된 결과 반환
+        return new PageImpl<>(artTypeSortListRess, pageable, artTypeSortListRess.size());
+    }
+
+    // 작품 분야에 따라 작품 리스트 paging 해서 가져오는 메서드
+    private ArtTypeSortListResDto addArtTypesArtListToArtTypeSortListRess(ArtOrderType order, ArtType artType, boolean isUserPreference, Pageable pageable) {
+        // 소장 작품만 해당하는 artType에 맞춰 가져오기
+        Page<Art> arts = artRepository.getArtsBySortAndFilterAndPaging(null, null, null, false, artType, order, pageable);
+
+        // 엔티티 dto 매핑
+        return ArtTypeSortListResDto.of(artType.getValue(),
+                isUserPreference,
+                arts.stream().map(
+                        art -> ArtMostBriefListResDto.of(
+                                art.getId(),
+                                art.getImgUrl()
+                        )
+                ).toList());
+    }
+
+
 }
