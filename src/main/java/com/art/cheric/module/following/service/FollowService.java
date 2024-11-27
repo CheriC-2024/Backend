@@ -1,17 +1,25 @@
 package com.art.cheric.module.following.service;
 
+import com.art.cheric.global.enums.FollowSortType;
+import com.art.cheric.global.enums.UserOrderType;
 import com.art.cheric.global.error.exception.AppException;
 import com.art.cheric.module.following.domain.entity.Follow;
 import com.art.cheric.module.following.domain.repository.FollowRepository;
 import com.art.cheric.module.following.error.FollowErrorCode;
 import com.art.cheric.module.user.domain.entity.User;
+import com.art.cheric.module.user.dto.res.UserBrief2ResDto;
 import com.art.cheric.module.user.service.UserService;
-import java.util.List;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional(readOnly = true)
@@ -49,7 +57,7 @@ public class FollowService {
     }
 
     private static void checkFollowingSelf(Long userId, Long followedUserId) {
-        if(Objects.equals(userId, followedUserId)){
+        if (Objects.equals(userId, followedUserId)) {
             throw new AppException(FollowErrorCode.INVALID_FOLLOWED_ID);
         }
     }
@@ -82,10 +90,49 @@ public class FollowService {
         userService.saveAllUser(users);
     }
 
-    public List<Long> findFollowingIdsListByUserId(Long userId){
+    public List<Long> findFollowingIdsListByUserId(Long userId) {
         return followRepository.findByFollowingUserId(userId).stream().map(
                 follow -> follow.getFollowedUser().getId()
         ).toList();
+    }
+
+
+    public Page<UserBrief2ResDto> getFollowList(Long userId, FollowSortType sort, UserOrderType order,
+                                                int page, int size) {
+        // 사용자 유효성 검증
+        userService.findUserById(userId);
+
+        // 페이징 데이터 생성
+        Pageable pageable = PageRequest.of(page, size);
+
+        // 팔로잉 필터를 위한 팔로잉 ID 리스트 조회
+        List<Long> followingIds = findFollowingIdsListByUserId(userId);
+
+        // 필터링 및 정렬된 데이터 가져오기
+        Page<Follow> follows = followRepository.getFollowsByUserIdAndOrderAndPaging(userId, sort, order, pageable);
+
+        // 엔티티를 DTO로 매핑
+        List<UserBrief2ResDto> result = follows.stream()
+                .map(follow -> mapFollowToUserBrief(follow, sort, followingIds))
+                .toList();
+
+        // 페이징된 결과 반환
+        return new PageImpl<>(result, pageable, follows.getTotalElements());
+    }
+
+    private UserBrief2ResDto mapFollowToUserBrief(Follow follow, FollowSortType sort, List<Long> followingIds) {
+        var user = switch (sort) {
+            case FOLLOWER -> follow.getFollowingUser();
+            case FOLLOWING -> follow.getFollowedUser();
+        };
+
+        return UserBrief2ResDto.of(
+                user.getId(),
+                user.getName(),
+                user.getProfileImgUrl(),
+                userService.getArtTypes(user.getUserParts()),
+                followingIds.contains(user.getId())
+        );
     }
 
 }
