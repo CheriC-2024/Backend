@@ -201,4 +201,8 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public List<UserPart> getUserPartListByUserId(Long userId){
+        return userPartRepository.findByUserId(userId);
+    }
+
 }
