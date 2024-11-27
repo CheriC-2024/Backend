@@ -5,7 +5,10 @@ import com.art.cheric.module.art.domain.repository.custom.ArtRepositoryCustom;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 
 @Repository
 public interface ArtRepository extends JpaRepository<Art, Long>, ArtRepositoryCustom {
+    Optional<Art> findByIdAndUserId(Long id, Long userId);
 }
