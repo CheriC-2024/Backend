@@ -450,6 +450,7 @@ public class ExhibitionService {
                                     .map(ExhibitionTheme::getTheme).toList(),
                             exhibition.getHeartCount(),
                             exhibition.getHits(),
+                            DateFormatUtil.formatLocalDateTime(exhibition.getCreatedAt()),
                             UserBriefResDto.of(
                                     exhibition.getUser().getId(),
                                     exhibition.getUser().getName(),

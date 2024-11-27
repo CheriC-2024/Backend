@@ -45,11 +45,15 @@ public class ExhibitionListResDto {
     @Schema(description = "전시 관람 수", example = "123")
     private final int hits;
 
+    @Schema(description = "전시 등록일", example = "2024.09.12 22:23")
+    private final String createAt;
+
     private final UserBriefResDto userRes;
 
     public static ExhibitionListResDto of(Long exhibitionId, String name, FontType font, FontColorType fontColor,
                                           List<String> colors, ExhibitionBackgroundType exhibitionBackgroundType,
-                                          String coverImgUrl, List<String> themes, int heartCount, int hits, UserBriefResDto userRes) {
+                                          String coverImgUrl, List<String> themes, int heartCount, int hits,
+                                          String createAt, UserBriefResDto userRes) {
         return ExhibitionListResDto.builder()
                 .exhibitionId(exhibitionId)
                 .name(name)
@@ -61,6 +65,7 @@ public class ExhibitionListResDto {
                 .themes(themes)
                 .heartCount(heartCount)
                 .hits(hits)
+                .createAt(createAt)
                 .userRes(userRes)
                 .build();
     }
