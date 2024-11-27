@@ -82,4 +82,10 @@ public class FollowService {
         userService.saveAllUser(users);
     }
 
+    public List<Long> findFollowingIdsListByUserId(Long userId){
+        return followRepository.findByFollowingUserId(userId).stream().map(
+                follow -> follow.getFollowedUser().getId()
+        ).toList();
+    }
+
 }
