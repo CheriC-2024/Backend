@@ -32,17 +32,11 @@ public class ArtistArt extends BaseTime {
     @JoinColumn(name = "art_id", nullable = false)
     private Art art;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-
     private boolean isUsable;
 
-    public static ArtistArt of(@NotNull Art art, @NotNull User user) {
+    public static ArtistArt from(@NotNull Art art) {
         return ArtistArt.builder()
                 .art(art)
-                .user(user)
                 .isUsable(true)
                 .build();
     }

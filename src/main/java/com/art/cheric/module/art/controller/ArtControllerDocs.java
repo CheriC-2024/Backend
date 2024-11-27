@@ -1,6 +1,8 @@
 package com.art.cheric.module.art.controller;
 
 import com.art.cheric.global.common.ResponseDto;
+import com.art.cheric.global.enums.ArtOrderType;
+import com.art.cheric.global.enums.ArtType;
 import com.art.cheric.module.art.dto.req.ArtReqDto;
 import com.art.cheric.module.art.dto.req.OwnArtReqDto;
 import com.art.cheric.module.user.domain.entity.User;
@@ -204,5 +206,296 @@ public interface ArtControllerDocs {
     })
     ResponseEntity<ResponseDto> getOwnArtDescription(User user, Long artId);
 
+    @Operation(summary = "작품 리스트 API", description = "작품 리스트를 필터,정렬,페이징에 따라 가져옵니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Ok",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ResponseDto.class),
+                            examples =
+                            @ExampleObject(value = "{\n" +
+                                    "  \"code\": 200,\n" +
+                                    "  \"message\": \"OK\",\n" +
+                                    "  \"data\": [\n" +
+                                    "    {\n" +
+                                    "      \"artId\": 24,\n" +
+                                    "      \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\",\n" +
+                                    "      \"name\": \"1 별이 빛나는 밤에\",\n" +
+                                    "      \"cherryNum\": 2,\n" +
+                                    "      \"createdAt\": \"artist\",\n" +
+                                    "      \"userRes\": {\n" +
+                                    "        \"id\": 2,\n" +
+                                    "        \"name\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-profileimage.png\",\n" +
+                                    "        \"profileImgUrl\": \"2024.11.27 08:49\"\n" +
+                                    "      }\n" +
+                                    "    },\n" +
+                                    "    {\n" +
+                                    "      \"artId\": 23,\n" +
+                                    "      \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\",\n" +
+                                    "      \"name\": \"1 별이 빛나는 밤에\",\n" +
+                                    "      \"cherryNum\": 2,\n" +
+                                    "      \"createdAt\": \"artist\",\n" +
+                                    "      \"userRes\": {\n" +
+                                    "        \"id\": 2,\n" +
+                                    "        \"name\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-profileimage.png\",\n" +
+                                    "        \"profileImgUrl\": \"2024.11.27 08:45\"\n" +
+                                    "      }\n" +
+                                    "    },\n" +
+                                    "    {\n" +
+                                    "      \"artId\": 22,\n" +
+                                    "      \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\",\n" +
+                                    "      \"name\": \"1 별이 빛나는 밤에\",\n" +
+                                    "      \"cherryNum\": 2,\n" +
+                                    "      \"createdAt\": \"artist\",\n" +
+                                    "      \"userRes\": {\n" +
+                                    "        \"id\": 2,\n" +
+                                    "        \"name\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-profileimage.png\",\n" +
+                                    "        \"profileImgUrl\": \"2024.11.27 08:37\"\n" +
+                                    "      }\n" +
+                                    "    },\n" +
+                                    "    {\n" +
+                                    "      \"artId\": 21,\n" +
+                                    "      \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\",\n" +
+                                    "      \"name\": \"1 별이 빛나는 밤에\",\n" +
+                                    "      \"cherryNum\": 2,\n" +
+                                    "      \"createdAt\": \"artist\",\n" +
+                                    "      \"userRes\": {\n" +
+                                    "        \"id\": 2,\n" +
+                                    "        \"name\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-profileimage.png\",\n" +
+                                    "        \"profileImgUrl\": \"2024.11.27 08:16\"\n" +
+                                    "      }\n" +
+                                    "    },\n" +
+                                    "    {\n" +
+                                    "      \"artId\": 20,\n" +
+                                    "      \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\",\n" +
+                                    "      \"name\": \"1 별이 빛나는 밤에\",\n" +
+                                    "      \"cherryNum\": 2,\n" +
+                                    "      \"createdAt\": \"artist\",\n" +
+                                    "      \"userRes\": {\n" +
+                                    "        \"id\": 3,\n" +
+                                    "        \"name\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-profileimage.png\",\n" +
+                                    "        \"profileImgUrl\": \"2024.11.27 08:36\"\n" +
+                                    "      }\n" +
+                                    "    },\n" +
+                                    "    {\n" +
+                                    "      \"artId\": 19,\n" +
+                                    "      \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\",\n" +
+                                    "      \"name\": \"1 별이 빛나는 밤에\",\n" +
+                                    "      \"cherryNum\": 2,\n" +
+                                    "      \"createdAt\": \"artist\",\n" +
+                                    "      \"userRes\": {\n" +
+                                    "        \"id\": 3,\n" +
+                                    "        \"name\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-profileimage.png\",\n" +
+                                    "        \"profileImgUrl\": \"2024.11.27 08:33\"\n" +
+                                    "      }\n" +
+                                    "    },\n" +
+                                    "    {\n" +
+                                    "      \"artId\": 18,\n" +
+                                    "      \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\",\n" +
+                                    "      \"name\": \"1 별이 빛나는 밤에\",\n" +
+                                    "      \"cherryNum\": 2,\n" +
+                                    "      \"createdAt\": \"artist\",\n" +
+                                    "      \"userRes\": {\n" +
+                                    "        \"id\": 3,\n" +
+                                    "        \"name\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-profileimage.png\",\n" +
+                                    "        \"profileImgUrl\": \"2024.11.27 08:24\"\n" +
+                                    "      }\n" +
+                                    "    },\n" +
+                                    "    {\n" +
+                                    "      \"artId\": 17,\n" +
+                                    "      \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\",\n" +
+                                    "      \"name\": \"별이 빛나는 밤에\",\n" +
+                                    "      \"cherryNum\": 2,\n" +
+                                    "      \"createdAt\": \"artist\",\n" +
+                                    "      \"userRes\": {\n" +
+                                    "        \"id\": 3,\n" +
+                                    "        \"name\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-profileimage.png\",\n" +
+                                    "        \"profileImgUrl\": \"2024.11.27 08:20\"\n" +
+                                    "      }\n" +
+                                    "    }\n" +
+                                    "  ],\n" +
+                                    "  \"totalElements\": 8,\n" +
+                                    "  \"totalPages\": 1,\n" +
+                                    "  \"size\": 10,\n" +
+                                    "  \"numberOfElements\": 8\n" +
+                                    "}")
+                    )
+            )
+    })
+    ResponseEntity<ResponseDto> getArts(User user, Boolean isFollowing, Long userId, Boolean isCollectorsArt,
+                                        ArtType artType, ArtOrderType order, int page, int size);
+
+    @Operation(summary = "작품 분야 별 리스트 API", description = "사용자 선호 분야를 우선순위로 작품 선호 분야를 필터링 합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Ok",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ResponseDto.class),
+                            examples =
+                            @ExampleObject(value = "{\n" +
+                                    "  \"code\": 200,\n" +
+                                    "  \"message\": \"OK\",\n" +
+                                    "  \"data\": [\n" +
+                                    "    {\n" +
+                                    "      \"artType\": \"회화\",\n" +
+                                    "      \"artMostBriefListRess\": [\n" +
+                                    "        {\n" +
+                                    "          \"artId\": 18,\n" +
+                                    "          \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\"\n" +
+                                    "        },\n" +
+                                    "        {\n" +
+                                    "          \"artId\": 17,\n" +
+                                    "          \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\"\n" +
+                                    "        },\n" +
+                                    "        {\n" +
+                                    "          \"artId\": 11,\n" +
+                                    "          \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\"\n" +
+                                    "        }\n" +
+                                    "      ],\n" +
+                                    "      \"userPreference\": true\n" +
+                                    "    },\n" +
+                                    "    {\n" +
+                                    "      \"artType\": \"유화\",\n" +
+                                    "      \"artMostBriefListRess\": [\n" +
+                                    "        {\n" +
+                                    "          \"artId\": 21,\n" +
+                                    "          \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\"\n" +
+                                    "        },\n" +
+                                    "        {\n" +
+                                    "          \"artId\": 20,\n" +
+                                    "          \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\"\n" +
+                                    "        },\n" +
+                                    "        {\n" +
+                                    "          \"artId\": 19,\n" +
+                                    "          \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\"\n" +
+                                    "        },\n" +
+                                    "        {\n" +
+                                    "          \"artId\": 18,\n" +
+                                    "          \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\"\n" +
+                                    "        },\n" +
+                                    "        {\n" +
+                                    "          \"artId\": 17,\n" +
+                                    "          \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\"\n" +
+                                    "        },\n" +
+                                    "        {\n" +
+                                    "          \"artId\": 13,\n" +
+                                    "          \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\"\n" +
+                                    "        },\n" +
+                                    "        {\n" +
+                                    "          \"artId\": 12,\n" +
+                                    "          \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\"\n" +
+                                    "        },\n" +
+                                    "        {\n" +
+                                    "          \"artId\": 11,\n" +
+                                    "          \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\"\n" +
+                                    "        }\n" +
+                                    "      ],\n" +
+                                    "      \"userPreference\": true\n" +
+                                    "    },\n" +
+                                    "    {\n" +
+                                    "      \"artType\": \"뉴미디어\",\n" +
+                                    "      \"artMostBriefListRess\": [\n" +
+                                    "        {\n" +
+                                    "          \"artId\": 24,\n" +
+                                    "          \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\"\n" +
+                                    "        },\n" +
+                                    "        {\n" +
+                                    "          \"artId\": 23,\n" +
+                                    "          \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\"\n" +
+                                    "        },\n" +
+                                    "        {\n" +
+                                    "          \"artId\": 16,\n" +
+                                    "          \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\"\n" +
+                                    "        },\n" +
+                                    "        {\n" +
+                                    "          \"artId\": 15,\n" +
+                                    "          \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\"\n" +
+                                    "        },\n" +
+                                    "        {\n" +
+                                    "          \"artId\": 14,\n" +
+                                    "          \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\"\n" +
+                                    "        }\n" +
+                                    "      ],\n" +
+                                    "      \"userPreference\": false\n" +
+                                    "    },\n" +
+                                    "    {\n" +
+                                    "      \"artType\": \"동양화\",\n" +
+                                    "      \"artMostBriefListRess\": [\n" +
+                                    "        {\n" +
+                                    "          \"artId\": 13,\n" +
+                                    "          \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\"\n" +
+                                    "        },\n" +
+                                    "        {\n" +
+                                    "          \"artId\": 12,\n" +
+                                    "          \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\"\n" +
+                                    "        }\n" +
+                                    "      ],\n" +
+                                    "      \"userPreference\": false\n" +
+                                    "    },\n" +
+                                    "    {\n" +
+                                    "      \"artType\": \"드로잉\",\n" +
+                                    "      \"artMostBriefListRess\": [\n" +
+                                    "        {\n" +
+                                    "          \"artId\": 23,\n" +
+                                    "          \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\"\n" +
+                                    "        },\n" +
+                                    "        {\n" +
+                                    "          \"artId\": 22,\n" +
+                                    "          \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\"\n" +
+                                    "        }\n" +
+                                    "      ],\n" +
+                                    "      \"userPreference\": false\n" +
+                                    "    },\n" +
+                                    "    {\n" +
+                                    "      \"artType\": \"디자인\",\n" +
+                                    "      \"artMostBriefListRess\": [],\n" +
+                                    "      \"userPreference\": false\n" +
+                                    "    },\n" +
+                                    "    {\n" +
+                                    "      \"artType\": \"수채화\",\n" +
+                                    "      \"artMostBriefListRess\": [\n" +
+                                    "        {\n" +
+                                    "          \"artId\": 21,\n" +
+                                    "          \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\"\n" +
+                                    "        },\n" +
+                                    "        {\n" +
+                                    "          \"artId\": 20,\n" +
+                                    "          \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\"\n" +
+                                    "        },\n" +
+                                    "        {\n" +
+                                    "          \"artId\": 19,\n" +
+                                    "          \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\"\n" +
+                                    "        }\n" +
+                                    "      ],\n" +
+                                    "      \"userPreference\": false\n" +
+                                    "    },\n" +
+                                    "    {\n" +
+                                    "      \"artType\": \"판화\",\n" +
+                                    "      \"artMostBriefListRess\": [\n" +
+                                    "        {\n" +
+                                    "          \"artId\": 16,\n" +
+                                    "          \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\"\n" +
+                                    "        },\n" +
+                                    "        {\n" +
+                                    "          \"artId\": 15,\n" +
+                                    "          \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\"\n" +
+                                    "        },\n" +
+                                    "        {\n" +
+                                    "          \"artId\": 14,\n" +
+                                    "          \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\"\n" +
+                                    "        }\n" +
+                                    "      ],\n" +
+                                    "      \"userPreference\": false\n" +
+                                    "    }\n" +
+                                    "  ],\n" +
+                                    "  \"totalElements\": 8,\n" +
+                                    "  \"totalPages\": 1,\n" +
+                                    "  \"size\": 10,\n" +
+                                    "  \"numberOfElements\": 8\n" +
+                                    "}")
+                    )
+            )
+    })
+    ResponseEntity<ResponseDto> getArtsGroupByArtType(User user, ArtOrderType order, int page, int size);
 }
 

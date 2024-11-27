@@ -36,6 +36,7 @@ import com.art.cheric.module.exhibition.dto.res.ExhibitionReviewListResDto;
 import com.art.cheric.module.exhibition.dto.res.ExhibitionReviewResDto;
 import com.art.cheric.module.exhibition.error.ExhibitionErrorCode;
 import com.art.cheric.module.user.domain.entity.User;
+import com.art.cheric.module.user.dto.res.UserBriefResDto;
 import com.art.cheric.module.user.service.UserService;
 import java.util.ArrayList;
 import java.util.List;
@@ -208,8 +209,7 @@ public class ExhibitionService {
                 artistName = ownArt.getArtistName();
                 artPrice = ownArt.getPrice();
             } else {
-                ArtistArt artistArt = artService.findArtistArtByArtId(art.getId());
-                artistName = artistArt.getUser().getName();
+                artistName = art.getUser().getName();
             }
 
             // 작품 정보 가져오기
@@ -449,7 +449,13 @@ public class ExhibitionService {
                             exhibition.getExhibitionThemes().stream()
                                     .map(ExhibitionTheme::getTheme).toList(),
                             exhibition.getHeartCount(),
-                            exhibition.getHits()
+                            exhibition.getHits(),
+                            DateFormatUtil.formatLocalDateTime(exhibition.getCreatedAt()),
+                            UserBriefResDto.of(
+                                    exhibition.getUser().getId(),
+                                    exhibition.getUser().getName(),
+                                    exhibition.getUser().getProfileImgUrl()
+                            )
                     )
             );
         }

@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class DateFormatUtil {
 
-    public static final String DATE_FORMAT = "yyyy.MM.dd";
+    public static final String DATE_FORMAT = "yyyy.MM.dd hh:ss";
 
     public static Date convertLocalDateTimeToDate(LocalDateTime localDateTime) {
         try {

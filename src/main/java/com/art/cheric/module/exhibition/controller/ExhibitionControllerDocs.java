@@ -238,74 +238,63 @@ public interface ExhibitionControllerDocs {
                             mediaType = "application/json",
                             schema = @Schema(implementation = ResponseDto.class),
                             examples =
-                            @ExampleObject(value = "{\n"
-                                    + "  \"code\": 200,\n"
-                                    + "  \"message\": \"OK\",\n"
-                                    + "  \"data\": [\n"
-                                    + "    {\n"
-                                    + "      \"exhibitionId\": 16,\n"
-                                    + "      \"name\": \"별빛:하늘을 그리다\",\n"
-                                    + "      \"font\": \"BASIC\",\n"
-                                    + "      \"fontColor\": \"BLACK\",\n"
-                                    + "      \"colors\": [\n"
-                                    + "        \"#CF3420\",\n"
-                                    + "        \"#CF3421\",\n"
-                                    + "        \"#CF3422\",\n"
-                                    + "        \"#CF3423\"\n"
-                                    + "      ],\n"
-                                    + "      \"exhibitionBackgroundType\": \"TOP_DOWN\",\n"
-                                    + "      \"coverImgUrl\": null,\n"
-                                    + "      \"themes\": [\n"
-                                    + "        \"별\",\n"
-                                    + "        \"하늘\",\n"
-                                    + "        \"빛\"\n"
-                                    + "      ],\n"
-                                    + "      \"heartCount\": 0,\n"
-                                    + "      \"hits\": 0\n"
-                                    + "    },\n"
-                                    + "    {\n"
-                                    + "      \"exhibitionId\": 15,\n"
-                                    + "      \"name\": \"별빛:하늘을 그리다\",\n"
-                                    + "      \"font\": \"BASIC\",\n"
-                                    + "      \"fontColor\": \"BLACK\",\n"
-                                    + "      \"colors\": [\n"
-                                    + "        \"#CF3420\",\n"
-                                    + "        \"#CF3421\",\n"
-                                    + "        \"#CF3422\",\n"
-                                    + "        \"#CF3423\"\n"
-                                    + "      ],\n"
-                                    + "      \"exhibitionBackgroundType\": \"TOP_DOWN\",\n"
-                                    + "      \"coverImgUrl\": null,\n"
-                                    + "      \"themes\": [\n"
-                                    + "        \"별\",\n"
-                                    + "        \"하늘\",\n"
-                                    + "        \"빛\"\n"
-                                    + "      ],\n"
-                                    + "      \"heartCount\": 0,\n"
-                                    + "      \"hits\": 0\n"
-                                    + "    },\n"
-                                    + "    {\n"
-                                    + "      \"exhibitionId\": 14,\n"
-                                    + "      \"name\": \"별빛:하늘을 그리다\",\n"
-                                    + "      \"font\": \"BASIC\",\n"
-                                    + "      \"fontColor\": \"BLACK\",\n"
-                                    + "      \"colors\": [],\n"
-                                    + "      \"exhibitionBackgroundType\": \"TOP_DOWN\",\n"
-                                    + "      \"coverImgUrl\": null,\n"
-                                    + "      \"themes\": [\n"
-                                    + "        \"별\",\n"
-                                    + "        \"하늘\",\n"
-                                    + "        \"빛\"\n"
-                                    + "      ],\n"
-                                    + "      \"heartCount\": 0,\n"
-                                    + "      \"hits\": 0\n"
-                                    + "    }\n"
-                                    + "  ],\n"
-                                    + "  \"totalElements\": 4,\n"
-                                    + "  \"totalPages\": 2,\n"
-                                    + "  \"size\": 3,\n"
-                                    + "  \"numberOfElements\": 3\n"
-                                    + "}")
+                            @ExampleObject(value = "{\n" +
+                                    "  \"code\": 200,\n" +
+                                    "  \"message\": \"OK\",\n" +
+                                    "  \"data\": [\n" +
+                                    "    {\n" +
+                                    "      \"exhibitionId\": 2,\n" +
+                                    "      \"name\": \"별빛:하늘을 그리다\",\n" +
+                                    "      \"font\": \"BASIC\",\n" +
+                                    "      \"fontColor\": \"BLACK\",\n" +
+                                    "      \"colors\": [],\n" +
+                                    "      \"exhibitionBackgroundType\": null,\n" +
+                                    "      \"coverImgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/EXHIBITION_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-exhibitionImage.png\",\n" +
+                                    "      \"themes\": [\n" +
+                                    "        \"별\",\n" +
+                                    "        \"하늘\",\n" +
+                                    "        \"빛\"\n" +
+                                    "      ],\n" +
+                                    "      \"heartCount\": 0,\n" +
+                                    "      \"hits\": 0,\n" +
+                                    "      \"userRes\": {\n" +
+                                    "        \"id\": 1,\n" +
+                                    "        \"name\": \"artist\",\n" +
+                                    "        \"profileImgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-profileimage.png\"\n" +
+                                    "      }\n" +
+                                    "    },\n" +
+                                    "    {\n" +
+                                    "      \"exhibitionId\": 1,\n" +
+                                    "      \"name\": \"별빛:하늘을 그리다\",\n" +
+                                    "      \"font\": \"BASIC\",\n" +
+                                    "      \"fontColor\": \"BLACK\",\n" +
+                                    "      \"colors\": [\n" +
+                                    "        \"#CF3420\",\n" +
+                                    "        \"#CF3421\",\n" +
+                                    "        \"#CF3422\",\n" +
+                                    "        \"#CF3423\"\n" +
+                                    "      ],\n" +
+                                    "      \"exhibitionBackgroundType\": \"TOP_DOWN\",\n" +
+                                    "      \"coverImgUrl\": null,\n" +
+                                    "      \"themes\": [\n" +
+                                    "        \"별\",\n" +
+                                    "        \"하늘\",\n" +
+                                    "        \"빛\"\n" +
+                                    "      ],\n" +
+                                    "      \"heartCount\": 0,\n" +
+                                    "      \"hits\": 0,\n" +
+                                    "      \"userRes\": {\n" +
+                                    "        \"id\": 1,\n" +
+                                    "        \"name\": \"artist\",\n" +
+                                    "        \"profileImgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-profileimage.png\"\n" +
+                                    "      }\n" +
+                                    "    }\n" +
+                                    "  ],\n" +
+                                    "  \"totalElements\": 2,\n" +
+                                    "  \"totalPages\": 1,\n" +
+                                    "  \"size\": 3,\n" +
+                                    "  \"numberOfElements\": 2\n" +
+                                    "}")
                     )
             ),
     })

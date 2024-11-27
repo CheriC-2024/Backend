@@ -63,7 +63,6 @@ public class ExhibitionRepositoryImpl implements ExhibitionRepositoryCustom {
             case LIKE -> orderSpecifiers.add(exhibition.heartCount.desc());
             case HITS -> orderSpecifiers.add(exhibition.hits.desc());
         }
-        ;
 
         if (order != ExhibitionOrderType.LATEST) {
             orderSpecifiers.add(exhibition.createdAt.desc());
