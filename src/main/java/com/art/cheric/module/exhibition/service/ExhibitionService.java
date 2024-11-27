@@ -181,6 +181,9 @@ public class ExhibitionService {
         }
 
         return ExhibitionResDto.of(
+                exhibition.getName(),
+                exhibition.getFont(),
+                exhibition.getFontColor(),
                 exhibition.getDescription(),
                 exhibition.getHeartCount(),
                 exhibition.getHits(),

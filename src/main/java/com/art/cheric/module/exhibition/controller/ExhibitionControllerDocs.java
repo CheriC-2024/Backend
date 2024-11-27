@@ -47,7 +47,56 @@ public interface ExhibitionControllerDocs {
                             mediaType = "application/json",
                             schema = @Schema(implementation = ResponseDto.class),
                             examples =
-                            @ExampleObject(value = "{ \"code\": 200, \"message\": \"Ok\" }")
+                            @ExampleObject(value = "{\n" +
+                                    "  \"code\": 200,\n" +
+                                    "  \"message\": \"OK\",\n" +
+                                    "  \"data\": {\n" +
+                                    "    \"name\": \"별빛:하늘을 그리다\",\n" +
+                                    "    \"font\": \"BASIC\",\n" +
+                                    "    \"fontColor\": \"BLACK\",\n" +
+                                    "    \"description\": \"별빛을 나타내는 작품을 모은 전시입니다.\",\n" +
+                                    "    \"heartCount\": 0,\n" +
+                                    "    \"hits\": 0,\n" +
+                                    "    \"exhibitionArtRess\": [\n" +
+                                    "      {\n" +
+                                    "        \"description\": \"이러쿵 저러쿵을 통해 수집하게 되었습니다.\",\n" +
+                                    "        \"reasonForPurchase\": \"별빛을 나타내는 게 마음에 와닿아서 수집하게 되었습니다.\",\n" +
+                                    "        \"review\": \"별빛을 나타내는 작품을 보는 과정에서 행복했습니다.\",\n" +
+                                    "        \"artExhibitionRes\": {\n" +
+                                    "          \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-ArtImage1.png\",\n" +
+                                    "          \"cherryPrice\": null,\n" +
+                                    "          \"name\": \"별이 빛나는 밤에\",\n" +
+                                    "          \"artistName\": \"이작가\",\n" +
+                                    "          \"series\": \"별\",\n" +
+                                    "          \"horizontalSize\": 100000,\n" +
+                                    "          \"verticalSize\": 200000,\n" +
+                                    "          \"material\": \"수채화 물감을 사용했습니다.\",\n" +
+                                    "          \"madeAt\": \"2024\",\n" +
+                                    "          \"artTypes\": [\n" +
+                                    "            \"PAINTING\",\n" +
+                                    "            \"OIL_PAINTING\"\n" +
+                                    "          ],\n" +
+                                    "          \"ownArtRes\": {\n" +
+                                    "            \"price\": 100000\n" +
+                                    "          },\n" +
+                                    "          \"heartCount\": 0,\n" +
+                                    "          \"collectorsArt\": true\n" +
+                                    "        }\n" +
+                                    "      }\n" +
+                                    "    ],\n" +
+                                    "    \"userRes\": {\n" +
+                                    "      \"id\": 1,\n" +
+                                    "      \"name\": \"yerim\",\n" +
+                                    "      \"description\": \"저는 3년차 회화 분야 작가입니다.\",\n" +
+                                    "      \"artTypes\": [\n" +
+                                    "        \"PAINTING\",\n" +
+                                    "        \"WATER_PAINTING\"\n" +
+                                    "      ],\n" +
+                                    "      \"profileImgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-profileimage.png\"\n" +
+                                    "    },\n" +
+                                    "    \"exhibitionReviewRes\": null\n" +
+                                    "  }\n" +
+                                    "}")
                     )
             ),
             @ApiResponse(responseCode = "404", description = "해당 자원을 찾을 수 없습니다.",

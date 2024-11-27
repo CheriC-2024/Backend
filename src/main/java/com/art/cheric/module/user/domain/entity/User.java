@@ -2,6 +2,7 @@ package com.art.cheric.module.user.domain.entity;
 
 import com.art.cheric.global.common.BaseTime;
 import com.art.cheric.global.enums.UserRole;
+import com.art.cheric.module.following.domain.entity.Follow;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -75,6 +76,14 @@ public class User extends BaseTime {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @Builder.Default
     private List<UserPart> userParts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "followingUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<Follow> followings = new ArrayList<>();
+
+    @OneToMany(mappedBy = "followedUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<Follow> followers = new ArrayList<>();
 
     public static User of(@NotNull String email, @NotNull String fcmToken, @NotNull String deviceId) {
         return User

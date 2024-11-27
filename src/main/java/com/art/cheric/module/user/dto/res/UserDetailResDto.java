@@ -3,10 +3,11 @@ package com.art.cheric.module.user.dto.res;
 
 import com.art.cheric.global.enums.ArtType;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.util.List;
 
 @Schema(description = "사용자 상세 정보 DTO")
 @Getter
@@ -46,9 +47,13 @@ public class UserDetailResDto {
     @Schema(description = "사용자 정산 체리 수", example = "23")
     private final Integer soldCherryNum;
 
+    @Schema(description = "팔로잉 여부", example = "true")
+    private final boolean isFollowing;
+
     public static UserDetailResDto of(Long id, boolean isValidateArtist, String name, String description,
                                       List<ArtType> artTypes, String profileImgUrl, String backgroundImgUrl,
-                                      int followerAmount, int followingAmount, int myCherryNum, Integer soldCherryNum) {
+                                      int followerAmount, int followingAmount, int myCherryNum,
+                                      Integer soldCherryNum, boolean isFollowing) {
         return UserDetailResDto.builder()
                 .id(id)
                 .isValidateArtist(isValidateArtist)
@@ -61,6 +66,7 @@ public class UserDetailResDto {
                 .followingAmount(followingAmount)
                 .myCherryNum(myCherryNum)
                 .soldCherryNum(soldCherryNum)
+                .isFollowing(isFollowing)
                 .build();
     }
 }

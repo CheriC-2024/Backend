@@ -70,6 +70,17 @@ public class ArtRepositoryImpl implements ArtRepositoryCustom {
         return new PageImpl<>(results, pageable, total);
     }
 
+    @Override
+    public List<Art> getArtsByUserIdAndCollectorsArtFalseOrderByCreatedAtDesc(Long userId) {
+        QArt art = QArt.art;
+
+        return jpaQueryFactory.selectFrom(art)
+                .where(art.user.id.eq(userId).and(art.isCollectorsArt.isFalse()))
+                .orderBy(art.createdAt.desc())
+                .limit(3)
+                .fetch();
+    }
+
     private List<OrderSpecifier<?>> getOrderSpecifier(ArtOrderType order, QArt art) {
         List<OrderSpecifier<?>> orderSpecifiers = new ArrayList<>();
         switch (order) {
