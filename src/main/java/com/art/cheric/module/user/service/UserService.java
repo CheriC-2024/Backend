@@ -2,33 +2,40 @@ package com.art.cheric.module.user.service;
 
 import com.art.cheric.global.enums.ArtType;
 import com.art.cheric.global.enums.JwtVo;
+import com.art.cheric.global.enums.UserOrderType;
 import com.art.cheric.global.error.ErrorCode;
 import com.art.cheric.global.error.GlobalErrorCode;
 import com.art.cheric.global.error.exception.AppException;
 import com.art.cheric.global.util.GoogleOAuthUtil;
 import com.art.cheric.global.util.JwtUtil;
 import com.art.cheric.global.util.RedisUtil;
+import com.art.cheric.module.art.domain.repository.ArtRepository;
+import com.art.cheric.module.art.dto.res.ArtBriefResDto;
 import com.art.cheric.module.artist.dto.req.ArtistBasicReqDto;
+import com.art.cheric.module.following.domain.repository.FollowRepository;
 import com.art.cheric.module.user.domain.entity.User;
 import com.art.cheric.module.user.domain.entity.UserPart;
 import com.art.cheric.module.user.domain.repository.UserPartRepository;
 import com.art.cheric.module.user.domain.repository.UserRepository;
 import com.art.cheric.module.user.dto.req.SignUpReqDto;
-import com.art.cheric.module.user.dto.res.LoginResDto;
-import com.art.cheric.module.user.dto.res.UserDetailResDto;
-import com.art.cheric.module.user.dto.res.UserResDto;
+import com.art.cheric.module.user.dto.res.*;
 import com.art.cheric.module.user.error.UserErrorCode;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional(readOnly = true)
@@ -40,6 +47,8 @@ public class UserService {
     private final GoogleOAuthUtil googleOAuthUtil;
     private final UserRepository userRepository;
     private final UserPartRepository userPartRepository;
+    private final FollowRepository followRepository;
+    private final ArtRepository artRepository;
 
     @Transactional
     public LoginResDto getGoogleLogin(String idToken, String fcmToken, String deviceToken) {
@@ -143,6 +152,9 @@ public class UserService {
             finalUser = findUserById(userId);
         }
 
+        // 해당 사용자를 follow 중인지 확인하기 위한 리스트 불러오기
+        List<Long> followingIds = findFollowingIdsListByUserId(user.getId());
+
         return UserDetailResDto.of(
                 finalUser.getId(),
                 finalUser.isValidateArtist(),
@@ -154,7 +166,8 @@ public class UserService {
                 finalUser.getFollowerAmount(),
                 finalUser.getFollowingAmount(),
                 finalUser.getMyCherryNum(),
-                finalUser.getSoldCherryNum()
+                finalUser.getSoldCherryNum(),
+                followingIds.contains(finalUser.getId())
         );
     }
 
@@ -174,17 +187,73 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    public Page<UserBriefResDto> getUserBriefList(User user, Boolean isFollowing, Boolean isArtist, List<ArtType> artTypes,
+                                                  UserOrderType order, int page, int size) {
 
+        // 페이징 데이터 전달
+        Pageable pageable = PageRequest.of(page, size);
+
+        // 팔로잉 필터라면 팔로잉 id 전달
+        List<Long> followingIds = findFollowingIdsListByUserId(user.getId());
+
+        // 필터링, 정렬에 따른 데이터 가져오기
+        Page<User> users = userRepository.getUsersBySortAndFilterAndPaging(isFollowing,
+                isFollowing != null ? followingIds : null, isArtist, artTypes,
+                order, pageable);
+
+        // 엔티티 dto 매핑
+        List<UserBriefResDto> result = users.stream().map(
+                userItem -> UserBriefResDto.of(
+                        userItem.getId(),
+                        userItem.getName(),
+                        userItem.getProfileImgUrl()
+                )).toList();
+
+        // 페이징된 결과를 반환
+        return new PageImpl<>(result, pageable, users.getTotalElements());
+    }
+
+    public Page<UserBrief2ResDto> getUserFollowInfoList(User user, Boolean isFollowing, Boolean isArtist, List<ArtType> artTypes,
+                                                        UserOrderType order, int page, int size) {
+
+        // 페이징 데이터 전달
+        Pageable pageable = PageRequest.of(page, size);
+
+        // 팔로잉 필터라면 팔로잉 id 전달
+        List<Long> followingIds = findFollowingIdsListByUserId(user.getId());
+
+        // 필터링, 정렬에 따른 데이터 가져오기
+        Page<User> users = userRepository.getUsersBySortAndFilterAndPaging(isFollowing,
+                isFollowing != null ? followingIds : null, isArtist, artTypes,
+                order, pageable);
+
+        // 엔티티 dto 매핑
+        List<UserBrief2ResDto> result = users.stream().map(
+                userItem -> UserBrief2ResDto.of(
+                        userItem.getId(),
+                        userItem.getName(),
+                        userItem.getProfileImgUrl(),
+                        getArtTypes(userItem.getUserParts()),
+                        followingIds.contains(userItem.getId())
+                )).toList();
+
+        // 페이징된 결과를 반환
+        return new PageImpl<>(result, pageable, users.getTotalElements());
+    }
+
+    // id 기반 사용자 조회
     public User findUserById(Long userId) {
         return userRepository.findById(userId.toString()).orElseThrow(
                 () -> new AppException(GlobalErrorCode.USER_NOT_FOUND)
         );
     }
 
+    // 유저 모두 저장
     public void saveAllUser(List<User> user) {
         userRepository.saveAll(user);
     }
 
+    // 작가 정보로 사용자 업데이트
     public void updateUserAsArtist(User user, ArtistBasicReqDto artistBasicReq) {
         List<UserPart> userParts = new ArrayList<>();
         for (ArtType artType : artistBasicReq.userPartRequests()) {
@@ -201,8 +270,46 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public List<UserPart> getUserPartListByUserId(Long userId){
+    // 사용자 분야 조회
+    public List<UserPart> getUserPartListByUserId(Long userId) {
         return userPartRepository.findByUserId(userId);
     }
 
+    // 사용자 팔로잉 리스트 조회
+    private List<Long> findFollowingIdsListByUserId(Long userId) {
+        return followRepository.findByFollowingUserId(userId).stream().map(
+                follow -> follow.getFollowedUser().getId()
+        ).toList();
+    }
+
+    public List<UserListResDto> getUserRecommend(User user, ArtType artTypes,
+                                           UserOrderType order, int page, int size) {
+        // 페이징 데이터 전달
+        Pageable pageable = PageRequest.of(page, size);
+
+        // 팔로잉 필터라면 팔로잉 id 전달 + 본인 id 제외 > 추천이기에
+        List<Long> followingIds = new ArrayList<>(findFollowingIdsListByUserId(user.getId()));
+        followingIds.add(user.getId());
+
+
+        // 필터링, 정렬에 따른 데이터 가져오기
+        Page<User> users = userRepository.getUsersBySortAndFilterAndPaging(false,
+                followingIds, true, List.of(artTypes), order, pageable);
+
+
+        // 엔티티 dto 매핑
+        return users.stream().map(
+                userItem -> UserListResDto.of(
+                        userItem.getId(),
+                        userItem.getName(),
+                        userItem.getProfileImgUrl(),
+                        artRepository.getArtsByUserIdAndCollectorsArtFalseOrderByCreatedAtDesc(userItem.getId()).stream().map(
+                                art -> ArtBriefResDto.of(
+                                        art.getId(),
+                                        art.isCollectorsArt(),
+                                        art.getImgUrl(),
+                                        art.getCherryPrice(),
+                                        art.getName())).toList())).toList();
+
+    }
 }
