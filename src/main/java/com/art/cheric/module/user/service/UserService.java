@@ -181,7 +181,7 @@ public class UserService {
         );
     }
 
-    public List<ArtType> getArtTypes(List<UserPart> userParts) {
+    private List<ArtType> getArtTypes(List<UserPart> userParts) {
         return userParts.stream()
                 .map(UserPart::getUserArtType)
                 .collect(Collectors.toList());
