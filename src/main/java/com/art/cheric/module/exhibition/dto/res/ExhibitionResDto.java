@@ -1,29 +1,16 @@
 package com.art.cheric.module.exhibition.dto.res;
 
-import com.art.cheric.global.enums.FontColorType;
-import com.art.cheric.global.enums.FontType;
-import com.art.cheric.module.user.dto.res.UserResDto;
+import com.art.cheric.module.user.dto.res.ExhibitionUserResDto;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.util.List;
 
 @Schema(description = "전시 보기 기본 DTO")
 @Getter
 @Builder(access = AccessLevel.PRIVATE)
 public class ExhibitionResDto {
-
-    @Schema(description = "전시 제목", example = "별빛을 나타내는 작품을 모은 전시입니다.")
-    private final String name;
-
-    @Schema(description = "전시 폰트", example = "별빛을 나타내는 작품을 모은 전시입니다.")
-    private final FontType font;
-
-    @Schema(description = "전시 폰트 색상", example = "BLACK")
-    private final FontColorType fontColor;
-
     @Schema(description = "전시 설명", example = "별빛을 나타내는 작품을 모은 전시입니다.")
     private final String description;
 
@@ -37,24 +24,25 @@ public class ExhibitionResDto {
     private final List<ExhibitionArtResDto> exhibitionArtRess;
 
     @Schema(description = "전시 등록자 정보 DTO")
-    private final UserResDto userRes;
+    private final ExhibitionUserResDto userRes;
 
     @Schema(description = "전시 댓글 1위 정보 DTO")
     private final ExhibitionReviewResDto exhibitionReviewRes;
 
-    public static ExhibitionResDto of(String name, FontType font, FontColorType fontColor, String description, int heartCount, int hits,
-                                      List<ExhibitionArtResDto> exhibitionArtRess, UserResDto userRes,
-                                      ExhibitionReviewResDto exhibitionReviewRes) {
+    @Schema(description = "좋아요 여부", example = "true")
+    private final Boolean isHeart;
+
+    public static ExhibitionResDto of(String description, int heartCount, int hits,
+                                      List<ExhibitionArtResDto> exhibitionArtRess, ExhibitionUserResDto userRes,
+                                      ExhibitionReviewResDto exhibitionReviewRes, Boolean isHeart) {
         return ExhibitionResDto.builder()
-                .name(name)
-                .font(font)
-                .fontColor(fontColor)
                 .description(description)
                 .heartCount(heartCount)
                 .hits(hits)
                 .exhibitionArtRess(exhibitionArtRess)
                 .userRes(userRes)
                 .exhibitionReviewRes(exhibitionReviewRes)
+                .isHeart(isHeart)
                 .build();
     }
 }
