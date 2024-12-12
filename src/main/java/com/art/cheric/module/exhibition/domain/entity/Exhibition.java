@@ -56,8 +56,6 @@ public class Exhibition extends BaseTime {
 
     private String coverImgUrl;
 
-    private String colors;
-
     @Enumerated(EnumType.STRING)
     private ExhibitionBackgroundType exhibitionBackgroundType;
 
@@ -73,11 +71,11 @@ public class Exhibition extends BaseTime {
     @Builder.Default
     private List<ExhibitionArt> exhibitionArts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "exhibition", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "exhibition", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<ExhibitionTheme> exhibitionThemes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "exhibition", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "exhibition", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<ExhibitionBackgroundColor> exhibitionBackgroundColors = new ArrayList<>();
 

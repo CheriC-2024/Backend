@@ -1,14 +1,8 @@
 package com.art.cheric.module.art.domain.entity;
 
 import com.art.cheric.global.common.BaseTime;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import com.art.cheric.module.user.domain.entity.User;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import java.time.Year;
 import java.util.ArrayList;
@@ -29,6 +23,10 @@ public class Art extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @NotNull
     private String name;
@@ -68,10 +66,11 @@ public class Art extends BaseTime {
     @Builder.Default
     private List<ArtPlusImage> artPlusImages = new ArrayList<>();
 
-    public static Art of(@NotNull String name, String description, String series, String material, @NotNull Year madeAt,
+    public static Art of(@NotNull User user, @NotNull String name, String description, String series, String material, @NotNull Year madeAt,
                          Integer cherryPrice, @NotNull int horizontalSize, @NotNull int verticalSize,
                          @NotNull String imgUrl, @NotNull boolean isCollectorsArt) {
         return Art.builder()
+                .user(user)
                 .name(name)
                 .description(description)
                 .series(series)
