@@ -80,6 +80,21 @@ public class CollectionService {
         collectionArtRepository.saveAll(collectionArts);
     }
 
+    // 컬렉션 삭제
+    @Transactional
+    public void deleteCollection(User user, Long collectionId){
+        // 있는 컬렉션인지 확인
+        Collection collection = collectionRepository.findByIdAndUserId(collectionId, user.getId()).orElseThrow(
+                () ->  new AppException(CollectionErrorCode.COLLECTION_NOT_FOUND)
+        );
+
+        // 작품 리스트 삭제
+        collectionArtRepository.deleteAll(collectionArtRepository.findByCollectionId(collectionId));
+
+        // 컬렉션 삭제
+        collectionRepository.delete(collection);
+    }
+
     // 작품 리스트에 없는 작품인지 확인
     private void checkCollectionArtIsUnique(Long collectionId, Long artId) {
         if (collectionArtRepository.findByCollectionIdAndArtId(collectionId, artId).isPresent()) {

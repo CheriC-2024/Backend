@@ -59,11 +59,15 @@ public class ArtResDto {
     @Schema(description = "소장 작품 관련 추가 정보 DTO", example = "작가 작품인 경우 나오지 않음")
     private final OwnArtResDto ownArtRes;
 
+    @Schema(description = "좋아요 여부", example = "true")
+    private final Boolean isHeart;
+
 
     public static ArtResDto of(boolean isCollectorsArt, String imgUrl, Integer cherryPrice, String name,
                                String artistName, String series, int horizontalSize,
                                int verticalSize, String material, Year madeAt, List<ArtType> artTypes,
-                               UserResDto userRes, int heartCount, String description, OwnArtResDto ownArtRes) {
+                               UserResDto userRes, int heartCount, String description, OwnArtResDto ownArtRes,
+                               Boolean isHeart) {
         return ArtResDto.builder()
                 .isCollectorsArt(isCollectorsArt)
                 .imgUrl(imgUrl)
@@ -80,6 +84,7 @@ public class ArtResDto {
                 .heartCount(heartCount)
                 .description(description)
                 .ownArtRes(ownArtRes)
+                .isHeart(isHeart)
                 .build();
     }
 }

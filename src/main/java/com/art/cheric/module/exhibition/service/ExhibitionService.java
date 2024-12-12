@@ -162,7 +162,7 @@ public class ExhibitionService {
     }
 
     // 전시 내용 확인
-    public ExhibitionResDto getExhibitionContent(Long exhibitionId) {
+    public ExhibitionResDto getExhibitionContent(User user, Long exhibitionId) {
         // 전시 있는지 확인
         Exhibition exhibition = findExhibitionById(exhibitionId);
 
@@ -181,15 +181,13 @@ public class ExhibitionService {
         }
 
         return ExhibitionResDto.of(
-                exhibition.getName(),
-                exhibition.getFont(),
-                exhibition.getFontColor(),
                 exhibition.getDescription(),
                 exhibition.getHeartCount(),
                 exhibition.getHits(),
                 exhibitionArtRess,
-                userService.createUserResDto(exhibition.getUser()),
-                exhibitionReviewRes
+                userService.createExhibitionUserResDto(exhibition.getUser(), user.getId()),
+                exhibitionReviewRes,
+                exhibitionHeartRepository.findByUserIdAndExhibitionId(user.getId(), exhibitionId).isPresent()
         );
 
     }
@@ -467,7 +465,7 @@ public class ExhibitionService {
         return new PageImpl<>(exhibitionListRess, PageRequest.of((int) (exhibitionPage.getPageable().getOffset() / exhibitionPage.getPageable().getPageSize()), exhibitionPage.getPageable().getPageSize()), exhibitionPage.getTotalPages());
     }
 
-    public Page<ExhibitionReviewListResDto> getExhibitionReviews(Long exhibitionId, int page, int size) {
+    public Page<ExhibitionReviewListResDto> getExhibitionReviews(User user, Long exhibitionId, int page, int size) {
 
         Pageable pageable = PageRequest.of(page, size);
 
@@ -481,10 +479,12 @@ public class ExhibitionService {
                             exhibitionReview.getId(),
                             exhibitionReview.getMessage(),
                             exhibitionReview.getUser().getName(),
+                            exhibitionReview.getUser().getProfileImgUrl(),
                             exhibitionReview.getHeartCount(),
                             exhibitionReviewRepository.countByExhibitionIdAndExhibitionReviewId(exhibitionId,
                                     exhibitionReview.getId()),
-                            DateFormatUtil.formatLocalDateTime(exhibitionReview.getCreatedAt())
+                            DateFormatUtil.formatLocalDateTime(exhibitionReview.getCreatedAt()),
+                            exhibitionReviewHeartRepository.findByExhibitionReviewIdAndUserId(exhibitionReview.getId(), user.getId()).isPresent()
                     )
             );
         }
@@ -492,42 +492,44 @@ public class ExhibitionService {
         return new PageImpl<>(exhibitionReviewListRess, pageable, exhibitionReviewPage.getTotalPages());
     }
 
-    public ExhibitionReviewDetailResDto getExhibitionReviewsById(Long exhibitionId, Long reviewId) {
+    public ExhibitionReviewDetailResDto getExhibitionReviewsById(User user, Long exhibitionId, Long reviewId) {
         ExhibitionReview exhibitionReview = exhibitionReviewRepository.findByIdAndExhibitionId(reviewId, exhibitionId)
                 .orElseThrow(() -> new AppException(ExhibitionErrorCode.REVIEW_NOT_EXIST));
 
         // 전시 기본 댓글 조회
-        ExhibitionReviewDetailResDto exhibitionReviewDetailRes = convertToDetailResDto(exhibitionReview);
+        ExhibitionReviewDetailResDto exhibitionReviewDetailRes = convertToDetailResDto(user.getId(), exhibitionReview);
 
         // 대댓글 리스트를 가져와서 재귀적으로 처리
-        List<ExhibitionReviewDetailResDto> replies = getRepliesRecursively(reviewId);
+        List<ExhibitionReviewDetailResDto> replies = getRepliesRecursively(user.getId(), reviewId);
 
         // 대댓글 정보를 메인 댓글 DTO에 추가
         return exhibitionReviewDetailRes.addExhibitionReviewListResDto(replies);
     }
 
-    private List<ExhibitionReviewDetailResDto> getRepliesRecursively(Long parentReviewId) {
+    private List<ExhibitionReviewDetailResDto> getRepliesRecursively(Long userId, Long parentReviewId) {
         // 대댓글을 조회
         List<ExhibitionReview> replies = exhibitionReviewRepository.findReplyById(parentReviewId);
 
         // 대댓글 각각에 대해 DTO 변환 및 재귀 호출
         List<ExhibitionReviewDetailResDto> replyDtos = new ArrayList<>();
         for (ExhibitionReview reply : replies) {
-            ExhibitionReviewDetailResDto replyDto = convertToDetailResDto(reply);
-            replyDto.addExhibitionReviewListResDto(getRepliesRecursively(reply.getId())); // 재귀 호출
+            ExhibitionReviewDetailResDto replyDto = convertToDetailResDto(userId, reply);
+            replyDto.addExhibitionReviewListResDto(getRepliesRecursively(userId, reply.getId())); // 재귀 호출
             replyDtos.add(replyDto);
         }
 
         return replyDtos;
     }
 
-    private ExhibitionReviewDetailResDto convertToDetailResDto(ExhibitionReview review) {
+    private ExhibitionReviewDetailResDto convertToDetailResDto(Long userId, ExhibitionReview review) {
         return ExhibitionReviewDetailResDto.of(
                 review.getId(),
                 review.getMessage(),
                 review.getUser().getName(),
+                review.getUser().getProfileImgUrl(),
                 review.getHeartCount(),
-                DateFormatUtil.formatLocalDateTime(review.getCreatedAt())
+                DateFormatUtil.formatLocalDateTime(review.getCreatedAt()),
+                exhibitionReviewHeartRepository.findByExhibitionReviewIdAndUserId(review.getId(), userId).isPresent()
         );
     }
 }

@@ -33,7 +33,7 @@ public class FollowController implements FollowControllerDocs {
     public ResponseEntity<ResponseDto> deleteFollow(@RequestAttribute("user") User user,
                                                     @PathVariable(name = "followed-id") Long followedUserId) {
         followService.deleteFollow(user, followedUserId);
-        return ResponseEntity.status(200).body(ResponseDto.of(200, "Ok"));
+        return ResponseEntity.ok(ResponseDto.of(200));
     }
 
     @GetMapping("/{userId}")

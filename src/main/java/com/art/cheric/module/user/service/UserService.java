@@ -9,6 +9,7 @@ import com.art.cheric.global.error.exception.AppException;
 import com.art.cheric.global.util.GoogleOAuthUtil;
 import com.art.cheric.global.util.JwtUtil;
 import com.art.cheric.global.util.RedisUtil;
+import com.art.cheric.module.art.domain.entity.Art;
 import com.art.cheric.module.art.domain.repository.ArtRepository;
 import com.art.cheric.module.art.dto.res.ArtBriefResDto;
 import com.art.cheric.module.artist.dto.req.ArtistBasicReqDto;
@@ -18,24 +19,31 @@ import com.art.cheric.module.user.domain.entity.UserPart;
 import com.art.cheric.module.user.domain.repository.UserPartRepository;
 import com.art.cheric.module.user.domain.repository.UserRepository;
 import com.art.cheric.module.user.dto.req.SignUpReqDto;
-import com.art.cheric.module.user.dto.res.*;
+import com.art.cheric.module.user.dto.res.ExhibitionUserResDto;
+import com.art.cheric.module.user.dto.res.HotUserListResDto;
+import com.art.cheric.module.user.dto.res.LoginResDto;
+import com.art.cheric.module.user.dto.res.UserBrief2ResDto;
+import com.art.cheric.module.user.dto.res.UserBriefResDto;
+import com.art.cheric.module.user.dto.res.UserDetailResDto;
+import com.art.cheric.module.user.dto.res.UserListResDto;
+import com.art.cheric.module.user.dto.res.UserResDto;
 import com.art.cheric.module.user.error.UserErrorCode;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.io.IOException;
-import java.security.GeneralSecurityException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -50,6 +58,7 @@ public class UserService {
     private final FollowRepository followRepository;
     private final ArtRepository artRepository;
 
+    // 로그인
     @Transactional
     public LoginResDto getGoogleLogin(String idToken, String fcmToken, String deviceToken) {
         // 요청 인자 유효성 검사
@@ -82,6 +91,7 @@ public class UserService {
         return LoginResDto.of(jwtVo.getAccessToken(), jwtVo.getRefreshToken(), user.getInfo() == null);
     }
 
+    // refreshToken을 통한 accessToken 생성
     @Transactional
     public LoginResDto getAccessToken(String refreshToken) {
         if (refreshToken.isBlank()) {
@@ -107,6 +117,7 @@ public class UserService {
         return LoginResDto.of(jwtVo.getAccessToken(), jwtVo.getRefreshToken(), tokenUser.getInfo() == null);
     }
 
+    // 사용자 회원가입
     @Transactional
     public void postSignUp(User user, SignUpReqDto signUpReq) {
         // 사용자 정보 업데이트
@@ -121,31 +132,20 @@ public class UserService {
 
     }
 
+    // 사용자 이름 중복 검사
     public void checkNameIsDuplicated(String name) {
         checkNameIsBlankOrSizeError(name);
         checkArtistNameIsDuplicated(name);
     }
 
-    private void checkNameIsBlankOrSizeError(String name) {
-        if (name.isBlank()) {
-            throw new AppException(UserErrorCode.NAME_REQUIRED);
-        } else if (!(name.length() >= 2 && name.length() <= 10)) {
-            throw new AppException(UserErrorCode.NAME_SIZE_ERROR);
-        }
-    }
-
-    private void checkArtistNameIsDuplicated(String name) {
-        userRepository.findByIsValidateArtistFalseAndName(name).ifPresent(user -> {
-            throw new AppException(UserErrorCode.NAME_DUPLICATED);
-        });
-    }
-
+    // 사용자 로그아웃
     @Transactional
     public void deleteGoogleLogout(User user) {
         // 사용자 refreshToken 삭제
         redisUtil.delete(user.getId() + "_refresh");
     }
 
+    // 사용자 상세 정보 조회
     public UserDetailResDto getUserDetailInfo(User user, Long userId) {
         User finalUser = user;
         if (userId != null) {
@@ -171,25 +171,9 @@ public class UserService {
         );
     }
 
-
-    public UserResDto createUserResDto(User user) {
-        return UserResDto.of(
-                user.getId(),
-                user.getName(),
-                user.getInfo(),
-                getArtTypes(user.getUserParts()),
-                user.getProfileImgUrl()
-        );
-    }
-
-
-    private List<ArtType> getArtTypes(List<UserPart> userParts) {
-        return userParts.stream()
-                .map(UserPart::getUserArtType)
-                .collect(Collectors.toList());
-    }
-
-    public Page<UserBriefResDto> getUserBriefList(User user, Boolean isFollowing, Boolean isArtist, List<ArtType> artTypes,
+    // 사용자 간단 정보 리스트 조회
+    public Page<UserBriefResDto> getUserBriefList(User user, Boolean isFollowing, Boolean isArtist,
+                                                  List<ArtType> artTypes,
                                                   UserOrderType order, int page, int size) {
 
         // 페이징 데이터 전달
@@ -215,9 +199,10 @@ public class UserService {
         return new PageImpl<>(result, pageable, users.getTotalElements());
     }
 
-    public Page<UserBrief2ResDto> getUserFollowInfoList(User user, Boolean isFollowing, Boolean isArtist, List<ArtType> artTypes,
+    // 사용자 간단 정보 + follow 여부 정보 리스트 조회
+    public Page<UserBrief2ResDto> getUserFollowInfoList(User user, Boolean isFollowing, Boolean isArtist,
+                                                        List<ArtType> artTypes,
                                                         UserOrderType order, int page, int size) {
-
         // 페이징 데이터 전달
         Pageable pageable = PageRequest.of(page, size);
 
@@ -243,11 +228,124 @@ public class UserService {
         return new PageImpl<>(result, pageable, users.getTotalElements());
     }
 
+    // 사용자 추천
+    public List<UserListResDto> getUserRecommend(User user, ArtType artTypes, Boolean isArtist,
+                                                 UserOrderType order, int page, int size) {
+        // 페이징 데이터 전달
+        Pageable pageable = PageRequest.of(page, size);
+
+        // 팔로잉 필터라면 팔로잉 id 전달 + 본인 id 제외 > 추천이기에
+        List<Long> followingIds = new ArrayList<>(findFollowingIdsListByUserId(user.getId()));
+        followingIds.add(user.getId());
+
+        // 필터링, 정렬에 따른 데이터 가져오기
+        Page<User> users = userRepository.getUsersBySortAndFilterAndPaging(false,
+                followingIds, isArtist, List.of(artTypes), order, pageable);
+
+        // 엔티티 dto 매핑
+        return users.stream().map(
+                userItem -> UserListResDto.of(
+                        userItem.getId(),
+                        userItem.getName(),
+                        userItem.getProfileImgUrl(),
+                        artRepository.getArtsByUserIdAndCollectorsArtFalseOrderByCreatedAtDesc(userItem.getId())
+                                .stream().map(
+                                        // TODO 작품 유효성 검사 필요
+                                        art -> ArtBriefResDto.of(
+                                                art.getId(),
+                                                art.isCollectorsArt(),
+                                                art.getImgUrl(),
+                                                art.getCherryPrice(),
+                                                art.getName())
+                                ).toList())
+        ).toList();
+
+    }
+
+    // hot 한 작가 추천
+    public Page<HotUserListResDto> getHotUser(Boolean isArtist, int page, int size) {
+        // 페이징 데이터 전달
+        Pageable pageable = PageRequest.of(page, size);
+
+        // 필터링, 정렬에 따른 데이터 가져오기
+        Page<User> users = userRepository.getUsersBySortAndFilterAndPaging(null, null, isArtist,
+                null, UserOrderType.FOLLOWER, pageable);
+
+        // 엔티티 dto 매핑
+        List<HotUserListResDto> result = users.stream().map(
+                userItem -> {
+
+                    Pageable pageableArt = PageRequest.of(0, 1, Sort.by(Sort.Order.desc("createdAt")));
+                    List<Art> arts = artRepository.findMostRecentArtByUserId(userItem.getId(), pageableArt);
+                    Art art = arts.isEmpty() ? null : arts.get(0);
+
+                    // TODO 작품 유효성 검사 필요
+
+                    return HotUserListResDto.of(
+                            userItem.getId(),
+                            userItem.getName(),
+                            userItem.getProfileImgUrl(),
+                            getArtTypes(userItem.getUserParts()),
+                            userItem.getInfo(),
+                            art != null ? art.getImgUrl() : null
+                    );
+                }).toList();
+
+        // 페이징된 결과를 반환
+        return new PageImpl<>(result, pageable, users.getTotalElements());
+    }
+
+    // 이름 유효성 검사
+    private void checkNameIsBlankOrSizeError(String name) {
+        if (name.isBlank()) {
+            throw new AppException(UserErrorCode.NAME_REQUIRED);
+        } else if (!(name.length() >= 2 && name.length() <= 10)) {
+            throw new AppException(UserErrorCode.NAME_SIZE_ERROR);
+        }
+    }
+
+    // 이름 중복 검사
+    private void checkArtistNameIsDuplicated(String name) {
+        userRepository.findByIsValidateArtistFalseAndName(name).ifPresent(user -> {
+            throw new AppException(UserErrorCode.NAME_DUPLICATED);
+        });
+    }
+
     // id 기반 사용자 조회
     public User findUserById(Long userId) {
         return userRepository.findById(userId.toString()).orElseThrow(
                 () -> new AppException(GlobalErrorCode.USER_NOT_FOUND)
         );
+    }
+
+    // 사용자 기본 dto 생성
+    public UserResDto createUserResDto(User user) {
+        return UserResDto.of(
+                user.getId(),
+                user.getName(),
+                user.getInfo(),
+                getArtTypes(user.getUserParts()),
+                user.getProfileImgUrl()
+        );
+    }
+
+    // 전시 제작자 기본 dto 생성
+    public ExhibitionUserResDto createExhibitionUserResDto(User user,Long userId) {
+        return ExhibitionUserResDto.of(
+                user.getId(),
+                user.getName(),
+                user.getInfo(),
+                getArtTypes(user.getUserParts()),
+                user.getProfileImgUrl(),
+                followRepository.findByFollowingUserIdAndFollowedUserId(userId, user.getId()).isPresent()
+        );
+    }
+
+    // 사용자 선호 분야 ArtType 으로 가져오기
+    private List<ArtType> getArtTypes(List<UserPart> userParts) {
+        return userParts.stream()
+                .map(UserPart::getUserArtType)
+                .collect(Collectors.toList());
     }
 
     // 유저 모두 저장
@@ -284,34 +382,4 @@ public class UserService {
         ).toList();
     }
 
-    public List<UserListResDto> getUserRecommend(User user, ArtType artTypes,
-                                                 UserOrderType order, int page, int size) {
-        // 페이징 데이터 전달
-        Pageable pageable = PageRequest.of(page, size);
-
-        // 팔로잉 필터라면 팔로잉 id 전달 + 본인 id 제외 > 추천이기에
-        List<Long> followingIds = new ArrayList<>(findFollowingIdsListByUserId(user.getId()));
-        followingIds.add(user.getId());
-
-
-        // 필터링, 정렬에 따른 데이터 가져오기
-        Page<User> users = userRepository.getUsersBySortAndFilterAndPaging(false,
-                followingIds, true, List.of(artTypes), order, pageable);
-
-
-        // 엔티티 dto 매핑
-        return users.stream().map(
-                userItem -> UserListResDto.of(
-                        userItem.getId(),
-                        userItem.getName(),
-                        userItem.getProfileImgUrl(),
-                        artRepository.getArtsByUserIdAndCollectorsArtFalseOrderByCreatedAtDesc(userItem.getId()).stream().map(
-                                art -> ArtBriefResDto.of(
-                                        art.getId(),
-                                        art.isCollectorsArt(),
-                                        art.getImgUrl(),
-                                        art.getCherryPrice(),
-                                        art.getName())).toList())).toList();
-
-    }
 }

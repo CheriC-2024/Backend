@@ -99,17 +99,26 @@ public class UserController implements UserControllerDocs {
                 resPage.getTotalPages(), resPage.getSize(), resPage.getNumberOfElements()));
     }
 
-
     @GetMapping("/recommend")
     public ResponseEntity<ResponseDto> getUserRecommend(
             @RequestAttribute("user") User user,
+            @Schema(description = "false 라면, 컬렉터만 / true 라면 작가만 / null이라면 모두 반환합니다.") @RequestParam(name = "isArtist") @Nullable Boolean isArtist,
             @RequestParam(name = "artType") ArtType artType,
             @RequestParam(name = "order") UserOrderType order,
             @Schema(description = "0번부터 시작합니다. 조회할 페이지 번호를 의미합니다.") @RequestParam(name = "page") int page,
             @Schema(description = "조회할 페이지 크기를 의미합니다.") @RequestParam(name = "size") int size) {
-        List<UserListResDto> resDto = userService.getUserRecommend(user, artType, order, page, size);
-        return ResponseEntity.status(201).body(DataResponseDto.of(resDto, 201));
-
+        List<UserListResDto> resDto = userService.getUserRecommend(user, artType, isArtist, order, page, size);
+        // TODO 추후에 Paging 정보 같이주도록 변경
+        return ResponseEntity.status(200).body(DataResponseDto.of(resDto, 200));
     }
 
+    @GetMapping("/hot")
+    public ResponseEntity<ResponseDto> getHotUser(
+            @Schema(description = "false 라면, 컬렉터만 / true 라면 작가만 / null이라면 모두 반환합니다.") @RequestParam(name = "isArtist") @Nullable Boolean isArtist,
+            @Schema(description = "0번부터 시작합니다. 조회할 페이지 번호를 의미합니다.") @RequestParam(name = "page") int page,
+            @Schema(description = "조회할 페이지 크기를 의미합니다.") @RequestParam(name = "size") int size) {
+        Page<HotUserListResDto> resPage = userService.getHotUser(isArtist, page, size);
+        return ResponseEntity.status(200).body(DataPageResponseDto.of(resPage.getContent(), 200, resPage.getTotalElements(),
+                resPage.getTotalPages(), resPage.getSize(), resPage.getNumberOfElements()));
+    }
 }
