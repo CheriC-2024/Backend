@@ -406,6 +406,6 @@ public interface UserControllerDocs {
                     )
             )
     })
-    ResponseEntity<ResponseDto> getUserRecommend(User user, ArtType artType, UserOrderType order, int page, int size);
+    ResponseEntity<ResponseDto> getUserRecommend(User user, Boolean isArtist, ArtType artType, UserOrderType order, int page, int size);
 }
 
