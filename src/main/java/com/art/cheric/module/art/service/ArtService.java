@@ -3,12 +3,28 @@ package com.art.cheric.module.art.service;
 import com.art.cheric.global.enums.ArtOrderType;
 import com.art.cheric.global.enums.ArtType;
 import com.art.cheric.global.error.exception.AppException;
-import com.art.cheric.global.util.DateFormatUtil;
-import com.art.cheric.module.art.domain.entity.*;
-import com.art.cheric.module.art.domain.repository.*;
+import com.art.cheric.module.art.domain.entity.Art;
+import com.art.cheric.module.art.domain.entity.ArtFile;
+import com.art.cheric.module.art.domain.entity.ArtHeart;
+import com.art.cheric.module.art.domain.entity.ArtPart;
+import com.art.cheric.module.art.domain.entity.ArtPlusImage;
+import com.art.cheric.module.art.domain.entity.ArtistArt;
+import com.art.cheric.module.art.domain.entity.OwnArt;
+import com.art.cheric.module.art.domain.repository.ArtFileRepository;
+import com.art.cheric.module.art.domain.repository.ArtHeartRepository;
+import com.art.cheric.module.art.domain.repository.ArtPartRepository;
+import com.art.cheric.module.art.domain.repository.ArtPlusImageRepository;
+import com.art.cheric.module.art.domain.repository.ArtRepository;
+import com.art.cheric.module.art.domain.repository.ArtistArtRepository;
+import com.art.cheric.module.art.domain.repository.OwnArtRepository;
 import com.art.cheric.module.art.dto.req.ArtReqDto;
 import com.art.cheric.module.art.dto.req.OwnArtReqDto;
-import com.art.cheric.module.art.dto.res.*;
+import com.art.cheric.module.art.dto.res.ArtBriefListResDto;
+import com.art.cheric.module.art.dto.res.ArtDescriptionResDto;
+import com.art.cheric.module.art.dto.res.ArtMostBriefListResDto;
+import com.art.cheric.module.art.dto.res.ArtResDto;
+import com.art.cheric.module.art.dto.res.ArtTypeSortListResDto;
+import com.art.cheric.module.art.dto.res.OwnArtResDto;
 import com.art.cheric.module.art.error.ArtErrorCode;
 import com.art.cheric.module.artist.service.ArtistService;
 import com.art.cheric.module.following.service.FollowService;
@@ -17,6 +33,11 @@ import com.art.cheric.module.user.domain.entity.UserPart;
 import com.art.cheric.module.user.dto.res.UserBriefResDto;
 import com.art.cheric.module.user.dto.res.UserResDto;
 import com.art.cheric.module.user.service.UserService;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -25,12 +46,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -54,7 +69,8 @@ public class ArtService {
         // art 생성
         ArtReqDto artReq = ownArtReq.artBasicInfo();
         Art art = artRepository.save(
-                Art.of(user, artReq.name(), artReq.description(), artReq.series(), artReq.material(), artReq.madeAt(), null,
+                Art.of(user, artReq.name(), artReq.description(), artReq.series(), artReq.material(), artReq.madeAt(),
+                        null,
                         artReq.horizontalSize(), artReq.verticalSize(), artReq.imgUrl(), true));
 
         // artPart 생성
@@ -105,6 +121,7 @@ public class ArtService {
         return art.getId();
     }
 
+    // 등록 체리수 유효성 검증
     private void checkCherryCountValidate(ArtReqDto artReq) {
         if (artReq.cherryPrice() == null || artReq.cherryPrice() < 0) {
             throw new AppException(ArtErrorCode.INVALID_CHERRY_PRICE);
@@ -112,7 +129,7 @@ public class ArtService {
     }
 
     // 작품 상세 확인
-    public ArtResDto getArt(Long artId) {
+    public ArtResDto getArt(User user, Long artId) {
         // 있는 작품인지 확인
         Art art = findArtByIdWithValidation(artId);
 
@@ -147,11 +164,12 @@ public class ArtService {
                 userResDto,
                 art.getHeartCount(),
                 art.getDescription(),
-                OwnArtResDto.from(artPrice)
+                OwnArtResDto.from(artPrice),
+                artHeartRepository.findByArtIdAndUserId(art.getId(), user.getId()).isPresent()
         );
     }
 
-
+    // 작품 하트 추가
     @Transactional
     public int postHeart(User user, Long artId) {
         // 유효한 작품인지 확인
@@ -174,12 +192,14 @@ public class ArtService {
         return art.getHeartCount();
     }
 
+    // 해당 사용자의 해당 작품 하트가 유일한지 확인
     private void checkArtHeartUnique(Long userId, Long artId) {
         if (artHeartRepository.findByArtIdAndUserId(artId, userId).isPresent()) {
             throw new AppException(ArtErrorCode.ART_HEART_ALREADY_EXIST);
         }
     }
 
+    // 하트 취소
     @Transactional
     public int deleteHeart(User user, Long artId) {
         // 유효한 작품인지 확인
@@ -276,16 +296,16 @@ public class ArtService {
         }
     }
 
-    // 작가 작품 유효성 확인
+    // 작가 작품 존재 여부 확인
     public ArtistArt findArtistArtByArtId(Long artId) {
         return artistArtRepository.findByArtId(artId).orElseThrow(
                 () -> new AppException(ArtErrorCode.ARTIST_ART_NOT_FOUND)
         );
     }
 
-
     // 작품 리스트 반환
-    public Page<ArtBriefListResDto> getArts(User user, Boolean isFollowing, Long userId, Boolean isCollectorsArt, ArtType artType,
+    public Page<ArtBriefListResDto> getArts(User user, Boolean isFollowing, Long userId, Boolean isCollectorsArt,
+                                            ArtType artType,
                                             ArtOrderType order, int page, int size) {
 
         // 페이징 데이터 전달
@@ -298,7 +318,8 @@ public class ArtService {
         }
 
         // 필터링, 정렬에 따른 데이터 가져오기
-        Page<Art> arts = artRepository.getArtsBySortAndFilterAndPaging(isFollowing, followingIds, userId, isCollectorsArt, artType,
+        Page<Art> arts = artRepository.getArtsBySortAndFilterAndPaging(isFollowing, followingIds, userId,
+                isCollectorsArt, artType,
                 order, pageable);
 
         // 엔티티 dto 매핑
@@ -311,9 +332,9 @@ public class ArtService {
                         art.getUser().getName(),
                         UserBriefResDto.of(
                                 art.getUser().getId(),
-                                art.getUser().getProfileImgUrl(),
-                                DateFormatUtil.formatLocalDateTime(art.getCreatedAt()
-                                )))).toList();
+                                art.getUser().getName(),
+                                art.getUser().getProfileImgUrl()
+                        ))).toList();
 
         // 페이징된 결과물 반환
         return new PageImpl<>(result, pageable, arts.getTotalElements());
@@ -336,7 +357,6 @@ public class ArtService {
             artTypeSortListRess.add(addArtTypesArtListToArtTypeSortListRess(order, artType, true, pageable));
         }
 
-
         // 사용되지 않은 나머지 ArtType 이름 기반 오름차순 리스트 뽑기
         List<ArtType> remainingArtTypes = Arrays.stream(ArtType.values())
                 .filter(artType -> !excludedArtTypes.contains(artType))
@@ -353,9 +373,11 @@ public class ArtService {
     }
 
     // 작품 분야에 따라 작품 리스트 paging 해서 가져오는 메서드
-    private ArtTypeSortListResDto addArtTypesArtListToArtTypeSortListRess(ArtOrderType order, ArtType artType, boolean isUserPreference, Pageable pageable) {
+    private ArtTypeSortListResDto addArtTypesArtListToArtTypeSortListRess(ArtOrderType order, ArtType artType,
+                                                                          boolean isUserPreference, Pageable pageable) {
         // 소장 작품만 해당하는 artType에 맞춰 가져오기
-        Page<Art> arts = artRepository.getArtsBySortAndFilterAndPaging(null, null, null, false, artType, order, pageable);
+        Page<Art> arts = artRepository.getArtsBySortAndFilterAndPaging(null, null, null, false, artType, order,
+                pageable);
 
         // 엔티티 dto 매핑
         return ArtTypeSortListResDto.of(artType.getValue(),
