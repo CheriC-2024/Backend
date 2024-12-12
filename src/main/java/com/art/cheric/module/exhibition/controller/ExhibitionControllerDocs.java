@@ -13,8 +13,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name = "Exhibition", description = "전시 관련 API")
 public interface ExhibitionControllerDocs {
@@ -287,63 +285,54 @@ public interface ExhibitionControllerDocs {
                             mediaType = "application/json",
                             schema = @Schema(implementation = ResponseDto.class),
                             examples =
-                            @ExampleObject(value = "{\n" +
-                                    "  \"code\": 200,\n" +
-                                    "  \"message\": \"OK\",\n" +
-                                    "  \"data\": [\n" +
-                                    "    {\n" +
-                                    "      \"exhibitionId\": 2,\n" +
-                                    "      \"name\": \"별빛:하늘을 그리다\",\n" +
-                                    "      \"font\": \"BASIC\",\n" +
-                                    "      \"fontColor\": \"BLACK\",\n" +
-                                    "      \"colors\": [],\n" +
-                                    "      \"exhibitionBackgroundType\": null,\n" +
-                                    "      \"coverImgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/EXHIBITION_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-exhibitionImage.png\",\n" +
-                                    "      \"themes\": [\n" +
-                                    "        \"별\",\n" +
-                                    "        \"하늘\",\n" +
-                                    "        \"빛\"\n" +
-                                    "      ],\n" +
-                                    "      \"heartCount\": 0,\n" +
-                                    "      \"hits\": 0,\n" +
-                                    "      \"userRes\": {\n" +
-                                    "        \"id\": 1,\n" +
-                                    "        \"name\": \"artist\",\n" +
-                                    "        \"profileImgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-profileimage.png\"\n" +
-                                    "      }\n" +
-                                    "    },\n" +
-                                    "    {\n" +
-                                    "      \"exhibitionId\": 1,\n" +
-                                    "      \"name\": \"별빛:하늘을 그리다\",\n" +
-                                    "      \"font\": \"BASIC\",\n" +
-                                    "      \"fontColor\": \"BLACK\",\n" +
-                                    "      \"colors\": [\n" +
-                                    "        \"#CF3420\",\n" +
-                                    "        \"#CF3421\",\n" +
-                                    "        \"#CF3422\",\n" +
-                                    "        \"#CF3423\"\n" +
-                                    "      ],\n" +
-                                    "      \"exhibitionBackgroundType\": \"TOP_DOWN\",\n" +
-                                    "      \"coverImgUrl\": null,\n" +
-                                    "      \"themes\": [\n" +
-                                    "        \"별\",\n" +
-                                    "        \"하늘\",\n" +
-                                    "        \"빛\"\n" +
-                                    "      ],\n" +
-                                    "      \"heartCount\": 0,\n" +
-                                    "      \"hits\": 0,\n" +
-                                    "      \"userRes\": {\n" +
-                                    "        \"id\": 1,\n" +
-                                    "        \"name\": \"artist\",\n" +
-                                    "        \"profileImgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-profileimage.png\"\n" +
-                                    "      }\n" +
-                                    "    }\n" +
-                                    "  ],\n" +
-                                    "  \"totalElements\": 2,\n" +
-                                    "  \"totalPages\": 1,\n" +
-                                    "  \"size\": 3,\n" +
-                                    "  \"numberOfElements\": 2\n" +
-                                    "}")
+                            @ExampleObject(value = "{\n"
+                                    + "  \"code\": 200,\n"
+                                    + "  \"message\": \"OK\",\n"
+                                    + "  \"data\": {\n"
+                                    + "    \"description\": \"별빛을 나타내는 작품을 모은 전시입니다.\",\n"
+                                    + "    \"heartCount\": 0,\n"
+                                    + "    \"hits\": 0,\n"
+                                    + "    \"exhibitionArtRess\": [\n"
+                                    + "      {\n"
+                                    + "        \"description\": \"이러쿵 저러쿵을 통해 수집하게 되었습니다.\",\n"
+                                    + "        \"reasonForPurchase\": \"별빛을 나타내는 게 마음에 와닿아서 수집하게 되었습니다.\",\n"
+                                    + "        \"review\": \"별빛을 나타내는 작품을 보는 과정에서 행복했습니다.\",\n"
+                                    + "        \"artExhibitionRes\": {\n"
+                                    + "          \"imgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/5_2_HenriRousseau/116_0_art_image.jpg\",\n"
+                                    + "          \"cherryPrice\": 2,\n"
+                                    + "          \"name\": \"세인트 클라우드 공원의 가로수 길\",\n"
+                                    + "          \"artistName\": \"구스타프 클림트\",\n"
+                                    + "          \"series\": null,\n"
+                                    + "          \"horizontalSize\": 0,\n"
+                                    + "          \"verticalSize\": 0,\n"
+                                    + "          \"material\": \"캔버스에 유화\",\n"
+                                    + "          \"madeAt\": \"2002\",\n"
+                                    + "          \"artTypes\": [\n"
+                                    + "          \"PAINTING\",\n"
+                                    + "          \"OIL_PAINTING\"\n"
+                                    + "          ],\n"                                    + "          \"ownArtRes\": {\n"
+                                    + "            \"price\": null\n"
+                                    + "          },\n"
+                                    + "          \"heartCount\": 25,\n"
+                                    + "          \"collectorsArt\": false\n"
+                                    + "        }\n"
+                                    + "      }\n"
+                                    + "    ],\n"
+                                    + "    \"userRes\": {\n"
+                                    + "      \"id\": 1,\n"
+                                    + "      \"name\": \"artist\",\n"
+                                    + "      \"description\": \"저는 3년차 회화 분야 작가입니다.\",\n"
+                                    + "      \"artTypes\": [\n"
+                                    + "        \"PAINTING\",\n"
+                                    + "        \"OIL_PAINTING\"\n"
+                                    + "      ],\n"
+                                    + "      \"profileImgUrl\": \"https://i.ibb.co/NxM5XzJ/p-image-1.jpg\",\n"
+                                    + "      \"isFollow\": false\n"
+                                    + "    },\n"
+                                    + "    \"exhibitionReviewRes\": null,\n"
+                                    + "    \"isHeart\": false\n"
+                                    + "  }\n"
+                                    + "}")
                     )
             ),
     })
@@ -359,44 +348,27 @@ public interface ExhibitionControllerDocs {
                             @ExampleObject(value = "{\n"
                                     + "  \"code\": 200,\n"
                                     + "  \"message\": \"OK\",\n"
-                                    + "  \"data\": [\n"
-                                    + "    {\n"
-                                    + "      \"id\": 4,\n"
-                                    + "      \"review\": \"3수집하신 소장 작품 너무 좋네요!\",\n"
-                                    + "      \"name\": null,\n"
-                                    + "      \"heartCount\": 0,\n"
-                                    + "      \"replyCount\": 0,\n"
-                                    + "      \"createAt\": \"2024.11.27\"\n"
-                                    + "    },\n"
-                                    + "    {\n"
-                                    + "      \"id\": 3,\n"
-                                    + "      \"review\": \"2수집하신 소장 작품 너무 좋네요!\",\n"
-                                    + "      \"name\": null,\n"
-                                    + "      \"heartCount\": 0,\n"
-                                    + "      \"replyCount\": 0,\n"
-                                    + "      \"createAt\": \"2024.11.27\"\n"
-                                    + "    },\n"
-                                    + "    {\n"
-                                    + "      \"id\": 2,\n"
-                                    + "      \"review\": \"1수집하신 소장 작품 너무 좋네요!\",\n"
-                                    + "      \"name\": null,\n"
-                                    + "      \"heartCount\": 0,\n"
-                                    + "      \"replyCount\": 0,\n"
-                                    + "      \"createAt\": \"2024.11.27\"\n"
-                                    + "    },\n"
-                                    + "    {\n"
-                                    + "      \"id\": 1,\n"
-                                    + "      \"review\": \"수집하신 소장 작품 너무 좋네요!\",\n"
-                                    + "      \"name\": null,\n"
-                                    + "      \"heartCount\": 0,\n"
-                                    + "      \"replyCount\": 2,\n"
-                                    + "      \"createAt\": \"2024.11.27\"\n"
-                                    + "    }\n"
-                                    + "  ],\n"
-                                    + "  \"totalElements\": 4,\n"
-                                    + "  \"totalPages\": 1,\n"
-                                    + "  \"size\": 4,\n"
-                                    + "  \"numberOfElements\": 4\n"
+                                    + "  \"data\": {\n"
+                                    + "    \"id\": 16,\n"
+                                    + "    \"review\": \"신선한 아이디어네요.\",\n"
+                                    + "    \"name\": \"artist\",\n"
+                                    + "    \"imgUrl\": \"https://i.ibb.co/NxM5XzJ/p-image-1.jpg\",\n"
+                                    + "    \"heartCount\": 1,\n"
+                                    + "    \"createAt\": \"1970.01.01 12:00\",\n"
+                                    + "    \"replies\": [\n"
+                                    + "      {\n"
+                                    + "        \"id\": 15,\n"
+                                    + "        \"review\": \"bbbb\",\n"
+                                    + "        \"name\": \"artist\",\n"
+                                    + "        \"imgUrl\": \"https://i.ibb.co/NxM5XzJ/p-image-1.jpg\",\n"
+                                    + "        \"heartCount\": 1,\n"
+                                    + "        \"createAt\": \"1970.01.01 12:00\",\n"
+                                    + "        \"replies\": [],\n"
+                                    + "        \"isHeart\": false\n"
+                                    + "      }\n"
+                                    + "    ],\n"
+                                    + "    \"isHeart\": false\n"
+                                    + "  }\n"
                                     + "}")
                     )
             ),
