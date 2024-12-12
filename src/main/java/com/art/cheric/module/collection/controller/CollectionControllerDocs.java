@@ -244,5 +244,18 @@ public interface CollectionControllerDocs {
     })
     ResponseEntity<ResponseDto> getSelfCollectionList(User user, CollectionIdListReqDto collectionIdListReq,
                                                       BasicOrderType sortType);
+
+    @Operation(summary = "컬렉션 삭제 API", description = "컬렉션을 삭제합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Ok",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ResponseDto.class),
+                            examples =
+                            @ExampleObject(value = "{ \"code\": 200, \"message\": \"Ok\" }")
+                    )
+            ),
+    })
+    ResponseEntity<ResponseDto> deleteCollection(User user, Long collectionId);
 }
 

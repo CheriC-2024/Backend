@@ -16,6 +16,7 @@ import javax.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,9 +40,9 @@ public class CollectionController implements CollectionControllerDocs {
         return ResponseEntity.status(201).body(ResponseDto.of(201, collectionId + " 컬렉션이 생성되었습니다."));
     }
 
-    @PostMapping("/{collectionId}/art")
+    @PostMapping("/{id}/art")
     public ResponseEntity<ResponseDto> postCollectionArt(@RequestAttribute("user") User user,
-                                                         @PathVariable("collectionId") Long collectionId,
+                                                         @PathVariable("id") Long collectionId,
                                                          @RequestBody @Valid ArtIdListReqDto artIdListReq) {
         collectionService.postCollectionArt(user, collectionId, artIdListReq);
         return ResponseEntity.status(201).body(ResponseDto.of(201));
@@ -60,5 +61,12 @@ public class CollectionController implements CollectionControllerDocs {
         List<CollectionArtResDto> resDtos = collectionService.getSelfCollectionList(user, collectionIdListReq,
                 order);
         return ResponseEntity.status(200).body(DataResponseDto.of(resDtos, 200));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseDto> deleteCollection(@RequestAttribute("user") User user,
+                                                        @PathVariable("id") Long collectionId){
+        collectionService.deleteCollection(user, collectionId);
+        return ResponseEntity.ok(ResponseDto.of(200));
     }
 }

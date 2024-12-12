@@ -12,9 +12,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.ResponseEntity;
-
 import java.util.List;
+import org.springframework.http.ResponseEntity;
 
 @Tag(name = "User", description = "사용자 관련 API")
 public interface UserControllerDocs {
@@ -269,12 +268,14 @@ public interface UserControllerDocs {
                                     "    {\n" +
                                     "      \"id\": 3,\n" +
                                     "      \"name\": \"test2\",\n" +
-                                    "      \"profileImgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-profileimage.png\"\n" +
+                                    "      \"profileImgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-profileimage.png\"\n"
+                                    +
                                     "    },\n" +
                                     "    {\n" +
                                     "      \"id\": 2,\n" +
                                     "      \"name\": \"test1\",\n" +
-                                    "      \"profileImgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-profileimage.png\"\n" +
+                                    "      \"profileImgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-profileimage.png\"\n"
+                                    +
                                     "    }\n" +
                                     "  ],\n" +
                                     "  \"totalElements\": 2,\n" +
@@ -304,7 +305,8 @@ public interface UserControllerDocs {
                                     "    {\n" +
                                     "      \"id\": 3,\n" +
                                     "      \"name\": \"test2\",\n" +
-                                    "      \"profileImgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-profileimage.png\",\n" +
+                                    "      \"profileImgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-profileimage.png\",\n"
+                                    +
                                     "      \"artTypes\": [\n" +
                                     "        \"WATER_PAINTING\",\n" +
                                     "        \"OIL_PAINTING\"\n" +
@@ -314,7 +316,8 @@ public interface UserControllerDocs {
                                     "    {\n" +
                                     "      \"id\": 2,\n" +
                                     "      \"name\": \"test1\",\n" +
-                                    "      \"profileImgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-profileimage.png\",\n" +
+                                    "      \"profileImgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/1/716dc032-40da-4e9a-97a1-e27ea8abbbd2-profileimage.png\",\n"
+                                    +
                                     "      \"artTypes\": [\n" +
                                     "        \"ORIENTAL_PAINTING\",\n" +
                                     "        \"DESIGN_ART\"\n" +
@@ -334,7 +337,7 @@ public interface UserControllerDocs {
             User user, Boolean isFollowing, Boolean isArtist, List<ArtType> artTypes, UserOrderType order,
             int page, int size);
 
-    @Operation(summary = "분야 기반 사용자 추천 리스트 조회 API", description = "조회한 분야를 기반으로 추천하는 컬렉터를 제공합니다.")
+    @Operation(summary = "분야 기반 사용자 추천 리스트 조회 API", description = "조회한 분야를 기반으로 추천하는 사용자를 제공합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Ok",
                     content = @Content(
@@ -406,6 +409,82 @@ public interface UserControllerDocs {
                     )
             )
     })
-    ResponseEntity<ResponseDto> getUserRecommend(User user, ArtType artType, UserOrderType order, int page, int size);
+    ResponseEntity<ResponseDto> getUserRecommend(User user, Boolean isArtist, ArtType artType, UserOrderType order,
+                                                 int page, int size);
+
+    @Operation(summary = "인기 기반 사용자 추천 리스트 조회 API", description = "팔로워 기반으로 사용자 추천 리스트를 제공합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Ok",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ResponseDto.class),
+                            examples =
+                            @ExampleObject(value = "{\n"
+                                    + "  \"code\": 200,\n"
+                                    + "  \"message\": \"OK\",\n"
+                                    + "  \"data\": [\n"
+                                    + "    {\n"
+                                    + "      \"id\": 28,\n"
+                                    + "      \"name\": \"앙리 루소\",\n"
+                                    + "      \"profileImgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/profile/22_profile_img.jpg\",\n"
+                                    + "      \"artTypes\": [\n"
+                                    + "        \"WATER_PAINTING\",\n"
+                                    + "        \"PAINTING\"\n"
+                                    + "      ],\n"
+                                    + "      \"description\": null,\n"
+                                    + "      \"artImgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/7_1_Rembrandt/193_0_art_image.jpg\"\n"
+                                    + "    },\n"
+                                    + "    {\n"
+                                    + "      \"id\": 31,\n"
+                                    + "      \"name\": \"캘빈 킴\",\n"
+                                    + "      \"profileImgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/profile/25_profile_img.jpg\",\n"
+                                    + "      \"artTypes\": [\n"
+                                    + "        \"WATER_PAINTING\",\n"
+                                    + "        \"PAINTING\"\n"
+                                    + "      ],\n"
+                                    + "      \"description\": null,\n"
+                                    + "      \"artImgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/7_4_LeeManIk/209_0_art_image.jpg\"\n"
+                                    + "    },\n"
+                                    + "    {\n"
+                                    + "      \"id\": 20,\n"
+                                    + "      \"name\": \"에드가 드가\",\n"
+                                    + "      \"profileImgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/profile/14_profile_img.jpg\",\n"
+                                    + "      \"artTypes\": [\n"
+                                    + "        \"DRAWING_ART\"\n"
+                                    + "      ],\n"
+                                    + "      \"description\": null,\n"
+                                    + "      \"artImgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/3_3_EgonSchiele/57_0_art_image.jpg\"\n"
+                                    + "    },\n"
+                                    + "    {\n"
+                                    + "      \"id\": 18,\n"
+                                    + "      \"name\": \"알브레히트 뒤러\",\n"
+                                    + "      \"profileImgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/profile/12_profile_img.jpg\",\n"
+                                    + "      \"artTypes\": [\n"
+                                    + "        \"DRAWING_ART\"\n"
+                                    + "      ],\n"
+                                    + "      \"description\": null,\n"
+                                    + "      \"artImgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/3_1_MarcChagall/47_0_art_image.png\"\n"
+                                    + "    },\n"
+                                    + "    {\n"
+                                    + "      \"id\": 35,\n"
+                                    + "      \"name\": \"이상원\",\n"
+                                    + "      \"profileImgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/USER_IMG/profile/29_profile_img.jpg\",\n"
+                                    + "      \"artTypes\": [\n"
+                                    + "        \"OIL_PAINTING\",\n"
+                                    + "        \"PAINTING\"\n"
+                                    + "      ],\n"
+                                    + "      \"description\": null,\n"
+                                    + "      \"artImgUrl\": \"https://cheric-bucket.s3.ap-northeast-2.amazonaws.com/ARTIST_ART_IMG/6_4_SangwonLee/176_0_art_image.jpg\"\n"
+                                    + "    }\n"
+                                    + "  ],\n"
+                                    + "  \"totalElements\": 38,\n"
+                                    + "  \"totalPages\": 8,\n"
+                                    + "  \"size\": 5,\n"
+                                    + "  \"numberOfElements\": 5\n"
+                                    + "}")
+                    )
+            )
+    })
+    ResponseEntity<ResponseDto> getHotUser(Boolean isArtist, int page, int size);
 }
 

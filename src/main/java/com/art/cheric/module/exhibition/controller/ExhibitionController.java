@@ -44,8 +44,9 @@ public class ExhibitionController implements ExhibitionControllerDocs {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseDto> getExhibitionContent(@PathVariable(name = "id") Long exhibitionId) {
-        ExhibitionResDto resDto = exhibitionService.getExhibitionContent(exhibitionId);
+    public ResponseEntity<ResponseDto> getExhibitionContent(@RequestAttribute("user") User user,
+                                                            @PathVariable(name = "id") Long exhibitionId) {
+        ExhibitionResDto resDto = exhibitionService.getExhibitionContent(user, exhibitionId);
         return ResponseEntity.status(200).body(DataResponseDto.of(resDto, 200));
     }
 
@@ -72,7 +73,7 @@ public class ExhibitionController implements ExhibitionControllerDocs {
     }
 
     @PostMapping("/{id}/reviews/{reviewId}")
-    public ResponseEntity<ResponseDto> postReview(@RequestAttribute("user") User user,
+    public ResponseEntity<ResponseDto> postReReview(@RequestAttribute("user") User user,
                                                   @PathVariable(name = "id") Long exhibitionId,
                                                   @PathVariable(name = "reviewId") Long reviewId,
                                                   @RequestBody @Valid ExhibitionReviewReqDto exhibitionReviewReq) {
@@ -118,19 +119,21 @@ public class ExhibitionController implements ExhibitionControllerDocs {
     }
 
     @GetMapping("/{id}/reviews")
-    public ResponseEntity<ResponseDto> getExhibitionReviews(@PathVariable(name = "id") Long exhibitionId,
+    public ResponseEntity<ResponseDto> getExhibitionReviews(@RequestAttribute("user") User user,
+                                                            @PathVariable(name = "id") Long exhibitionId,
                                                             @RequestParam(name = "page") int page,
                                                             @RequestParam(name = "size") int size) {
-        Page<ExhibitionReviewListResDto> resPage = exhibitionService.getExhibitionReviews(exhibitionId, page, size);
+        Page<ExhibitionReviewListResDto> resPage = exhibitionService.getExhibitionReviews(user, exhibitionId, page, size);
         return ResponseEntity.status(200).body(
                 DataPageResponseDto.of(resPage.getContent(), 200, resPage.getTotalElements(),
                         resPage.getTotalPages(), resPage.getSize(), resPage.getNumberOfElements()));
     }
 
     @GetMapping("/{id}/reviews/{reviewId}")
-    public ResponseEntity<ResponseDto> getExhibitionReviews(@PathVariable(name = "id") Long exhibitionId,
+    public ResponseEntity<ResponseDto> getExhibitionReviews(@RequestAttribute("user") User user,
+                                                            @PathVariable(name = "id") Long exhibitionId,
                                                             @PathVariable(name = "reviewId") Long reviewId) {
-        ExhibitionReviewDetailResDto resDto = exhibitionService.getExhibitionReviewsById(exhibitionId, reviewId);
+        ExhibitionReviewDetailResDto resDto = exhibitionService.getExhibitionReviewsById(user, exhibitionId, reviewId);
         return ResponseEntity.status(200).body(DataResponseDto.of(resDto, 200));
     }
 }

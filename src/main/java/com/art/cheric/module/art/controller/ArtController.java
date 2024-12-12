@@ -47,7 +47,7 @@ public class ArtController implements ArtControllerDocs {
     @GetMapping("/{id}")
     public ResponseEntity<ResponseDto> getArt(@RequestAttribute("user") User user,
                                               @PathVariable("id") Long artId) {
-        ArtResDto resDto = artService.getArt(artId);
+        ArtResDto resDto = artService.getArt(user, artId);
         return ResponseEntity.status(200).body(DataResponseDto.of(resDto, 200));
     }
 
