@@ -113,7 +113,7 @@ public interface ExhibitionControllerDocs {
                     )
             ),
     })
-    ResponseEntity<ResponseDto> getExhibitionContent(Long exhibitionId);
+    ResponseEntity<ResponseDto> getExhibitionContent(User user, Long exhibitionId);
 
     @Operation(summary = "전시 하트 추가 API", description = "전시에 하트를 추가합니다.")
     @ApiResponses({
@@ -201,7 +201,7 @@ public interface ExhibitionControllerDocs {
                     )
             ),
     })
-    ResponseEntity<ResponseDto> postReview(User user, Long exhibitionId, Long reviewId,
+    ResponseEntity<ResponseDto> postReReview(User user, Long exhibitionId, Long reviewId,
                                            ExhibitionReviewReqDto exhibitionReviewReq);
 
     @Operation(summary = "전시 댓글 좋아요 생성 API", description = "전시에 댓글에 좋아요를 답니다.")
@@ -401,7 +401,7 @@ public interface ExhibitionControllerDocs {
                     )
             ),
     })
-    ResponseEntity<ResponseDto> getExhibitionReviews(Long exhibitionId, int page,int size);
+    ResponseEntity<ResponseDto> getExhibitionReviews( User user, Long exhibitionId, int page,int size);
 
     @Operation(summary = "전시 댓글 상세 조회 API", description = "전시 및 댓글 id에 해당하는 댓글과 대댓글을 조회합니다.")
     @ApiResponses({
@@ -476,6 +476,6 @@ public interface ExhibitionControllerDocs {
                     )
             ),
     })
-    ResponseEntity<ResponseDto> getExhibitionReviews(Long exhibitionId, Long reviewId);
+    ResponseEntity<ResponseDto> getExhibitionReviews(User user, Long exhibitionId, Long reviewId);
 }
 
