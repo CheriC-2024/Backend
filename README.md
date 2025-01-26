@@ -1,4 +1,4 @@
-# Cheric
+# 🍒 Cheric
 
 ## **Table of Contents**
 
