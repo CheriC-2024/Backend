@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  backend:
+    container_name: backend
+    image: yerim01/cheric
+    expose:
+      - 8080
+    ports:
+      - 8080:8080
+    restart: always
+    depends_on:
+      - redis
+    volumes:
+      - /home/ubuntu/google-credentials.json:/app/google-credentials.json
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/google-credentials.json
+    networks:
+      - testnet
+
+  redis:
+    container_name: redis
+    image: redis
+    ports:
+      - "6379:6379"
+    restart: always
+    networks:
+      - testnet
+
+networks:
+  testnet:
+    driver: bridge
