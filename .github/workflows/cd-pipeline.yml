@@ -23,16 +23,12 @@ jobs:
       - name: application.yml 생성
         run: |
           cd ./src/main/resources
-          touch ./application.yml
           echo "${{ secrets.PROPERTIES }}" > ./application.yml
         shell: bash
 
-      - name: 빌드 권한 부여
-        run: chmod +x gradlew
-
-      - name: 프로젝트 jar 파일 제작
+      - name: 빌드 권한 부여 및 프로젝트 jar 제작
         run: |
-          chmod +x gradlew 
+          chmod +x gradlew
           ./gradlew bootJar
 
       - name: 웹 이미지 빌드 및 도커허브에 push
@@ -41,6 +37,24 @@ jobs:
           docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }} . 
           docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
 
+      - name: EC2에 google-credentials.json 복원
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ubuntu
+          key: ${{ secrets.KEY }}
+          script: |
+            echo "${{ secrets.GOOGLE_CREDS_BASE64 }}" | base64 -d > /home/ubuntu/google-credentials.json
+
+      - name: docker-compose.yml 복사
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ubuntu
+          key: ${{ secrets.KEY }}
+          source: "docker-compose.yml"
+          target: "~/app"
+
       - name: Docker 컨테이너 배포 및 업데이트
         uses: appleboy/ssh-action@master
         with:
@@ -48,10 +62,9 @@ jobs:
           username: ubuntu
           key: ${{ secrets.KEY }}
           script: |
-            sudo docker-compose down
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
-            sudo docker-compose up -d --force-recreate --no-deps
-            sudo docker exec -it backend bash -c "export GOOGLE_APPLICATION_CREDENTIALS='/home/ubuntu/google-credentials.json'"
-            sudo docker exec backend ls -al /app/google-credentials.json
-            sudo docker exec backend cat /app/google-credentials.json
-            sudo docker image prune -f
+            mkdir -p ~/app                                
+            cd ~/app                                       
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }} 
+            sudo docker-compose down                  
+            sudo docker-compose up -d --force-recreate --no-deps 
+            sudo docker image prune -f                 
